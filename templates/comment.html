@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Comments</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <h2>Leave a Comment</h2>
+  <form method="POST">
+    <input type="text" name="name" placeholder="Your Name" required>
+    <textarea name="message" placeholder="Your Comment" required></textarea>
+    <button type="submit">Submit</button>
+  </form>
+
+  <h3>All Comments</h3>
+  <ul>
+    {% for comment in comments %}
+      <li><strong>{{ comment.name }}</strong>: {{ comment.message }}</li>
+    {% endfor %}
+  </ul>
+</body>
+</html>

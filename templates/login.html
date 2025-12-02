@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/login.css') }}">
+    <!-- Optional: add Bootstrap Icons or Font Awesome for the home icon -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+      rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='assets/images/profile/letter-a.png') }}" />
+  </head>
+  <body>
+
+    <div class="login-container">
+      <!-- 🏠 Home icon -->
+      <a href="{{ url_for('home') }}" class="home-icon" title="Go to Home">
+        <i class="bi bi-house-door-fill"></i>
+      </a>
+
+      <h2>Admin <span style="color: var(--color-secondary);">Login</span></h2>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      <form method="POST">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+  </body>
+</html>
