@@ -1,1 +1,78 @@
+# =========================
+# Python / Flask
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+*.db
+
+# Virtual environments
 venv/
+.env/
+.env.*
+.venv/
+
+# Flask instance / cache
+instance/
+.flaskenv
+*.log
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.local
+.env.production
+
+# =========================
+# MongoDB
+# =========================
+*.bson
+dump/
+
+# =========================
+# OS / Editor junk
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# VS Code
+.vscode/
+
+# =========================
+# Node / Frontend (if any tools used)
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# Build / Cache
+# =========================
+dist/
+build/
+.cache/
+
+# =========================
+# Uploaded / Generated files
+# =========================
+uploads/
+media/
+static/uploads/
+
+# =========================
+# Secrets / Certificates
+# =========================
+*.pem
+*.key
+
+# =========================
+# Misc
+# =========================
+*.bak
+*.swp
+*.tmp

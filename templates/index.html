@@ -24,35 +24,15 @@
     <script
       src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script
       src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-
-    <script type="text/javascript">
-      (function () {
-        emailjs.init("1bPMwxrU-aMkzex8k");
-      })();
-    </script>
-    <script src="/static/js/commentsSlider.js" defer></script>
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
   </head>
   <body>
-    <!-- Loading Screen -->
-    <!-- Fullscreen Loader -->
-    <div id="loader">
-      <div class="loader-content">
-        <img
-          src="{{ url_for('static', filename='assets/images/skills/machine-learning.svg') }}"
-          alt="Logo" />
-        <p>Welcome to My Portfolio</p>
-      </div>
-    </div>
     <div id="scrollProgress"></div>
     <header>
-      <nav class="navbar">
+      <nav class="navbar" data-aos="fade-down" data-aos-duration="1500">
         <div id="logo">
           <a href="#"
             style="text-decoration: none"><h1>Atha<span>rvaa...</span></h1></a>
@@ -82,7 +62,7 @@
       </nav>
     </header>
 
-    <section class="hero" id="home" data-aos="fade-down">
+    <section class="hero" id="home" data-aos="fade-up" data-aos-duration="1500">
       <div class="hero-head">
         <div class="hero-text">
           <h6>I Build things where,</h6>
@@ -93,7 +73,7 @@
           <h2>And I'm a <span class="text"></span></h2>
         </div>
 
-        <div class="image-wrapper">
+        <div class="image-wrapper" data-aos="zoom-in" data-aos-duration="1500">
           <div class="blob"></div>
           <!-- Lottie Animation -->
           <div class="animation-wrapper">
@@ -111,7 +91,7 @@
         <!-- Buttons : View my work and download -->
         <div class="hero-buttons">
           <a href="#projects" class="btn-primary">View My Work</a>
-          <a href="{{ url_for('static', filename='resume.pdf') }}"
+          <a href="{{ url_for('static', filename='assets/resume.pdf') }}"
             class="btn-secondary">Download CV</a>
         </div>
         <!-- Social Links (Icons) -->
@@ -138,10 +118,10 @@
       </div>
     </section>
 
-    <section class="about" id="about" data-aos="fade-right">
+    <section class="about" id="about" data-aos="fade" data-aos-duration="1500">
       <h1 class="section-title">About Me</h1>
       <div class="about-text">
-        <h3>Hello I'm Atharva</h3>
+        <h3>Hello I'm Atharva Bhosale</h3>
         <p>
           A passionate Machine Learning Engineer and Full Stack Developer with a
           strong foundation in AI, data science, and modern web technologies. I
@@ -185,7 +165,8 @@
       </div>
     </section>
 
-    <section class="arsenal" id="skills" data-aos="fade-up  ">
+    <section class="arsenal" id="skills" data-aos="fade"
+      data-aos-duration="1500">
       <h1 class="section-title">My Tech Arsenal</h1>
       <!-- Languages -->
       <div class="arsenal-category">
@@ -300,7 +281,8 @@
     </section>
 
     <!-- Your certificates section -->
-    <section class="certificates" id="certificates" data-aos="fade-up">
+    <section class="certificates" id="certificates" data-aos="fade"
+      data-aos-duration="1500">
       <h1 class="section-title">Achievements & Certificates</h1>
 
       <!-- Swiper wrapper -->
@@ -365,7 +347,8 @@
       </div>
     </section>
 
-    <section class="projects" id="projects" data-aos="fast-paced">
+    <section class="projects" id="projects" data-aos="fade"
+      data-aos-duration="1500">
       <h1 class="section-title">My Projects</h1>
 
       <div class="project-grid">
@@ -375,14 +358,14 @@
             src="{{ url_for('static', filename='assets/images/projects/finance.png') }}"
             alt="Project 1" />
           <div class="project-content">
-            <h3>ML Stock Predictor</h3>
+            <h3>Finanace Tracking App</h3>
             <p>
               This web application helps users track income and expenses in one
               place. It provides a clean and intuitive dashboard where users
               can:<br />
               1)View recent transactions with categories like Food, Healthcare,
               Groceries, etc.<br />
-               2)See transaction details such as date,
+              2)See transaction details such as date,
               description, and <br />
 
               3)Navigate through different sections (Dashboard, Add, Predict,
@@ -391,7 +374,7 @@
             </p>
             <span class="tech-stack">Python, TensorFlow, Flask</span>
             <div class="project-icons">
-              <a href="#" target="_blank" title="Live Demo">
+              <a href="https://github.com/atharva7471/Finance-Tracker.git" target="_blank" title="Live Demo">
                 <i class="bi bi-box-arrow-up-right"></i>
               </a>
               <a href="https://github.com/atharva7471/Finance-Tracker.git"
@@ -441,7 +424,7 @@
             </p>
             <span class="tech-stack">Python, Pandas, Flask, ML</span>
             <div class="project-icons">
-              <a href="#" target="_blank" title="Live Demo">
+              <a href="https://github.com/atharva7471/Movie-Recommender.git" target="_blank" title="Live Demo">
                 <i class="bi bi-box-arrow-up-right"></i>
               </a>
               <a href="https://github.com/atharva7471/Movie-Recommender.git"
@@ -454,7 +437,8 @@
       </div>
     </section>
 
-    <section class="contact" id="contact" data-aos="zoom-in">
+    <section class="contact" id="contact" data-aos="fade-up"
+      data-aos-duration="1500">
       <h1 class="section-title">Get In Touch</h1>
 
       <p class="contact-intro">
@@ -463,7 +447,8 @@
         always open. Would love your feedback, reviews, and suggestions too!
       </p>
 
-      <form class="contact-form" id="commentForm" method="POST">
+      <form class="contact-form" id="commentForm" method="POST"
+        action="{{ url_for('submit') }}">
         <input
           type="text"
           id="name"
@@ -538,7 +523,7 @@
           <li><a href="#projects">Projects</a></li>
           <li><a href="#skills">Skills</a></li>
           <li><a href="#contact">Contact</a></li>
-          <li><a href="admin">Admin</a></li>
+          <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
         </ul>
 
         <div class="social-links">
@@ -570,6 +555,12 @@
     </button>
 
     <!-- Script File -->
+    <script>
+      window.API = {
+        comments: "{{ url_for('get_comments') }}",
+        submit: "{{ url_for('submit') }}"
+      };
+    </script>
     <script src="{{ url_for('static', filename='app.js') }}"></script>
   </body>
 </html>

@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
 * {
     margin: 0;
     padding: 0;
@@ -69,48 +68,9 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 110vh;
+    height: 100vh;
+    padding-top: 100px;
     background: var(--gradient-light);
-}
-
-/* Fullscreen Loader */
-#loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--color-bg-dark);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 5000;
-    transition: transform 0.8s ease, visibility 0.8s ease;
-}
-
-/* Loader Content (logo + text) */
-#loader .loader-content {
-    text-align: center;
-    color: var(--color-text);
-}
-
-#loader img {
-    width: 500px;
-    height: 500px;
-    margin-bottom: 20px;
-}
-
-#loader p {
-    font-size: 1.2rem;
-    letter-spacing: 1px;
-    animation: fadeText 2s infinite alternate;
-}
-
-/* Hidden state */
-#loader.hidden {
-    transform: translateY(-100%);
-    /* slide away */
-    visibility: hidden;
 }
 
 #scrollProgress {
@@ -127,10 +87,17 @@ body {
 }
 
 header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    width: 100%;
     z-index: 1000;
 }
+
+header.scrolled .navbar {
+    box-shadow: 0 6px 30px rgba(0,0,0,0.25);
+}
+
 
 /*-- Navbar --*/
 .navbar {
@@ -219,6 +186,17 @@ header {
 .navbar .nav-item ul li:hover::after {
     width: 100%;
 }
+
+/* -- Active Nav Link -- */
+.navbar .nav-item ul li.active a {
+    color: var(--color-secondary);
+    font-weight: 600;
+}
+
+.navbar .nav-item ul li.active::after {
+    width: 100%;
+}
+
 
 /*-- Hero  Section --*/
 .hero {
@@ -912,23 +890,23 @@ header {
 }
 
 .testimonial-slide::before {
-  content: "❝";
-  font-size: 3rem;
-  color: var(--color-secondary);
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  opacity: 0.2;
+    content: "❝";
+    font-size: 3rem;
+    color: var(--color-secondary);
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    opacity: 0.2;
 }
 
 .testimonial-slide::after {
-  content: "❞";
-  font-size: 3rem;
-  color: var(--color-secondary);
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  opacity: 0.2;
+    content: "❞";
+    font-size: 3rem;
+    color: var(--color-secondary);
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    opacity: 0.2;
 }
 
 /* Active (center) */
@@ -962,46 +940,50 @@ header {
 
 /* Arrows */
 .slider-controls button {
-  background: var(--color-bg-light);
-  border: none;
-  padding: 12px 15px;        /* only arrows get padding */
-  border-radius: 50%;
-  cursor: pointer;
-  transition: background 0.3s ease;
+    background: var(--color-bg-light);
+    border: none;
+    padding: 12px 15px;
+    /* only arrows get padding */
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 .slider-controls button:hover {
-  background: var(--buttons);
+    background: var(--buttons);
 }
 
 /* Dots */
 .slider-dots {
-  display: flex;
-  gap: 3px; /* increase gap between dots (default was 8px) */
-  justify-content: center;
+    display: flex;
+    gap: 3px;
+    /* increase gap between dots (default was 8px) */
+    justify-content: center;
 }
 
 .slider-dots button {
-  padding: 0;            /* reset padding so no oval */
-  width: 8px;
-  margin: 5px;
-  height: 8px;
-  border-radius: 50%;    /* perfect circle */
-  border: none;
-  background: var(--buttons);
-  cursor: pointer;
-  transition: transform 0.25s ease, background 0.25s ease;
+    padding: 0;
+    /* reset padding so no oval */
+    width: 8px;
+    margin: 5px;
+    height: 8px;
+    border-radius: 50%;
+    /* perfect circle */
+    border: none;
+    background: var(--buttons);
+    cursor: pointer;
+    transition: transform 0.25s ease, background 0.25s ease;
 }
 
 .slider-dots button:hover {
-  transform: scale(1.3);
-  background: var(--color-secondary);
+    transform: scale(1.3);
+    background: var(--color-secondary);
 }
 
 .slider-dots button.active {
-  width: 10px;
-  height: 10px;
-  background: var(--color-secondary);
+    width: 10px;
+    height: 10px;
+    background: var(--color-secondary);
 }
 
 

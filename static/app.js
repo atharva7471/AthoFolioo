@@ -1,6 +1,3 @@
-let autoId = null;
-const AUTO_DELAY = 5000; // 5 seconds
-
 // ===== Root Colors =====
 (function () {
   const saved = localStorage.getItem("theme");
@@ -23,6 +20,11 @@ var typed = new Typed(".text", {
   loop: true,
 });
 
+window.addEventListener("scroll", () => {
+  document.querySelector("header")
+    .classList.toggle("scrolled", window.scrollY > 10);
+});
+
 // ===== Navbar Toggle =====
 const menuToggle = document.getElementById("menuToggle");
 const navMenu = document.querySelector(".nav-item ul");
@@ -32,12 +34,6 @@ menuToggle.addEventListener("click", () => {
   navMenu.classList.toggle("active");
   toggleIcon.classList.toggle("bi-list");
   toggleIcon.classList.toggle("bi-x");
-});
-
-// ===== Window Loader =====
-window.addEventListener("DOMContentLoaded", () => {
-  const loader = document.getElementById("loader");
-  setTimeout(() => loader.classList.add("hidden"), 2000);
 });
 
 // ===== Scroll Progress =====
@@ -83,7 +79,7 @@ window.addEventListener("scroll", () => {
 })();
 
 // ===== AOS Animation =====
-AOS.init({ duration: 1100, once: true });
+AOS.init({ duration: 1200, once: false });
 
 // ===== Back to Top Button =====
 const backBtn = document.getElementById("backToTop");
@@ -242,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
     startAuto();
   }
 
-  async function loadComments() {
+  window.loadComments = async function () {
     try {
       const res = await fetch("/comments");
       const data = await res.json();
@@ -323,3 +319,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+// ===== Accurate Active Navbar Link on Scroll =====
+const sections = document.querySelectorAll("section[id]");
+const navLinks = document.querySelectorAll(".nav-item ul li");
+
+function setActiveNav() {
+  const scrollPos = window.scrollY + window.innerHeight / 2;
+
+  sections.forEach(section => {
+    const top = section.offsetTop;
+    const height = section.offsetHeight;
+    const id = section.getAttribute("id");
+
+    if (scrollPos >= top && scrollPos < top + height) {
+      navLinks.forEach(li => {
+        li.classList.remove("active");
+        const link = li.querySelector("a");
+        if (link && link.getAttribute("href") === `#${id}`) {
+          li.classList.add("active");
+        }
+      });
+    }
+  });
+}
+
+window.addEventListener("scroll", setActiveNav);
+window.addEventListener("load", setActiveNav);
