@@ -21,7 +21,8 @@ var typed = new Typed(".text", {
 });
 
 window.addEventListener("scroll", () => {
-  document.querySelector("header")
+  document
+    .querySelector("header")
     .classList.toggle("scrolled", window.scrollY > 10);
 });
 
@@ -246,7 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } catch (err) {
       console.error("Failed to load comments", err);
     }
-  }
+  };
 
   prevBtn.addEventListener("click", () => {
     if (slides.length <= 1) return;
@@ -270,7 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   loadComments();
 });
-
 
 // ================== Comment Form ==================
 document.addEventListener("DOMContentLoaded", () => {
@@ -327,13 +327,13 @@ const navLinks = document.querySelectorAll(".nav-item ul li");
 function setActiveNav() {
   const scrollPos = window.scrollY + window.innerHeight / 2;
 
-  sections.forEach(section => {
+  sections.forEach((section) => {
     const top = section.offsetTop;
     const height = section.offsetHeight;
     const id = section.getAttribute("id");
 
     if (scrollPos >= top && scrollPos < top + height) {
-      navLinks.forEach(li => {
+      navLinks.forEach((li) => {
         li.classList.remove("active");
         const link = li.querySelector("a");
         if (link && link.getAttribute("href") === `#${id}`) {
