@@ -296,10 +296,11 @@ header.scrolled .navbar {
     margin: 0 auto;
     z-index: 1;
     transition: transform 0.3s ease, 0.3s ease;
+    transform: scale(1.5);
 }
 
 .hero .hero-head .image-wrapper .animation-wrapper:hover {
-    transform: scale(1.05);
+    transform: scale(1.6);
 }
 
 .hero .hero-tail {
@@ -569,7 +570,7 @@ header.scrolled .navbar {
 .cert-modal {
     display: none;
     /* hidden by default */
-    position: fixed;
+    /* position: fixed; */
     z-index: 9999;
     padding-top: 60px;
     left: 0;
