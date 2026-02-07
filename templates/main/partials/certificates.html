@@ -1,0 +1,21 @@
+<!-- Your certificates section -->
+<section class="certificates" id="certificates" data-aos="fade"
+    data-aos-duration="1500">
+    <h1 class="section-title">Achievements & Certificates</h1>
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            {% for cert in certificates %}
+            <div class="swiper-slide cert-card">
+                <img src="{{ cert.image_url }}" alt="{{ cert.title }}">
+                <div class="text">
+                    <p>{{ cert.title }}</p>
+                    <p>{{ cert.issuer }}</p>
+                </div>
+                <a href="{{ cert.image_url }}">See Certificate</a>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- Pagination dots -->
+        <div class="swiper-pagination"></div>
+    </div>
+</section>

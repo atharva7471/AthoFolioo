@@ -1,193 +1,159 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+:root {
+    /* Your specified variables */
+    --color-primary: #38bdf8;
+    --color-secondary: #facc15;
+    --gradient-dark: linear-gradient(125deg, #0d1930, #19233d);
+    --gradient-light: linear-gradient(120deg, #023047, #0d1930);
 
-/* ================================
-   GLOBAL THEME STYLES
-==================================*/
+    /* Helper variables for the dark theme */
+    --text-main: #f1f5f9;
+    --text-muted: #94a3b8;
+    --bg-input: rgba(255, 255, 255, 0.05);
+    --border-input: rgba(255, 255, 255, 0.1);
+    --glass-bg: rgba(13, 25, 48, 0.6);
+    --glass-border: rgba(56, 189, 248, 0.1);
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
-:root[data-theme="dark"] {
-    --color-primary: #38bdf8;
-    --color-secondary: #facc15;
-    --color-bg-dark: #0d1930d9;
-    --color-bg-light: #023047;
-    --gradient-dark: linear-gradient(125deg, #0d1930, #19233d);
-    --gradient-light: linear-gradient(120deg, #023047, #0d1930);
-    --color-text: #e5e7eb;
-    --color-text-muted: #9ca1a6;
-    --buttons: #38bff8c5;
-    --border: 1px solid black;
-    --box-shadow: 0 8px 20px #0b1220;
-    --text-shadow: rgba(0, 255, 200, 0.3);
-    --color-success: #14c455;
-    --color-danger: #ba1717;
-    color-scheme: dark;
-}
-
-:root[data-theme="light"] {
-    --color-primary: #38bdf8;
-    --color-secondary: #facc15;
-    --color-bg-dark: #ffeee1;
-    --color-bg-light: #fff7f0;
-    --gradient-dark: #ffeee1;
-    --gradient-light: #fff7f0;
-    --color-text: #071431;
-    --color-text-muted: #0d1e33;
-    --border: 1px solid #d1d5db;
-    --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    --text-shadow: rgba(14, 165, 233, 0.2);
-    --buttons: #38bff8c5;
-    --color-success: #16a34a;
-    --color-danger: #ba1717;
-    color-scheme: light;
-}
-
-/* ================================
-   BODY STYLES
-==================================*/
 body {
-    background: var(--gradient-light);
-    color: var(--color-text);
+    background: var(--gradient-dark);
+    min-height: 100vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 100dvh; /* Uses Dynamic Viewport Height for mobile browsers */
-    transition: background 0.4s ease, color 0.4s ease;
-    padding: 1.5rem;
+    justify-content: center;
+    color: var(--text-main);
+    /* Optional: animated background size if you want movement */
+    background-size: 200% 200%;
 }
 
-/* ================================
-   LOGIN CONTAINER
-==================================*/
 .login-container {
-    position: relative;
-    background: var(--color-bg-dark);
-    border-radius: 20px;
-    box-shadow: var(--box-shadow);
-    padding: 3rem;
-    width: 100%;
-    max-width: 500px; /* Refined width for better proportions */
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    /* Glass blur effect */
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    width: 30rem;
+    padding: 2.5rem;
+    border-radius: 16px;
     text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    transition: transform 0.3s ease;
 }
 
 .login-container:hover {
-    transform: translateY(-5px);
+    box-shadow: 0 10px 40px 0 rgba(56, 189, 248, 0.15);
+    /* Primary glow on hover */
 }
 
-.login-container h2 {
-    margin-bottom: 2rem;
-    color: var(--color-primary);
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-/* ================================
-   HOME ICON
-==================================*/
+/* --- Home Icon --- */
 .home-icon {
     position: absolute;
-    top: 1.2rem;
-    left: 1.2rem;
-    font-size: 1.5rem;
-    color: var(--color-primary);
+    top: 20px;
+    left: 20px;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    transition: color 0.3s, transform 0.3s;
     text-decoration: none;
-    transition: 0.2s ease;
-    z-index: 10;
 }
 
 .home-icon:hover {
-    color: var(--color-secondary);
-    transform: scale(1.15);
+    color: var(--color-primary);
+    transform: scale(1.1);
 }
 
-/* ================================
-   FORM & INPUTS
-==================================*/
+/* --- Typography --- */
+h2 {
+    color: var(--color-primary);
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+h2 span {
+    /* Using secondary color as requested */
+    color: var(--color-secondary);
+}
+
+/* --- Form Elements --- */
 form {
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.2rem;
 }
 
-input[type="text"],
-input[type="password"] {
-    width: 100%;
-    padding: 1rem 1.2rem;
-    border: 1px solid transparent;
-    border-radius: 12px;
+input {
+    background: var(--bg-input);
+    border: 1px solid var(--border-input);
+    padding: 14px 16px;
+    border-radius: 8px;
+    color: var(--text-main);
     font-size: 1rem;
-    background: var(--color-bg-light);
-    color: var(--color-text);
-    transition: 0.25s ease;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input::placeholder {
+    color: var(--text-muted);
 }
 
 input:focus {
-    outline: none;
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.15);
+    background: rgba(56, 189, 248, 0.05);
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
 }
 
-button[type="submit"] {
-    background: var(--buttons);
-    border: none;
-    border-radius: 12px;
-    padding: 1rem;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #fff;
-    cursor: pointer;
-    margin-top: 0.5rem;
-    transition: 0.3s ease;
-}
-
-button[type="submit"]:hover {
+button {
     background: var(--color-primary);
+    color: #0d1930;
+    /* Dark text for contrast against bright button */
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+button:hover {
+    background: var(--color-secondary);
+    color: #000;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+    box-shadow: 0 5px 15px rgba(250, 204, 21, 0.3);
 }
 
-/* ================================
-   RESPONSIVENESS
-==================================*/
-@media (max-width: 640px) {
-    body {
-        padding: 1rem;
-        align-items: flex-start; /* Prevents keyboard from hiding form */
-        padding-top: 15dvh;
-    }
-
-    .login-container {
-        padding: 2.5rem 1.5rem;
-        border-radius: 16px;
-    }
-
-    .login-container h2 {
-        font-size: 1.6rem;
-    }
-
-    /* Larger touch targets for mobile */
-    input[type="text"],
-    input[type="password"],
-    button[type="submit"] {
-        padding: 1.1rem;
-        font-size: 16px; /* Prevents iOS auto-zoom on focus */
-    }
+.flash-messages {
+    margin-bottom: 1.5rem;
 }
 
-@media (max-width: 480px) {
-    .login-container {
-        max-width: 100%;
-        background: transparent; /* Cleaner flat look for small screens */
-        box-shadow: none;
-    }
-    
-    .home-icon {
-        top: 0.5rem;
-        left: 0.5rem;
-    }
+.flash {
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    border-left: 4px solid transparent;
+}
+
+.flash.error,
+.flash.danger {
+    background: rgba(220, 38, 38, 0.2);
+    color: #fca5a5;
+    border-left-color: #ef4444;
+}
+
+.flash.success {
+    background: rgba(22, 163, 74, 0.2);
+    color: #86efac;
+    border-left-color: #22c55e;
 }

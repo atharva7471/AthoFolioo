@@ -68,7 +68,7 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 100vh;
+    height: 110vh;
     padding-top: 100px;
     background: var(--gradient-light);
 }
@@ -520,163 +520,65 @@ header.scrolled .navbar {
 .certificates {
     background: var(--gradient-dark);
     padding: 40px 0;
-    position: relative;
+    /* position: relative; */
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    padding: 40px 0 70px;
 }
 
 /* Swiper Container */
 .swiper {
     width: 100%;
-    max-width: 1000px;
+    max-width: 9000px;
+    height: fit-content;
     border-radius: 10px;
     padding: 40px 40px 60px;
-}
-
-.swiper:hover {
-    box-shadow: 0 0 15px var(--box-shadow);
 }
 
 /* Each Slide (Card) */
 .cert-card {
     background: var(--color-bg-dark);
     border-radius: 12px;
-    padding: 15px;
     text-align: center;
-    padding: 15px 15px 25px;
+    padding: 25px 25px 60px;
+}
+
+.cert-card:hover {
+    transform: translateY(-7px);
 }
 
 /* Certificate Image */
 .cert-card img {
     width: 100%;
-    height: 250px;
+    height: 300px;
     object-fit: contain;
     border-radius: 8px;
-    margin-bottom: 10px;
 }
 
 /* Certificate Text */
-.cert-card p {
-    color: #a29393;
+.cert-card .text {
+    color: var(--color-text-muted);
     font-size: 0.95rem;
-    margin: 6px 0;
+    margin-bottom: 10px;   
 }
 
-/* Modal background */
-.cert-modal {
-    display: none;
-    /* hidden by default */
-    /* position: fixed; */
-    z-index: 9999;
-    padding-top: 60px;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background: rgba(0, 0, 0, 0.8);
-}
-
-/* See Certificate Button - always visible */
-.see-cert-btn {
-    display: inline-block;
-    padding: 8px 14px;
-    margin-bottom: 10px;
-    background: var(--color-primary);
-    color: #e0feff;
-    font-size: 0.9rem;
-    border-radius: 6px;
+.cert-card a {
+    color: var(--color-text);
     text-decoration: none;
-    margin-top: 10px;
-    opacity: 1;
-    /* always visible */
-    transform: none;
-    /* no hover animation */
-    transition: background 0.3s ease;
+    font-size: 0.95rem;
+    padding: 10px;
+    background-color: var(--buttons);
+    border-radius: 5px;
 }
 
-.see-cert-btn:hover {
-    background: var(--color-primary-hover, var(--buttons));
+.cert-card a:hover {
+    background-color: var(--color-secondary);
 }
 
-/* ===== Certificate Modal Styles ===== */
-.cert-modal {
-    display: none;
-    z-index: 1000;
-    align-items: center;
-    left: 70px;
-    top: 25px;
-    width: 90%;
-    height: 90%;
-    box-shadow: 0 0 25px var(--box-shadow);
-    background: var(--gradient-dark);
-}
-
-
-.cert-modal-content {
-    display: block;
-    margin: auto;
-    max-width: 70%;
-    /* smaller window */
-    max-height: 60vh;
-    /* keep inside viewport */
-    /* border: 3px solid #444; */
-    border-radius: 12px;
-    box-shadow: 0 0 25px var(--box-shadow);
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-.cert-modal-caption {
-    text-align: center;
-    color: #e0feff;
-    /* light text on dark */
-    margin-top: 12px;
-    font-size: 1rem;
-    font-weight: 500;
-}
-
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 25px;
-    font-size: 35px;
-    font-weight: bold;
-    color: var(--color-secondary);
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-.close-btn:hover {
-    color: var(--color-primary);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Swiper Navigation Arrows */
-.swiper-button-next,
-.swiper-button-prev {
-    color: var(--color-primary);
-    transition: transform 0.3s ease;
-}
-
-.swiper-button-next:hover,
-.swiper-button-prev:hover {
-    transform: scale(1.15);
+.swiper-wrapper {
+    transition-timing-function: linear !important;
 }
 
 /* Swiper Pagination Dots */
@@ -1230,53 +1132,11 @@ header.scrolled .navbar {
         flex-wrap: wrap;
         justify-content: center;
         gap: 12px;
-    }
+    }  
 
-    /* Certificates */
-    .certificates {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .certificates .cert-slider {
-        padding: 20px;
-        gap: 10px;
-    }
-
-    .cert-card img {
-        height: 200px;
-    }
-
-    .cert-card p {
-        font-size: 0.85rem;
-    }
-
-    .see-cert-btn {
-        font-size: 0.8rem;
-        padding: 6px 12px;
-    }
-
-    /* Cert Modal */
-    .cert-modal {
-        width: 95%;
-        height: 70%;
-        left: 10px;
-    }
-
-    .cert-modal-content {
-        max-width: 95%;
-        max-height: 70vh;
-    }
-
-    .cert-modal-caption {
-        font-size: 0.9rem;
-        padding: 0 8px;
-        color: var(--color-text-muted);
-    }
-
-    .close-btn {
-        font-size: 28px;
-        right: 15px;
+    .swiper-slide {
+        width: 90% !important;
+        padding: 10px;
     }
 
     /* Projects & Arsenal */

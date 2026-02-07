@@ -38,20 +38,37 @@ This website showcases my **projects, skills, resume, achievements, and contact 
 
 ## 📂 Project Structure
 ```
-portfolio/
-│── app.py                          # Flask backend
-│── templates/
-│     ├── index.html                # Home page
-│     ├── projects.html             # Projects section
-│     └── contact.html              # Contact section
-│── static/
-│     ├── css/style.css             # Styling
-│     ├── js/script.js              # Interactive scripts
-│     └── assets/                   # Images, icons, resume
-│── requirements.txt                # Dependencies
-│── README.md                       # Documentation
+├── 📁 static
+│   ├── 📁 assets
+│   │   ├── 📁 images
+│   │   │   ├── 📁 profile
+│   │   │   └── 📁 skills
+│   │   └── 📕 resume.pdf
+│   ├── 📁 css
+│   │   ├── 🎨 admin_forms.css
+│   │   ├── 🎨 base.css
+│   │   ├── 🎨 comments.css
+│   │   ├── 🎨 dashboard.css
+│   │   ├── 🎨 login.css
+│   │   └── 🎨 styles.css
+│   └── 📁 js
+│       ├── 📄 admin.js
+│       └── 📄 app.js
+├── 📁 templates
+│   ├── 📁 admin
+│   │   ├── 🌐 add_cert.html
+│   │   ├── 🌐 add_project.html
+│   │   ├── 🌐 base.html
+│   │   ├── 🌐 comments.html
+│   │   ├── 🌐 dashboard.html
+│   │   └── 🌐 edit_project.html
+│   ├── 🌐 index.html
+│   └── 🌐 login.html
+├── ⚙️ .gitignore
+├── 📝 README.md
+├── 🐍 app.py
+└── 📄 requirements.txt
 ```
-
 ---
 
 ## 🔧 Setup & Run Locally
@@ -98,3 +115,6 @@ Your portfolio will run at:
 🔗 LinkedIn: https://linkedin.com/in/atharva-bhosale-7471abc  
 🐙 GitHub: https://github.com/atharva7471  
 🌐 Portfolio: https://athoofolio.vercel.app/  
+
+
+Created different folders file for each ib main just backend connections are remaining

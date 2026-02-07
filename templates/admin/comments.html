@@ -1,0 +1,55 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Comments{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/admin/comments.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="admin-card">
+  <h3>Manage Comments</h3>
+  <div class="search-bar">
+    <form method="get" action="{{ url_for('admin_comments') }}">
+      <input type="text" name="q" placeholder="Search comments..."
+        value="{{ search_query }}">
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  <div class="total-count">Total Comments: {{ comments|length }}</div>
+  {% if comments %}
+  <div class="comment-list">
+    {% for comment in comments %}
+    <div class="comment-card">
+      <div class="comment-info">
+        <h3>{{ comment.name }} <span
+            style="font-weight:400; color:#666;">({{ comment.email
+            }})</span></h3>
+        <p>{{ comment.message }}</p>
+        <p style="font-size:0.8rem; color:#999;">{{
+          comment.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+        <p>Status: {% if comment.approved %}<span
+            style="color:green;">Approved</span>{% else %}<span
+            style="color:red;">Hidden</span>{% endif %}</p>
+      </div>
+      <div class="action-btns">
+        <form
+          action="{{ url_for('toggle_approval', comment_id=comment._id) }}"
+          method="POST">
+          <button class="approve-btn">{% if comment.approved %}Hide{% else
+            %}Approve{% endif %}</button>
+        </form>
+        <form method="POST"
+          action="{{ url_for('delete_comment', comment_id=comment._id) }}"
+          onsubmit="return confirm('Delete this comment?');">
+          <button class="delete-btn">Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No comments yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

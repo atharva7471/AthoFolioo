@@ -1,0 +1,48 @@
+.admin-section {
+    padding: 40px 8%;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.admin-card {
+    background: var(--gradient-light);
+    padding: 30px;
+    border-radius: 14px;
+}
+
+.admin-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: var(--gradient-dark);
+    color: var(--color-text-muted);
+}
+
+.primary-btn,.back-btn {
+    text-decoration: none;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 25px;
+    background: var(--color-primary);
+    color: #000;
+    cursor: pointer;
+}

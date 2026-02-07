@@ -65,7 +65,7 @@ window.addEventListener("scroll", () => {
         : '<i class="bi bi-moon-stars"></i>';
     btn.setAttribute(
       "aria-label",
-      theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+      theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
     );
     btn.title = btn.getAttribute("aria-label");
   }
@@ -80,7 +80,7 @@ window.addEventListener("scroll", () => {
 })();
 
 // ===== AOS Animation =====
-AOS.init({ duration: 1200, once: false });
+AOS.init({ duration: 5000, once: false });
 
 // ===== Back to Top Button =====
 const backBtn = document.getElementById("backToTop");
@@ -92,38 +92,26 @@ window.onscroll = function () {
 };
 backBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-// ===== Swiper Slider =====
 var swiper = new Swiper(".mySwiper", {
-  slidesPerView: 1,
-  spaceBetween: 20,
-  loop: true,
-  pagination: { el: ".swiper-pagination", clickable: true },
-  navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-  autoplay: { delay: 3000, disableOnInteraction: false },
-});
+    slidesPerView: 2,
+    spaceBetween: 30,
+    loop: true,
 
-// ===== Certificate Modal =====
-const modal = document.getElementById("certModal");
-const modalImg = document.getElementById("certModalImg");
-const captionText = document.getElementById("certModalCaption");
-const closeBtn = document.querySelector(".close-btn");
+    speed: 7000,
 
-document.querySelectorAll(".see-cert-btn").forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    modal.style.display = "block";
-    modalImg.src = btn.parentElement.querySelector("img").src;
-    const certName =
-      btn.parentElement.querySelectorAll("p")[0]?.innerText || "";
-    const certPlatform =
-      btn.parentElement.querySelectorAll("p")[1]?.innerText || "";
-    captionText.innerText = `${certName} — ${certPlatform}`;
-  });
+    autoplay: {
+        delay: 0,
+        disableOnInteraction: false
+    },
+
+    freeMode: false,
+    freeModeMomentum: false,
+
+    pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+    }
 });
-closeBtn.onclick = () => (modal.style.display = "none");
-modal.onclick = (e) => {
-  if (e.target === modal) modal.style.display = "none";
-};
 
 // ================== Comment Slider ==================
 document.addEventListener("DOMContentLoaded", () => {
@@ -135,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let slides = [];
   let currentIndex = 0;
   let autoId = null;
-  const AUTO_DELAY = 4000; // 4 seconds autoplay
+  const AUTO_DELAY = 3000; // 3 seconds autoplay
 
   function escapeHtml(text) {
     if (!text) return "";
@@ -148,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ">": "&gt;",
           '"': "&quot;",
           "'": "&#39;",
-        }[m])
+        })[m],
     );
   }
 
@@ -169,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update dots
     const dots = dotsContainer.querySelectorAll(".slider-dot");
     dots.forEach((dot, i) =>
-      dot.classList.toggle("active", i === currentIndex)
+      dot.classList.toggle("active", i === currentIndex),
     );
   }
 

@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+{% block title %} | Certificates{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='/css/admin/admin_forms.css') }}">
+{% endblock %}
+
+{% block content %}
+<section id="add-certificate" class="admin-form-section">
+    <h2>Add New Certificate</h2>
+    <form
+        action="/admin/add-certificate"
+        method="POST"
+        enctype="multipart/form-data"
+        class="admin-form">
+        <input
+            type="text"
+            name="title"
+            placeholder="Certificate Title"
+            required>
+        <input
+            type="text"
+            name="issuer"
+            placeholder="Issued By"
+            required>
+        <input
+            type="file"
+            name="image"
+            accept="image/*"
+            required>
+        <button type="submit">Add Certificate</button>
+    </form>
+</section>
+<section class="admin-list-section">
+    <h2>Certificates</h2>
+    {% for cert in certificates %}
+    <div class="admin-list-item">
+        <strong>{{ cert.title }}</strong>
+        <div class="admin-actions">
+            <form method="POST"
+                action="{{ url_for('delete_certificate', cert_id=cert._id) }}"
+                onsubmit="return confirm('Delete this certificate?');">
+                <input type="hidden">
+                <button class="danger-btn">Delete</button>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <p>No certificates found.</p>
+    {% endfor %}
+</section>
+{% endblock %}
