@@ -545,6 +545,7 @@ header.scrolled .navbar {
 }
 
 .cert-card:hover {
+    box-shadow: 0 0 20px var(--box-shadow);
     transform: translateY(-7px);
 }
 

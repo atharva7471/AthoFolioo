@@ -17,10 +17,7 @@ import os
 # -------------------------
 # Configuration
 # -------------------------
-app = Flask(
-    __name__
-    
-)
+app = Flask(__name__)
 load_dotenv()
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.jinja_env.globals["datetime"] = datetime
