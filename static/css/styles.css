@@ -539,7 +539,6 @@ header.scrolled .navbar {
 
 /* Each Slide (Card) */
 .cert-card {
-    background: var(--color-bg-dark);
     border-radius: 12px;
     text-align: center;
     padding: 25px 25px 60px;

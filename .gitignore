@@ -76,3 +76,5 @@ static/uploads/
 *.bak
 *.swp
 *.tmp
+.vercel
+.env*.local
