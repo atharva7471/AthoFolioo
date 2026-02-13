@@ -354,7 +354,7 @@ header.scrolled .navbar {
 }
 
 .social-links a {
-    font-size: 30px;
+    font-size: 25px;
     color: var(--color-text);
     transition: 0.3s;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -718,24 +718,6 @@ header.scrolled .navbar {
 
 .contact .contact-form .btn-primary:hover {
     background: #cca91e;
-}
-
-.contact .social-links {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.contact .social-links a {
-    font-size: 2rem;
-    color: var(--color-text-muted);
-    transition: color 0.3s ease;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.contact .social-links a:hover {
-    transform: translateY(-5px);
-    color: var(--color-secondary);
 }
 
 /* ===== Comments Section Styles ===== */
