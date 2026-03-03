@@ -42,9 +42,14 @@
       {% include "main/partials/footer.html" %}
     </footer>
 
-    <button id="backToTop" title="Go to top">
-      <i class="bi bi-arrow-up"></i>
+    <button id="backToTop" title="Back to top" aria-label="Back to top">
+      <svg class="btt-ring" viewBox="0 0 44 44">
+        <circle class="btt-track" cx="22" cy="22" r="19"/>
+        <circle class="btt-progress" cx="22" cy="22" r="19" id="bttCircle"/>
+      </svg>
+      <i class="bi bi-chevron-up"></i>
     </button>
+
     <!-- AOS JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>

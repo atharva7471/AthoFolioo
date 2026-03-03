@@ -1,181 +1,251 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-* {
+/* ─── Tokens ─────────────────────────────────────── */
+:root {
+  --primary: #38bdf8;
+  --secondary: #f59e0b;
+  --success: #4ade80;
+  --danger: #f87171;
+  --warning: #fbbf24;
+
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --surface2: #263348;
+  --border: rgba(99, 155, 230, 0.12);
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --shadow: rgba(0, 0, 0, 0.35);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #eff6ff;
+  --surface: #ffffff;
+  --surface2: #f1f5f9;
+  --border: rgba(99, 155, 230, 0.2);
+  --text: #0f172a;
+  --muted: #475569;
+  --shadow: rgba(99, 155, 230, 0.1);
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-:root[data-theme="dark"] {
-  --color-primary: #38bdf8;
-  --color-secondary: #facc15;
-
-  --color-bg-dark: #0d1930d9;
-  --color-bg-light: #023047;
-
-  --gradient-dark: linear-gradient(125deg, #0d1930, #19233d);
-  --gradient-light: linear-gradient(120deg, #023047, #0d1930);
-
-  --color-text: #e5e7eb;
-  --color-text-muted: #9ca1a6;
-  --buttons: #38bff8c5;
-
-  --border: 1px solid black;
-  --box-shadow: #0b1220;
-  --text-shadow: rgba(0, 255, 200, 0.3);
-  --color-success: #4ade80;
-  color-scheme: dark;
-}
-
-:root[data-theme="light"] {
-  --color-primary: #38bdf8;
-  --color-secondary: #facc15;
-
-  --color-bg-dark: #ffeee1;
-  --color-bg-light: #fff7f0;
-
-  --gradient-dark: #ffeee1;
-  --gradient-light: #fff7f0;
-
-  --color-text: #071431;
-  --color-text-muted: #0d1e33;
-
-  --border: 1px solid #d1d5db;
-  --box-shadow: rgba(0, 0, 0, 0.08);
-  --text-shadow: rgba(14, 165, 233, 0.2);
-  --buttons: #38bff8c5;
-
-  --color-success: #16a34a;
-  color-scheme: light;
-}
-
 body {
+  font-family: 'Inter', sans-serif;
   min-height: 100vh;
-  background: var(--gradient-dark);
-  color: var(--color-text);
+  background: var(--bg);
+  color: var(--text);
   display: flex;
   flex-direction: column;
   line-height: 1.6;
+  font-size: 15px;
 }
 
+/* ─── Header / Nav ───────────────────────────────── */
 header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 2rem;
-  background: var(--gradient-light);
-  box-shadow: 0 4px 12px var(--box-shadow);
+  padding: 0.85rem 2rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 16px var(--shadow);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 200;
 }
 
 .logo {
   text-decoration: none;
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  color: var(--color-primary);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text);
 }
 
-header a span {
-  font-weight: 700;
-  color: var(--color-secondary);
+.logo span {
+  color: var(--primary);
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .link a {
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--muted);
+  font-size: 0.88rem;
   font-weight: 500;
-  padding: 0.4rem 0.8rem;
-  border-radius: 6px;
-  transition: background 0.2s ease, color 0.2s ease;
+  padding: 0.38rem 0.85rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
 
 .link a:hover {
-  background-color: var(--buttons);
+  color: var(--primary);
+  border-color: var(--border);
+  background: rgba(56, 189, 248, 0.06);
 }
 
+/* ─── Flash messages ─────────────────────────────── */
 .flash {
   position: relative;
-  margin: 1rem auto;
-  width: min(90%, 900px);
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0.8rem auto 0;
+  width: min(94%, 960px);
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
   font-weight: 500;
-  text-align: center;
 }
 
 .flash-close {
   position: absolute;
-  top: 6px;
   right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
-  font-size: 1.1rem;
-  opacity: 0.7;
+  font-size: 0.9rem;
+  opacity: 0.55;
+  background: none;
+  border: none;
+  color: inherit;
 }
 
 .flash.success {
-  background: rgba(74, 222, 128, 0.15);
-  color: var(--color-success);
-  border: 1px solid var(--color-success);
+  background: rgba(74, 222, 128, 0.1);
+  color: var(--success);
+  border: 1px solid rgba(74, 222, 128, 0.25);
 }
 
-.flash.error {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border: 1px solid #ef4444;
+.flash.danger {
+  background: rgba(248, 113, 113, 0.1);
+  color: var(--danger);
+  border: 1px solid rgba(248, 113, 113, 0.25);
 }
 
 .flash.warning {
-  background: rgba(250, 204, 21, 0.15);
-  color: var(--color-secondary);
-  border: 1px solid var(--color-secondary);
+  background: rgba(251, 191, 36, 0.1);
+  color: var(--warning);
+  border: 1px solid rgba(251, 191, 36, 0.25);
 }
 
+.flash.info {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--primary);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+/* ─── Content area ───────────────────────────────── */
 #content {
   flex: 1;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 2rem auto;
   padding: 0 1.5rem;
 }
 
-footer {
-  text-align: center;
-  padding: 0.8rem;
-  font-size: 0.85rem;
-  color: var(--color-text-muted);
-  border-top: var(--border);
-  background: var(--gradient-light);
-}
-
+/* ─── Card primitive ─────────────────────────────── */
 .card {
-  background: var(--gradient-light);
-  border: var(--border);
-  border-radius: 14px;
-  padding: 1.5rem;
-  box-shadow: 0 10px 30px var(--box-shadow);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.6rem;
+  box-shadow: 0 8px 28px var(--shadow);
 }
 
+/* ─── Buttons ────────────────────────────────────── */
 .btn {
-  display: inline-block;
-  padding: 0.55rem 1.2rem;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: rgba(56, 189, 248, 0.08);
+  color: var(--primary);
+  font-family: inherit;
+  font-size: 0.85rem;
   font-weight: 500;
-  background: var(--color-primary);
-  color: #000;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
 }
 
 .btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px var(--box-shadow);
+  background: rgba(56, 189, 248, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px var(--shadow);
+}
+
+.danger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  background: rgba(248, 113, 113, 0.08);
+  color: var(--danger);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.danger-btn:hover {
+  background: rgba(248, 113, 113, 0.18);
+  transform: translateY(-1px);
+}
+
+/* ─── Footer ─────────────────────────────────────── */
+footer {
+  text-align: center;
+  padding: 0.7rem 1rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+
+/* ─── Responsive ─────────────────────────────────── */
+@media (max-width: 640px) {
+  header {
+    padding: 0.75rem 1rem;
+  }
+
+  #content {
+    padding: 0 1rem;
+    margin: 1.2rem auto;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .link a {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.82rem;
+  }
 }

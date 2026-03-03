@@ -7,6 +7,7 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
+import traceback
 import uuid
 import cloudinary
 import cloudinary.uploader
@@ -136,6 +137,7 @@ def add_cert_page():
 # Logics
 # -------------------------
 @app.route('/submit', methods=['POST'])
+@csrf.exempt
 def submit():
     name = request.form.get("name")
     email = request.form.get("email")
@@ -209,15 +211,16 @@ def add_project():
 
     if not title or not description or not tech_stack:
         flash("Please fill all required fields", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("add_project_page"))
 
     if not image or not allowed_file(image):
         flash("Invalid image file (PNG, JPG, WEBP only, max 5MB)", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("add_project_page"))
 
     try:
+        image.stream.seek(0)  # ensure stream is at start
         upload_result = cloudinary.uploader.upload(
-            image,
+            image.stream,
             folder="portfolio/projects",
             resource_type="image",
             public_id=uuid.uuid4().hex,
@@ -239,8 +242,9 @@ def add_project():
         flash("Project added successfully!", "success")
 
     except Exception as e:
+        traceback.print_exc()
         app.logger.error("Cloudinary upload failed (project): %s", e)
-        flash("Image upload failed. Try again.", "danger")
+        flash(f"Image upload failed: {e}", "danger")
 
     return redirect(url_for("admin_dashboard"))
 
@@ -254,15 +258,16 @@ def add_certificate():
 
     if not title or not issuer:
         flash("Title and issuer are required", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("add_cert_page"))
 
     if not image or not allowed_file(image):
         flash("Invalid image file (PNG, JPG, WEBP only, max 5MB)", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("add_cert_page"))
 
     try:
+        image.stream.seek(0)  # ensure stream is at start
         upload_result = cloudinary.uploader.upload(
-            image,
+            image.stream,
             folder="portfolio/certificates",
             resource_type="image",
             public_id=uuid.uuid4().hex,
@@ -283,8 +288,10 @@ def add_certificate():
         flash("Certificate added successfully!", "success")
 
     except Exception as e:
+        traceback.print_exc()
         app.logger.error("Cloudinary upload failed (certificate): %s", e)
-        flash("Certificate upload failed. Try again.", "danger")
+        flash(f"Certificate upload failed: {e}", "danger")
+
 
     return redirect(url_for("admin_dashboard"))
 

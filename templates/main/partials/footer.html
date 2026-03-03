@@ -1,16 +1,48 @@
-<div class="footer-container">
-    <p class="footer-logo">Atharva <span>Bhosale</span></p>
+<!-- ─── Footer ──────────────────────────────────── -->
+<div class="footer-inner">
 
-    <ul class="footer-links">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><a href="{{ url_for('admin_dashboard') }}">Admin</a></li>
-    </ul>
+  <!-- 3-column grid -->
+  <div class="footer-grid">
 
-    {% include "main/partials/social_links.html" %}
+    <!-- Col 1: Brand -->
+    <div class="footer-col footer-brand">
+      <p class="footer-logo">Atharva <span>Bhosale</span></p>
+      <p class="footer-tagline">Machine Learning Engineer<br>&amp; Full-Stack Developer</p>
+      <div class="footer-socials">
+        {% include "main/partials/social_links.html" %}
+      </div>
+    </div>
 
-    <p class="footer-copy">© 2025 Atharva Bhosale. All rights reserved.</p>
+    <!-- Col 2: Navigation -->
+    <div class="footer-col">
+      <h4 class="footer-col-title">Navigation</h4>
+      <nav class="footer-nav">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+
+    <!-- Col 3: Quick Connect -->
+    <div class="footer-col">
+      <h4 class="footer-col-title">Quick Connect</h4>
+      <p class="footer-tagline">Open to collaborations,<br>freelance &amp; opportunities.</p>
+      <a href="#contact" class="footer-cta">Get in touch →</a>
+    </div>
+
+  </div>
+
+  <!-- Divider -->
+  <div class="footer-divider"></div>
+
+  <!-- Bottom bar -->
+  <div class="footer-bottom">
+    <p class="footer-copy">© {{ datetime.utcnow().year }} Atharva Bhosale. All rights reserved.</p>
+    <a href="{{ url_for('admin_dashboard') }}" class="footer-admin-link">
+      <i class="bi bi-shield-lock"></i> Admin
+    </a>
+  </div>
+
 </div>

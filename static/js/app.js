@@ -45,17 +45,29 @@ window.addEventListener("scroll", () => {
 // ===== AOS Animation =====
 AOS.init({ duration: 800, once: false });
 
-// ===== Back to Top Button =====
-const backBtn = document.getElementById("backToTop");
+// ===== Back to Top Button + Progress Ring =====
+const backBtn   = document.getElementById("backToTop");
+const bttCircle = document.getElementById("bttCircle");
+const CIRCUMFERENCE = 119.4; // 2π × r=19
+
 window.addEventListener("scroll", () => {
-  backBtn.style.display =
-    document.body.scrollTop > 200 || document.documentElement.scrollTop > 200
-      ? "block"
-      : "none";
+  const scrollTop    = document.documentElement.scrollTop || document.body.scrollTop;
+  const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const pct = scrollHeight > 0 ? scrollTop / scrollHeight : 0;
+
+  scrollTop > 200
+    ? backBtn.classList.add("visible")
+    : backBtn.classList.remove("visible");
+
+  if (bttCircle) {
+    bttCircle.style.strokeDashoffset = CIRCUMFERENCE * (1 - pct);
+  }
 });
+
 backBtn.addEventListener("click", () =>
   window.scrollTo({ top: 0, behavior: "smooth" })
 );
+
 
 // ===== Hero Interactive Particle Constellation =====
 (function () {
