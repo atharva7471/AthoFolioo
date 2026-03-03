@@ -2,7 +2,7 @@
 {% block title %}Edit Project{% endblock %}
 {% block head %}
 <link rel="stylesheet"
-  href="{{ url_for('static', filename='/css/admin/edit_project.css') }}">
+  href="{{ url_for('static', filename='css/admin/edit_project.css') }}">
 {% endblock %}
 {% block content %}
 <section class="admin-section admin-edit-project">
@@ -10,13 +10,13 @@
   <!-- Header -->
   <div class="admin-header">
     <h2>Edit Project</h2>
-    <a href="/admin/add-project" class="back-btn">Back</a>
+    <a href="{{ url_for('add_project_page') }}" class="back-btn">Back</a>
   </div>
 
   <!-- Form Card -->
   <div class="admin-card">
-
     <form method="POST" class="admin-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
       <!-- Title -->
       <div class="form-group">
@@ -52,7 +52,6 @@
         <label>Github URL</label>
         <input
           name="github_url"
-          rows="5"
           value="{{ project.github_url }}"
           required>
       </div>
@@ -60,10 +59,10 @@
         <label>Live URL</label>
         <input
           name="live_url"
-          rows="5"
           value="{{ project.live_url }}"
           required>
       </div>
+
       <!-- Submit -->
       <div class="form-actions">
         <button type="submit" class="primary-btn">
@@ -73,4 +72,4 @@
     </form>
   </div>
 </section>
- {% endblock %}
+{% endblock %}

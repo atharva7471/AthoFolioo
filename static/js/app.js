@@ -1,11 +1,3 @@
-// ===== Root Colors =====
-(function () {
-  const saved = localStorage.getItem("theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const theme = saved || (prefersDark ? "dark" : "light");
-  document.documentElement.setAttribute("data-theme", theme);
-})();
-
 // ===== Typing Animation =====
 var typed = new Typed(".text", {
   strings: [
@@ -20,6 +12,7 @@ var typed = new Typed(".text", {
   loop: true,
 });
 
+// ===== Navbar Scroll Effect =====
 window.addEventListener("scroll", () => {
   document
     .querySelector("header")
@@ -49,72 +42,249 @@ window.addEventListener("scroll", () => {
   progressBar.style.width = scrolled + "%";
 });
 
-// ===== Theme Toggle Button =====
-(function () {
-  const root = document.documentElement;
-  const btn = document.getElementById("themeToggle");
-  if (!btn) return;
-
-  function currentTheme() {
-    return root.getAttribute("data-theme") || "dark";
-  }
-  function setIcon(theme) {
-    btn.innerHTML =
-      theme === "dark"
-        ? '<i class="bi bi-sun"></i>'
-        : '<i class="bi bi-moon-stars"></i>';
-    btn.setAttribute(
-      "aria-label",
-      theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
-    );
-    btn.title = btn.getAttribute("aria-label");
-  }
-
-  setIcon(currentTheme());
-  btn.addEventListener("click", () => {
-    const next = currentTheme() === "dark" ? "light" : "dark";
-    root.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
-    setIcon(next);
-  });
-})();
-
 // ===== AOS Animation =====
-AOS.init({ duration: 5000, once: false });
+AOS.init({ duration: 800, once: false });
 
 // ===== Back to Top Button =====
 const backBtn = document.getElementById("backToTop");
-window.onscroll = function () {
+window.addEventListener("scroll", () => {
   backBtn.style.display =
     document.body.scrollTop > 200 || document.documentElement.scrollTop > 200
       ? "block"
       : "none";
-};
-backBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+});
+backBtn.addEventListener("click", () =>
+  window.scrollTo({ top: 0, behavior: "smooth" })
+);
 
-var swiper = new Swiper(".mySwiper", {
-    slidesPerView: 2,
-    spaceBetween: 30,
-    loop: true,
+// ===== Hero Interactive Particle Constellation =====
+(function () {
+  const canvas    = document.getElementById("heroCanvas");
+  const spotlight = document.getElementById("heroSpotlight");
+  const heroEl    = document.querySelector(".hero");
+  const blobEl    = document.querySelector(".image-wrapper .blob");
+  if (!canvas || !heroEl) return;
 
-    speed: 7000,
+  const ctx = canvas.getContext("2d");
+  let W, H;
+  const PARTICLE_COUNT = 70;
+  const CONNECT_DIST   = 130;
+  const REPULSE_DIST   = 110;
+  let mouse = { x: null, y: null, active: false };
+  let particles = [];
+  let rafId;
 
-    autoplay: {
-        delay: 0,
-        disableOnInteraction: false
-    },
+  // ── Resize ────────────────────────────────────────
+  function resize() {
+    const r = heroEl.getBoundingClientRect();
+    W = canvas.width  = r.width;
+    H = canvas.height = r.height;
+  }
 
-    freeMode: false,
-    freeModeMomentum: false,
-
-    pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
+  // ── Particle ──────────────────────────────────────
+  class Particle {
+    constructor() { this.spawn(); }
+    spawn() {
+      this.x  = Math.random() * W;
+      this.y  = Math.random() * H;
+      this.vx = (Math.random() - 0.5) * 0.55;
+      this.vy = (Math.random() - 0.5) * 0.55;
+      this.r  = Math.random() * 1.8 + 0.8;
+      this.hue = Math.random() > 0.5 ? 200 : 270; // cyan or purple
     }
+    update() {
+      if (mouse.active) {
+        const dx   = this.x - mouse.x;
+        const dy   = this.y - mouse.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < REPULSE_DIST && dist > 0) {
+          const force = ((REPULSE_DIST - dist) / REPULSE_DIST) * 0.25;
+          this.vx += (dx / dist) * force;
+          this.vy += (dy / dist) * force;
+        }
+      }
+      this.vx *= 0.97;
+      this.vy *= 0.97;
+      this.x  += this.vx;
+      this.y  += this.vy;
+      if (this.x < 0)  this.x = W;
+      if (this.x > W)  this.x = 0;
+      if (this.y < 0)  this.y = H;
+      if (this.y > H)  this.y = 0;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue}, 90%, 70%, 0.75)`;
+      ctx.fill();
+    }
+  }
+
+  // ── Draw frame ───────────────────────────────────
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+
+    for (let i = 0; i < particles.length; i++) {
+      const p = particles[i];
+
+      // particle → particle lines
+      for (let j = i + 1; j < particles.length; j++) {
+        const q    = particles[j];
+        const dist = Math.hypot(p.x - q.x, p.y - q.y);
+        if (dist < CONNECT_DIST) {
+          const alpha = (1 - dist / CONNECT_DIST) * 0.35;
+          ctx.strokeStyle = `rgba(139,92,246,${alpha})`;
+          ctx.lineWidth   = 0.7;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(q.x, q.y);
+          ctx.stroke();
+        }
+      }
+
+      // particle → cursor lines (golden)
+      if (mouse.active) {
+        const dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+        if (dist < CONNECT_DIST * 1.6) {
+          const alpha = (1 - dist / (CONNECT_DIST * 1.6)) * 0.55;
+          ctx.strokeStyle = `rgba(250,204,21,${alpha})`;
+          ctx.lineWidth   = 0.9;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+
+      p.update();
+      p.draw();
+    }
+
+    // Cursor node
+    if (mouse.active) {
+      // inner dot
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(250,204,21,0.9)";
+      ctx.fill();
+      // outer ring
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 18, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(250,204,21,0.25)";
+      ctx.lineWidth   = 1.2;
+      ctx.stroke();
+    }
+
+    rafId = requestAnimationFrame(draw);
+  }
+
+  // ── Init ─────────────────────────────────────────
+  function init() {
+    resize();
+    particles = Array.from({ length: PARTICLE_COUNT }, () => new Particle());
+    cancelAnimationFrame(rafId);
+    draw();
+  }
+
+  window.addEventListener("resize", init);
+
+  // ── Mouse via WINDOW (no navbar interruption) ────────
+  window.addEventListener("mousemove", (e) => {
+    const rect = heroEl.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Check if truly within hero bounds
+    const inside = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
+
+    if (inside) {
+      mouse.x = x;
+      mouse.y = y;
+      mouse.active = true;
+
+      if (spotlight) {
+        spotlight.style.left = x + "px";
+        spotlight.style.top  = y + "px";
+        spotlight.classList.add("active");
+      }
+      if (blobEl) {
+        const dx = ((x - W / 2) / W) * 30;
+        const dy = ((y - H / 2) / H) * 30;
+        blobEl.style.transform = `translate(${dx}px, ${dy}px)`;
+      }
+    } else {
+      mouse.active = false;
+      if (spotlight) spotlight.classList.remove("active");
+      if (blobEl)    blobEl.style.transform = "";
+    }
+  });
+
+  init();
+})();
+
+// ===== Flip Cards — Click to Flip =====
+document.querySelectorAll(".flip-card").forEach((card) => {
+  card.addEventListener("click", (e) => {
+    // Don't flip if clicking a link inside the back face
+    if (e.target.closest("a")) return;
+    card.classList.toggle("flipped");
+  });
 });
 
-// ================== Comment Slider ==================
+// Click outside any flipped card to unflip it
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".flip-card")) {
+    document.querySelectorAll(".flip-card.flipped").forEach((c) =>
+      c.classList.remove("flipped")
+    );
+  }
+});
+
+
+
+
+// ===== Swiper Carousel — Drag Only =====
+var swiper = new Swiper(".certSwiper", {
+  slidesPerView: "auto",
+  spaceBetween: 24,
+  loop: true,
+  speed: 600,
+  grabCursor: true,
+  allowTouchMove: true,
+});
+
+
+
+// ===== Active Navbar Link on Scroll =====
+const sections = document.querySelectorAll("section[id]");
+const navLinks = document.querySelectorAll(".nav-item ul li");
+
+function setActiveNav() {
+  const scrollPos = window.scrollY + window.innerHeight / 2;
+
+  sections.forEach((section) => {
+    const top = section.offsetTop;
+    const height = section.offsetHeight;
+    const id = section.getAttribute("id");
+
+    if (scrollPos >= top && scrollPos < top + height) {
+      navLinks.forEach((li) => {
+        li.classList.remove("active");
+        const link = li.querySelector("a");
+        if (link && link.getAttribute("href") === `#${id}`) {
+          li.classList.add("active");
+        }
+      });
+    }
+  });
+}
+
+window.addEventListener("scroll", setActiveNav);
+window.addEventListener("load", setActiveNav);
+
+// ===== Single DOMContentLoaded (Comment Slider + Form) =====
 document.addEventListener("DOMContentLoaded", () => {
+  // -------- Comment Slider --------
   const container = document.getElementById("commentsContainer");
   const prevBtn = document.querySelector(".slider-prev");
   const nextBtn = document.querySelector(".slider-next");
@@ -123,7 +293,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let slides = [];
   let currentIndex = 0;
   let autoId = null;
-  const AUTO_DELAY = 3000; // 3 seconds autoplay
+  const AUTO_DELAY = 3000;
 
   function escapeHtml(text) {
     if (!text) return "";
@@ -136,29 +306,22 @@ document.addEventListener("DOMContentLoaded", () => {
           ">": "&gt;",
           '"': "&quot;",
           "'": "&#39;",
-        })[m],
+        })[m]
     );
   }
 
   function updateSlides() {
     if (!slides.length) return;
-
     slides.forEach((slide, i) => {
       slide.classList.remove("active", "prev", "next");
-      if (i === currentIndex) {
-        slide.classList.add("active");
-      } else if (i === (currentIndex - 1 + slides.length) % slides.length) {
+      if (i === currentIndex) slide.classList.add("active");
+      else if (i === (currentIndex - 1 + slides.length) % slides.length)
         slide.classList.add("prev");
-      } else if (i === (currentIndex + 1) % slides.length) {
+      else if (i === (currentIndex + 1) % slides.length)
         slide.classList.add("next");
-      }
     });
-
-    // Update dots
     const dots = dotsContainer.querySelectorAll(".slider-dot");
-    dots.forEach((dot, i) =>
-      dot.classList.toggle("active", i === currentIndex),
-    );
+    dots.forEach((dot, i) => dot.classList.toggle("active", i === currentIndex));
   }
 
   function startAuto() {
@@ -171,16 +334,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function stopAuto() {
-    if (autoId) {
-      clearInterval(autoId);
-      autoId = null;
-    }
+    if (autoId) { clearInterval(autoId); autoId = null; }
   }
 
-  function resetAuto() {
-    stopAuto();
-    startAuto();
-  }
+  function resetAuto() { stopAuto(); startAuto(); }
 
   function renderComments(comments) {
     container.innerHTML = "";
@@ -210,7 +367,6 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>`;
       container.appendChild(slide);
 
-      // use button instead of div for dots
       const dot = document.createElement("button");
       dot.className = "slider-dot" + (i === 0 ? " active" : "");
       dot.addEventListener("click", () => {
@@ -229,7 +385,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.loadComments = async function () {
     try {
-      const res = await fetch("/comments");
+      const url = (window.API && window.API.comments) ? window.API.comments : "/comments";
+      const res = await fetch(url);
       const data = await res.json();
       renderComments(data);
     } catch (err) {
@@ -237,19 +394,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  prevBtn.addEventListener("click", () => {
-    if (slides.length <= 1) return;
-    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    updateSlides();
-    resetAuto();
-  });
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      if (slides.length <= 1) return;
+      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      updateSlides();
+      resetAuto();
+    });
+  }
 
-  nextBtn.addEventListener("click", () => {
-    if (slides.length <= 1) return;
-    currentIndex = (currentIndex + 1) % slides.length;
-    updateSlides();
-    resetAuto();
-  });
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      if (slides.length <= 1) return;
+      currentIndex = (currentIndex + 1) % slides.length;
+      updateSlides();
+      resetAuto();
+    });
+  }
 
   const sliderWrapper = document.querySelector(".slider-container");
   if (sliderWrapper) {
@@ -258,12 +419,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadComments();
-});
 
-// ================== Comment Form ==================
-document.addEventListener("DOMContentLoaded", () => {
+  // -------- Comment Form --------
   const commentForm = document.getElementById("commentForm");
-
   if (!commentForm) return;
 
   commentForm.addEventListener("submit", async (e) => {
@@ -285,13 +443,14 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       btn.disabled = true;
       btn.innerText = "Sending...";
-      const res = await fetch("/submit", { method: "POST", body: fd });
+      const submitUrl = (window.API && window.API.submit) ? window.API.submit : "/submit";
+      const res = await fetch(submitUrl, { method: "POST", body: fd });
       const result = await res.json();
       if (result.success) {
         alert("✅ Message has been sent!");
         commentForm.reset();
         setTimeout(() => {
-          if (typeof loadComments === "function") loadComments(); // refresh comments if available
+          if (typeof loadComments === "function") loadComments();
         }, 600);
       } else {
         alert("❌ " + (result.message || "Failed to submit."));
@@ -307,30 +466,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-
-// ===== Accurate Active Navbar Link on Scroll =====
-const sections = document.querySelectorAll("section[id]");
-const navLinks = document.querySelectorAll(".nav-item ul li");
-
-function setActiveNav() {
-  const scrollPos = window.scrollY + window.innerHeight / 2;
-
-  sections.forEach((section) => {
-    const top = section.offsetTop;
-    const height = section.offsetHeight;
-    const id = section.getAttribute("id");
-
-    if (scrollPos >= top && scrollPos < top + height) {
-      navLinks.forEach((li) => {
-        li.classList.remove("active");
-        const link = li.querySelector("a");
-        if (link && link.getAttribute("href") === `#${id}`) {
-          li.classList.add("active");
-        }
-      });
-    }
-  });
-}
-
-window.addEventListener("scroll", setActiveNav);
-window.addEventListener("load", setActiveNav);
