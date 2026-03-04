@@ -42,8 +42,91 @@ window.addEventListener("scroll", () => {
   progressBar.style.width = scrolled + "%";
 });
 
-// ===== AOS Animation =====
-AOS.init({ duration: 800, once: false });
+// ===== Custom Scroll-Reveal (replaces AOS) =====
+(function () {
+  // Dynamically add reveal classes to key sections
+  const revealMap = [
+    { sel: '.certificates',            cls: 'reveal reveal-up'     },
+    { sel: '.projects .section-title', cls: 'reveal reveal-down'   },
+    { sel: '.project-grid',            cls: 'reveal-stagger'       },
+    { sel: '.contact .section-title',  cls: 'reveal reveal-up'     },
+    { sel: '.contact-intro',           cls: 'reveal reveal-up'     },
+    { sel: '.contact-form',            cls: 'reveal reveal-up'     },
+    { sel: '.education',               cls: 'reveal reveal-up'     },
+    { sel: '.edu-timeline',            cls: 'reveal-stagger'       },
+    { sel: '.footer-inner',            cls: 'reveal reveal-up'     },
+    { sel: '.cert-track-wrapper',      cls: 'reveal reveal-up'     },
+  ];
+
+  revealMap.forEach(({ sel, cls }) => {
+    document.querySelectorAll(sel).forEach(el => {
+      cls.split(' ').forEach(c => el.classList.add(c));
+    });
+  });
+
+  // Observe all .reveal and .reveal-stagger elements
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      } else {
+        // Remove so the animation replays next time it enters viewport
+        entry.target.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => {
+    observer.observe(el);
+  });
+})();
+
+
+// ===== Project Card Modal =====
+(function () {
+  const modal    = document.getElementById("projectModal");
+  if (!modal) return;
+
+  const backdrop = modal.querySelector(".proj-modal-backdrop");
+  const closeBtn = modal.querySelector(".proj-modal-close");
+  const modalImg   = document.getElementById("modalImg");
+  const modalTitle = document.getElementById("modalTitle");
+  const modalDesc  = document.getElementById("modalDesc");
+  const modalTech  = document.getElementById("modalTech");
+  const modalLinks = document.getElementById("modalLinks");
+
+  function openModal(card) {
+    const { title, desc, img, live, github, tech } = card.dataset;
+    modalImg.src = img;
+    modalImg.alt = title;
+    modalTitle.textContent = title;
+    modalDesc.textContent  = desc;
+
+    modalTech.innerHTML = (tech || "").split(",").filter(Boolean)
+      .map(t => `<span>${t.trim()}</span>`).join("");
+
+    modalLinks.innerHTML = "";
+    if (live)   modalLinks.innerHTML += `<a href="${live}" target="_blank" rel="noopener noreferrer" class="modal-live"><i class="bi bi-box-arrow-up-right"></i> Live Demo</a>`;
+    if (github) modalLinks.innerHTML += `<a href="${github}" target="_blank" rel="noopener noreferrer" class="modal-gh"><i class="bi bi-github"></i> View Code</a>`;
+
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+
+  document.addEventListener("click", (e) => {
+    const card = e.target.closest(".project-card");
+    if (card) { openModal(card); return; }
+  });
+
+  backdrop.addEventListener("click", closeModal);
+  closeBtn.addEventListener("click", closeModal);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+})();
 
 // ===== Back to Top Button + Progress Ring =====
 const backBtn   = document.getElementById("backToTop");
@@ -478,3 +561,109 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+// ===== Tech Arsenal — Tabs =====
+(function () {
+  const tabs   = document.querySelectorAll(".arsenal-tab");
+  const panels = document.querySelectorAll(".arsenal-panel");
+
+  if (!tabs.length) return;
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const target = tab.dataset.cat;
+
+      // Update tab active state
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      // Show matching panel and replay card entrance animations
+      panels.forEach((panel) => {
+        panel.classList.remove("active");
+      });
+
+      const activePanel = document.getElementById("panel-" + target);
+      if (!activePanel) return;
+
+      // Re-trigger staggered card animations by resetting animation
+      const cards = activePanel.querySelectorAll(".skill-card");
+      cards.forEach((card) => {
+        card.style.animation = "none";
+        card.offsetHeight; // reflow
+        card.style.animation = "";
+      });
+
+      activePanel.classList.add("active");
+    });
+  });
+})();
+
+
+// ===== Tech Arsenal — Floating Dot Particles =====
+(function () {
+  const canvas  = document.getElementById("arsenalCanvas");
+  const section = document.querySelector(".arsenal");
+  if (!canvas || !section) return;
+
+  const ctx = canvas.getContext("2d");
+  let W, H, rafId;
+
+  const DOTS = 55;
+  let dots = [];
+
+  function resize() {
+    const r = section.getBoundingClientRect();
+    W = canvas.width  = r.width;
+    H = canvas.height = section.offsetHeight;
+  }
+
+  function randBetween(a, b) {
+    return a + Math.random() * (b - a);
+  }
+
+  class Dot {
+    constructor() { this.reset(); }
+    reset() {
+      this.x    = Math.random() * W;
+      this.y    = Math.random() * H;
+      this.r    = randBetween(1, 3.5);
+      this.vx   = randBetween(-0.35, 0.35);
+      this.vy   = randBetween(-0.35, 0.35);
+      this.alpha = randBetween(0.3, 0.8);
+      // Vary hue so we get teal, cyan, and amber dots
+      const pallete = [200, 215, 190, 45];
+      this.hue  = pallete[Math.floor(Math.random() * pallete.length)];
+    }
+    update() {
+      this.x += this.vx;
+      this.y += this.vy;
+      if (this.x < -10)  this.x = W + 10;
+      if (this.x > W + 10) this.x = -10;
+      if (this.y < -10)  this.y = H + 10;
+      if (this.y > H + 10) this.y = -10;
+    }
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = `hsla(${this.hue}, 85%, 65%, ${this.alpha})`;
+      ctx.fill();
+    }
+  }
+
+  function frame() {
+    ctx.clearRect(0, 0, W, H);
+    dots.forEach((d) => { d.update(); d.draw(); });
+    rafId = requestAnimationFrame(frame);
+  }
+
+  function init() {
+    resize();
+    cancelAnimationFrame(rafId);
+    dots = Array.from({ length: DOTS }, () => new Dot());
+    frame();
+  }
+
+  window.addEventListener("resize", init);
+  init();
+})();

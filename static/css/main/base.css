@@ -1,0 +1,120 @@
+﻿/* ── base ─────────────────────────────────────── */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+:root[data-theme="dark"] {
+    /* Primary / Secondary */
+    --color-primary: #38bdf8;
+    /* sky-400 â€” crisp cyan */
+    --color-secondary: #f59e0b;
+    /* amber-400 â€” warm gold */
+
+    /* Backgrounds â€” deep space navy layers */
+    --color-bg-dark: #0f172a;
+    /* slate-900 â€” card surfaces */
+    --color-bg-light: #1e293b;
+    /* slate-800 â€” alternate sections */
+
+    /* Gradients */
+    --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1a2744 100%);
+    --gradient-light: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+
+    /* Text */
+    --color-text: #e2e8f0;
+    /* slate-200 â€” crisp on dark */
+    --color-text-muted: #94a3b8;
+    /* slate-400 */
+    --buttons: #38bdf8bb;
+
+    /* Borders & Shadows */
+    --border: 1px solid rgba(99, 155, 230, 0.12);
+    --box-shadow: #070d1a;
+    --text-shadow: rgba(56, 189, 248, 0.25);
+
+    /* Inputs */
+    --input-border: rgba(148, 163, 196, 0.2);
+
+    --color-success: #4ade80;
+    color-scheme: dark;
+}
+
+
+:root[data-theme="light"] {
+    /* Primary / Secondary â€” same as dark for brand consistency */
+    --color-primary: #0ea5e9;
+    /* vivid sky blue */
+    --color-secondary: #f59e0b;
+    /* amber gold */
+
+    /* Backgrounds â€” layered cool blue-whites */
+    --color-bg-dark: #dbeafe;
+    /* indigo-100: card surfaces */
+    --color-bg-light: #eff6ff;
+    /* indigo-50: alternate sections */
+
+    /* Gradients */
+    --gradient-dark: linear-gradient(135deg, #dbeafe 0%, #e0f2fe 100%);
+    --gradient-light: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%);
+
+    /* Text */
+    --color-text: #0f172a;
+    /* slate-900 â€” sharp on light bg */
+    --color-text-muted: #475569;
+    /* slate-600 */
+
+    /* Borders & Shadows */
+    --border: 1px solid rgba(99, 155, 230, 0.25);
+    --box-shadow: rgba(56, 130, 246, 0.1);
+    --text-shadow: rgba(14, 165, 233, 0.18);
+
+    /* Buttons & Inputs */
+    --buttons: #0ea5e9cc;
+    --input-border: rgba(99, 155, 230, 0.3);
+
+    --color-success: #16a34a;
+    color-scheme: light;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 100px;
+    background: var(--gradient-light);
+}
+
+#scrollProgress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    z-index: 2000;
+    transition: width 0.25s ease-out;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+header.scrolled .navbar {
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
+}
+
+

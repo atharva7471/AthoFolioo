@@ -1,0 +1,173 @@
+﻿/* ── about ─────────────────────────────────────── */
+/* Education Timeline */
+.education {
+    padding: 40px 20px;
+    overflow-x: hidden;
+}
+
+.edu-timeline {
+    position: relative;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* Center spine */
+.edu-timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom,
+            transparent,
+            var(--color-primary) 15%,
+            var(--color-secondary) 85%,
+            transparent);
+    transform: translateX(-50%);
+}
+
+/* Each timeline row */
+.edu-item {
+    display: flex;
+    align-items: flex-start;
+    width: 50%;
+    padding: 0 40px 40px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.edu-item.left {
+    align-self: flex-start;
+    padding-right: 50px;
+}
+
+.edu-item.right {
+    align-self: flex-start;
+    padding-left: 50px;
+    margin-left: 50%;
+}
+
+/* Glowing dot node on the spine */
+.edu-dot {
+    position: absolute;
+    top: 6px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: #0f172a;
+    box-shadow: 0 0 0 4px var(--color-bg-dark),
+        0 0 18px rgba(56, 189, 248, 0.4);
+    z-index: 2;
+    flex-shrink: 0;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.edu-item.left .edu-dot {
+    right: -21px;
+}
+
+.edu-item.right .edu-dot {
+    left: -21px;
+}
+
+.edu-item:hover .edu-dot {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 4px var(--color-bg-dark),
+        0 0 28px rgba(56, 189, 248, 0.7);
+}
+
+/* Card */
+.edu-item .edu-card {
+    background: var(--color-bg-dark);
+    border: var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    width: 100%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.edu-item:hover .edu-card {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px var(--box-shadow);
+}
+
+/* Card header row */
+.edu-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.edu-card-header h4 {
+    font-size: 0.95rem;
+    color: var(--color-text);
+    font-weight: 600;
+    line-height: 1.4;
+    margin: 0;
+}
+
+/* Score badge */
+.edu-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(56, 189, 248, 0.12);
+    color: var(--color-primary);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.edu-badge.current {
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--color-secondary);
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.edu-degree {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 4px 0;
+}
+
+.edu-date {
+    font-size: 0.78rem;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin: 0;
+}
+
+/* Mobile: single column */
+@media (max-width: 640px) {
+    .edu-timeline::before {
+        left: 20px;
+    }
+
+    .edu-item,
+    .edu-item.right {
+        width: 100%;
+        margin-left: 0;
+        padding-left: 60px;
+        padding-right: 0;
+    }
+
+    .edu-item.left .edu-dot,
+    .edu-item.right .edu-dot {
+        left: 0;
+        right: auto;
+    }
+}
+
+

@@ -1,0 +1,268 @@
+﻿/* ── animations ─────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+/* 
+   CUSTOM ANIMATION SYSTEM replaces AOS
+   All scroll-reveal uses .reveal + IntersectionObserver
+   Entrance keyframes for non-scroll elements
+   */
+
+/* Keyframe library */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-28px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(40px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@keyframes slideLeft {
+    from {
+        opacity: 0;
+        transform: translateX(50px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@keyframes slideRight {
+    from {
+        opacity: 0;
+        transform: translateX(-50px)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.82)
+    }
+
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        text-shadow: 0 0 12px rgba(56, 189, 248, 0.3)
+    }
+
+    50% {
+        text-shadow: 0 0 28px rgba(56, 189, 248, 0.7)
+    }
+}
+
+@keyframes underlineSweep {
+    from {
+        clip-path: inset(0 100% 0 0);
+    }
+
+    to {
+        clip-path: inset(0 0% 0 0);
+    }
+}
+
+/* Navbar slides in from top on page load */
+.navbar {
+    animation: slideDown 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Logo text shimmer on load */
+#logo h1 {
+    animation: fadeIn 0.8s 0.3s both;
+}
+
+/* Hero text stagger each child */
+.hero .hero-text h6 {
+    animation: slideRight 0.7s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero .hero-text h1 {
+    animation: slideRight 0.7s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero .hero-text p {
+    animation: slideRight 0.6s 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero .hero-text h2 {
+    animation: slideRight 0.6s 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero .hero-buttons {
+    animation: slideUp 0.6s 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero .social-links {
+    animation: fadeIn 0.6s 0.9s both;
+}
+
+/* Hero image zoom in */
+.hero .image-wrapper {
+    animation: zoomIn 0.9s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Section title glow pulse after appear */
+.section-title {
+    animation: glowPulse 3.5s 1.2s ease-in-out infinite;
+}
+
+/* Section-title underline sweep */
+.section-title::after {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 60px;
+    margin: 8px auto 0;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    animation: underlineSweep 0.8s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/*
+   SCROLL REVEAL IntersectionObserver-driven
+   */
+
+/* Initial hidden state */
+.reveal {
+    opacity: 0;
+    transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-up {
+    transform: translateY(44px);
+}
+
+.reveal-down {
+    transform: translateY(-30px);
+}
+
+.reveal-left {
+    transform: translateX(50px);
+}
+
+.reveal-right {
+    transform: translateX(-50px);
+}
+
+.reveal-zoom {
+    transform: scale(0.88);
+}
+
+/* Revealed animate to natural position */
+.reveal.visible {
+    opacity: 1;
+    transform: none;
+}
+
+/* Stagger cascades on cards / list items */
+.reveal-stagger>* {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal-stagger.visible>*:nth-child(1) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.05s;
+}
+
+.reveal-stagger.visible>*:nth-child(2) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.12s;
+}
+
+.reveal-stagger.visible>*:nth-child(3) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.19s;
+}
+
+.reveal-stagger.visible>*:nth-child(4) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.26s;
+}
+
+.reveal-stagger.visible>*:nth-child(5) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.33s;
+}
+
+.reveal-stagger.visible>*:nth-child(6) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.40s;
+}
+
+.reveal-stagger.visible>*:nth-child(n+7) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.46s;
+}
+
+/* Flip cards stagger */
+.project-grid.reveal-stagger>.flip-card {
+    transition-property: opacity, transform;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .reveal,
+    .reveal-stagger>* {
+        opacity: 1;
+        transform: none;
+    }
+}
+
