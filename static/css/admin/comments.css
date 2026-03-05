@@ -1,142 +1,190 @@
+/* ─── Comments wrapper ───────────────────────────── */
 .admin-card {
-  background: var(--gradient-light);
-  border: var(--border);
-  border-radius: 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   padding: 1.8rem;
-  box-shadow: 0 12px 30px var(--box-shadow);
+  box-shadow: 0 6px 24px var(--shadow);
 }
 
-.admin-card h3 {
-  font-size: 1.4rem;
+.admin-card>h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
   margin-bottom: 1.2rem;
 }
 
-/* =========================
-   SEARCH BAR
-========================= */
-
+/* ─── Search bar ─────────────────────────────────── */
 .search-bar form {
   display: flex;
   gap: 0.6rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.1rem;
 }
 
 .search-bar input {
   flex: 1;
-  padding: 0.6rem 0.8rem;
-  border-radius: 10px;
-  border: var(--border);
-  background: transparent;
-  color: var(--color-text);
+  min-width: 0;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .search-bar input::placeholder {
-  color: var(--color-text-muted);
+  color: var(--muted);
+}
+
+.search-bar input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
 }
 
 .search-bar button {
   padding: 0.55rem 1.1rem;
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   border: none;
-  background: var(--color-primary);
-  color: #000;
+  background: linear-gradient(135deg, var(--primary), #0ea5e9);
+  color: #0f172a;
+  font-weight: 600;
+  font-size: 0.88rem;
+  font-family: inherit;
   cursor: pointer;
-  font-weight: 500;
+  white-space: nowrap;
+  transition: opacity 0.2s;
 }
 
 .search-bar button:hover {
-  box-shadow: 0 8px 20px var(--box-shadow);
+  opacity: 0.85;
 }
 
-/* =========================
-   TOTAL COUNT
-========================= */
-
+/* ─── Count label ────────────────────────────────── */
 .total-count {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  margin-bottom: 1.4rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 1rem;
 }
 
-/* =========================
-   COMMENT LIST
-========================= */
-
+/* ─── Comment list ───────────────────────────────── */
 .comment-list {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
-/* =========================
-   COMMENT CARD
-========================= */
-
+/* ─── Comment card ───────────────────────────────── */
 .comment-card {
   display: flex;
   justify-content: space-between;
-  gap: 1.2rem;
-  padding: 1.2rem;
-  border-radius: 14px;
-  border: var(--border);
-  background: rgba(255, 255, 255, 0.02);
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  transition: border-color 0.2s;
+}
+
+.comment-card:hover {
+  border-color: rgba(56, 189, 248, 0.2);
+}
+
+.comment-info {
+  flex: 1;
+  min-width: 0;
 }
 
 .comment-info h3 {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.2rem;
 }
 
 .comment-info p {
-  font-size: 0.9rem;
-  margin-bottom: 0.4rem;
-  color: var(--color-text-muted);
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+  word-break: break-word;
 }
 
-/* =========================
-   ACTION BUTTONS
-========================= */
-
+/* ─── Action buttons ─────────────────────────────── */
 .action-btns {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  align-self: flex-start;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
-/* Approve / Hide */
 .approve-btn {
-  padding: 0.35rem 0.9rem;
-  border-radius: 8px;
-  border: none;
-  background: var(--color-success);
-  color: #000;
-  font-size: 0.85rem;
+  padding: 0.38rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(74, 222, 128, 0.3);
+  background: rgba(74, 222, 128, 0.08);
+  color: var(--success);
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
 }
 
 .approve-btn:hover {
-  box-shadow: 0 6px 16px rgba(74, 222, 128, 0.4);
+  background: rgba(74, 222, 128, 0.18);
 }
 
-/* Delete */
 .delete-btn {
-  padding: 0.35rem 0.9rem;
-  border-radius: 8px;
-  border: none;
-  background: #ef4444;
-  color: #fff;
-  font-size: 0.85rem;
+  padding: 0.38rem 0.9rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+  background: rgba(248, 113, 113, 0.08);
+  color: var(--danger);
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: inherit;
   cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
 }
 
 .delete-btn:hover {
-  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+  background: rgba(248, 113, 113, 0.18);
 }
 
-.admin-card > p {
+.admin-card>p {
   margin-top: 1rem;
-  color: var(--color-text-muted);
+  color: var(--muted);
   font-style: italic;
+  font-size: 0.88rem;
+}
+
+/* ─── Responsive ─────────────────────────────────── */
+@media (max-width: 640px) {
+  .admin-card {
+    padding: 1.2rem;
+  }
+
+  .search-bar form {
+    flex-direction: column;
+  }
+
+  .search-bar button {
+    width: 100%;
+  }
+
+  .comment-card {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .action-btns {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+  }
 }

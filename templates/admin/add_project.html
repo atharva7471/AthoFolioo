@@ -2,7 +2,7 @@
 {% block title %}Add Project{% endblock %}
 {% block head %}
 <link rel="stylesheet"
-  href="{{ url_for('static', filename='/css/admin/admin_forms.css') }}">
+  href="{{ url_for('static', filename='css/admin/admin_forms.css') }}">
 {% endblock %}
 {% block content %}
 <section id="add-project" class="admin-form-section">
@@ -12,7 +12,7 @@
     method="POST"
     enctype="multipart/form-data"
     class="admin-form">
-
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <input type="text" name="title" placeholder="Project Title" required>
 
     <textarea
@@ -39,16 +39,12 @@
   <div class="admin-list-item">
     <strong>{{ project.title }}</strong>
     <div class="admin-actions">
-      <form method="POST"
-        action="{{ url_for('edit_project', project_id=project._id) }}"
-        onsubmit="return confirm('Edit this certificate?');">
-        <input type="hidden">
-        <button class="btn">Edit</button>
-      </form>
+      <a href="{{ url_for('edit_project', project_id=project._id) }}"
+        class="btn">Edit</a>
       <form method="POST"
         action="{{ url_for('delete_project', project_id=project._id) }}"
         onsubmit="return confirm('Delete this project?');">
-        <input type="hidden">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <button class="danger-btn">Delete</button>
       </form>
     </div>

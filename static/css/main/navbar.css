@@ -1,0 +1,99 @@
+﻿/* ── navbar ─────────────────────────────────────── */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 85%;
+    margin: 15px auto;
+    padding: 14px 28px;
+    backdrop-filter: blur(8px);
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 25px var(--box-shadow);
+}
+
+.theme-toggle {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--input-border);
+    background: transparent;
+    color: var(--color-text);
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: transform .4s ease, background-color .4s ease, color .4s ease, border-color .4s ease;
+}
+
+.theme-toggle:hover {
+    transform: translateY(-5px);
+    background-color: var(--color-bg-dark);
+    color: var(--color-text);
+}
+
+/* Logo */
+#logo h1 {
+    color: var(--color-primary);
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+#logo h1 span {
+    color: var(--color-secondary);
+}
+
+/*-- Navigation items --*/
+.navbar .nav-item ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar .nav-item ul li {
+    position: relative;
+}
+
+.navbar .nav-item ul li a {
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+    font-size: 1rem;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+/*-- Hover Effect --*/
+.navbar .nav-item ul li a:hover {
+    color: var(--color-secondary);
+    transform: scale(1.05);
+}
+
+/*-- Underline Animation --*/
+.navbar .nav-item ul li::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: var(--color-secondary);
+    transition: width 0.3s ease;
+}
+
+.navbar .nav-item ul li:hover::after {
+    width: 100%;
+}
+
+/* -- Active Nav Link -- */
+.navbar .nav-item ul li.active a {
+    color: var(--color-secondary);
+    font-weight: 600;
+}
+
+.navbar .nav-item ul li.active::after {
+    width: 100%;
+}
+
+

@@ -1,159 +1,257 @@
-:root {
-    /* Your specified variables */
-    --color-primary: #38bdf8;
-    --color-secondary: #facc15;
-    --gradient-dark: linear-gradient(125deg, #0d1930, #19233d);
-    --gradient-light: linear-gradient(120deg, #023047, #0d1930);
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-    /* Helper variables for the dark theme */
-    --text-main: #f1f5f9;
-    --text-muted: #94a3b8;
-    --bg-input: rgba(255, 255, 255, 0.05);
-    --border-input: rgba(255, 255, 255, 0.1);
-    --glass-bg: rgba(13, 25, 48, 0.6);
-    --glass-border: rgba(56, 189, 248, 0.1);
+/* ── Theme tokens ─────────────────────────────────── */
+:root {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --border: rgba(99, 155, 230, 0.15);
+    --primary: #38bdf8;
+    --secondary: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --danger: #f87171;
+    --success: #4ade80;
+    --shadow: rgba(0, 0, 0, 0.4);
 }
 
-* {
+[data-theme="light"] {
+    --bg: #eff6ff;
+    --surface: #ffffff;
+    --border: rgba(99, 155, 230, 0.2);
+    --text: #0f172a;
+    --muted: #475569;
+    --shadow: rgba(99, 155, 230, 0.12);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
 }
 
 body {
-    background: var(--gradient-dark);
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-main);
-    /* Optional: animated background size if you want movement */
-    background-size: 200% 200%;
+    padding: 20px;
 }
 
-.login-container {
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    /* Glass blur effect */
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-    width: 30rem;
-    padding: 2.5rem;
-    border-radius: 16px;
-    text-align: center;
-    position: relative;
-    transition: transform 0.3s ease;
+/* ── Wrap (subtle bg pattern) ────────────────────── */
+.login-wrap {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.login-container:hover {
-    box-shadow: 0 10px 40px 0 rgba(56, 189, 248, 0.15);
-    /* Primary glow on hover */
-}
-
-/* --- Home Icon --- */
-.home-icon {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    color: var(--text-muted);
-    font-size: 1.2rem;
-    transition: color 0.3s, transform 0.3s;
-    text-decoration: none;
-}
-
-.home-icon:hover {
-    color: var(--color-primary);
-    transform: scale(1.1);
-}
-
-/* --- Typography --- */
-h2 {
-    color: var(--color-primary);
-    margin-bottom: 2rem;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-h2 span {
-    /* Using secondary color as requested */
-    color: var(--color-secondary);
-}
-
-/* --- Form Elements --- */
-form {
+/* ── Card ─────────────────────────────────────────── */
+.login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 42px 40px 36px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 24px 60px var(--shadow);
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
+    align-items: center;
+    gap: 0;
+    animation: fadeUp 0.45s ease both;
 }
 
-input {
-    background: var(--bg-input);
-    border: 1px solid var(--border-input);
-    padding: 14px 16px;
-    border-radius: 8px;
-    color: var(--text-main);
-    font-size: 1rem;
-    outline: none;
-    transition: all 0.3s ease;
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-input::placeholder {
-    color: var(--text-muted);
-}
-
-input:focus {
-    border-color: var(--color-primary);
-    background: rgba(56, 189, 248, 0.05);
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-}
-
-button {
-    background: var(--color-primary);
-    color: #0d1930;
-    /* Dark text for contrast against bright button */
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
+/* ── Logo mark ────────────────────────────────────── */
+.login-logo {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
     font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-top: 10px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: #0f172a;
+    letter-spacing: -1px;
+    box-shadow: 0 4px 20px rgba(56, 189, 248, 0.35);
+    margin-bottom: 20px;
 }
 
-button:hover {
-    background: var(--color-secondary);
-    color: #000;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(250, 204, 21, 0.3);
+/* ── Headings ─────────────────────────────────────── */
+.login-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
 }
 
-.flash-messages {
-    margin-bottom: 1.5rem;
+.login-title span {
+    color: var(--primary);
 }
 
+.login-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 28px;
+}
+
+/* ── Flash ────────────────────────────────────────── */
 .flash {
-    padding: 10px;
-    border-radius: 6px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.flash-danger {
+    background: rgba(248, 113, 113, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(248, 113, 113, 0.25);
+}
+
+.flash-success {
+    background: rgba(74, 222, 128, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.flash-info {
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--primary);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+/* ── Form ─────────────────────────────────────────── */
+.login-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Input row with icon */
+.field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.field>i {
+    position: absolute;
+    left: 14px;
+    font-size: 1rem;
+    color: var(--muted);
+    pointer-events: none;
+}
+
+.field input {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text);
     font-size: 0.9rem;
-    margin-bottom: 10px;
-    border-left: 4px solid transparent;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
 }
 
-.flash.error,
-.flash.danger {
-    background: rgba(220, 38, 38, 0.2);
-    color: #fca5a5;
-    border-left-color: #ef4444;
+.field input::placeholder {
+    color: var(--muted);
 }
 
-.flash.success {
-    background: rgba(22, 163, 74, 0.2);
-    color: #86efac;
-    border-left-color: #22c55e;
+.field input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+/* Show/hide password button */
+.eye-btn {
+    position: absolute;
+    right: 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 1rem;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.eye-btn:hover {
+    color: var(--primary);
+}
+
+/* Submit button */
+.login-btn {
+    margin-top: 6px;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), #0ea5e9);
+    color: #0f172a;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.login-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+/* ── Back link ────────────────────────────────────── */
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 22px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.back-link:hover {
+    color: var(--primary);
+}
+
+/* ── Mobile ───────────────────────────────────────── */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 32px 24px 28px;
+    }
 }

@@ -1,89 +1,88 @@
-<section class="contact" id="contact" data-aos="fade-up"
-    data-aos-duration="1500">
-    <h1 class="section-title">Get In Touch</h1>
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <!-- Left: Get In Touch -->
+    <div class="contact-left">
+      <h1 class="section-title">Get In Touch</h1>
+      <p class="contact-intro">
+        Open to new opportunities, collaborations, and conversations.
+        Whether it's a project, a question, or just a hello — I'd love to hear from you.
+      </p>
 
-    <p class="contact-intro">
-        I'm currently open to new opportunities and collaborations. Whether
-        you
-        have a project in mind, a question, or just want to say hi, my inbox
-        is
-        always open. Would love your feedback, reviews, and suggestions too!
-    </p>
+      <!-- Info pills -->
+      <div class="contact-info">
+        <div class="contact-info-item">
+          <i class="bi bi-envelope-fill"></i>
+          <span>atharva7471@gmail.com</span>
+        </div>
+        <div class="contact-info-item">
+          <i class="bi bi-geo-alt-fill"></i>
+          <span>Pune, India</span>
+        </div>
+        <div class="contact-info-item">
+          <i class="bi bi-linkedin"></i>
+          <span>linkedin.com/in/atharva-bhosale-7471abc</span>
+        </div>
+      </div>
 
-    <form class="contact-form" id="commentForm" method="POST"
-        action="{{ url_for('submit') }}">
-        <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Your Name"
-            required />
-        <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Your Email"
-            required />
-        <textarea
-            name="message"
-            id="message"
-            placeholder="Your Message"
-            rows="5"
-            required></textarea>
-        <button type="submit" class="btn-primary">Send Message</button>
-    </form>
-
-    <div class="social-links">
-        <a
-            href="https://www.linkedin.com/in/atharva-bhosale-7471abc"
-            target="_blank"
-            aria-label="LinkedIn">
-            <i class="bi bi-linkedin"></i>
-        </a>
-        <a
-            href="https://github.com/atharva7471"
-            target="_blank"
-            aria-label="GitHub">
-            <i class="bi bi-github"></i>
-        </a>
-        <a
-            href="https://mail.google.com/mail/?view=cm&fs=1&to=atharva7471@gmail.com"
-            target="_blank"
-            aria-label="Email">
-            <i class="bi bi-envelope-fill"></i>
-        </a>
-        <a
-            href="https://www.instagram.com/atharva_7471/"
-            target="_blank"
-            aria-label="Instagram">
-            <i class="bi bi-instagram"></i>
-        </a>
+      {% include "main/partials/social_links.html" %}
     </div>
 
-    <!-- ================== User Comments Slider ================== -->
-    <section id="comments" class="comments-section">
-        <h1 class="section-title">User Comments</h1>
+    <!-- Right: Form -->
+    <div class="contact-right">
 
-        <div class="slider-container">
-            <div class="testimonial-slider" id="commentsContainer">
-                <!-- Slides will be injected here -->
-            </div>
+      <form class="contact-form" id="commentForm" method="POST"
+            action="{{ url_for('submit') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-            <div class="slider-controls">
-                <button class="slider-prev" aria-label="Previous comment">
-                    <i class="bi bi-chevron-left"></i>
-                </button>
-                <div class="slider-dots" id="sliderDots"></div>
-                <button class="slider-next" aria-label="Next comment">
-                    <i class="bi bi-chevron-right"></i>
-                </button>
-            </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name"><i class="bi bi-person"></i> Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+          </div>
+          <div class="form-group">
+            <label for="email"><i class="bi bi-envelope"></i> Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+          </div>
         </div>
-    </section>
+
+        <div class="form-group">
+          <label for="message"><i class="bi bi-chat-dots"></i> Message</label>
+          <textarea id="message" name="message" placeholder="What's on your mind?" rows="5" required></textarea>
+        </div>
+
+        <button type="submit" class="contact-submit">
+          Send Message <i class="bi bi-send"></i>
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- ── User Comments ── -->
+  <section id="comments" class="comments-section">
+    <h2 class="section-title">What People Say</h2>
+    <p class="comments-sub">Feedback &amp; thoughts from collaborators</p>
+
+    <div class="slider-container">
+      <div class="testimonial-slider" id="commentsContainer"></div>
+
+      <div class="slider-controls">
+        <button class="slider-prev" aria-label="Previous comment">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <div class="slider-dots" id="sliderDots"></div>
+        <button class="slider-next" aria-label="Next comment">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+  </section>
+
 </section>
+
 <script>
-      window.API = {
-        comments: "{{ url_for('get_comments') }}",
-        submit: "{{ url_for('submit') }}"
-      };
+  window.API = {
+    comments: "{{ url_for('get_comments') }}",
+    submit:   "{{ url_for('submit') }}"
+  };
 </script>

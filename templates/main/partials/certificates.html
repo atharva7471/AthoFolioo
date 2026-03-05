@@ -1,21 +1,34 @@
-<!-- Your certificates section -->
-<section class="certificates" id="certificates" data-aos="fade"
-    data-aos-duration="1500">
-    <h1 class="section-title">Achievements & Certificates</h1>
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper">
-            {% for cert in certificates %}
-            <div class="swiper-slide cert-card">
-                <img src="{{ cert.image_url }}" alt="{{ cert.title }}">
-                <div class="text">
-                    <p>{{ cert.title }}</p>
-                    <p>{{ cert.issuer }}</p>
+<!-- Certificates Section -->
+<section class="certificates" id="certificates">
+    <h1 class="section-title">Achievements &amp; Certificates</h1>
+    <p class="cert-subtitle">A showcase of my learning journey and accomplishments</p>
+
+    <div class="cert-track-wrapper">
+        <div class="swiper certSwiper">
+            <div class="swiper-wrapper">
+                {% for cert in certificates %}
+                <div class="swiper-slide">
+                    <div class="cert-card">
+                        <div class="cert-glow"></div>
+                        <div class="cert-img-wrap">
+                            <img src="{{ cert.image_url }}" alt="{{ cert.title }}" loading="lazy">
+                            <div class="cert-overlay">
+                                <a href="{{ cert.certificate_url if cert.certificate_url else cert.image_url }}"
+                                   target="_blank" rel="noopener noreferrer" class="cert-view-btn">
+                                    <i class="bi bi-eye"></i> View
+                                </a>
+                            </div>
+                        </div>
+                        <div class="cert-body">
+                            <h3 class="cert-title">{{ cert.title }}</h3>
+                            <p class="cert-issuer">
+                                <i class="bi bi-award-fill"></i> {{ cert.issuer }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ cert.image_url }}">See Certificate</a>
+                {% endfor %}
             </div>
-            {% endfor %}
         </div>
-        <!-- Pagination dots -->
-        <div class="swiper-pagination"></div>
     </div>
 </section>

@@ -1,17 +1,17 @@
 from flask import Flask, render_template, redirect, url_for, jsonify, flash, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
-from flask_wtf import FlaskForm
 from functools import wraps
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from dotenv import load_dotenv
+from flask_wtf.csrf import CSRFProtect
+import traceback
 import uuid
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-from flask_wtf.csrf import CSRFProtect
 import os
 
 # -------------------------
@@ -21,13 +21,14 @@ app = Flask(__name__)
 load_dotenv()
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.jinja_env.globals["datetime"] = datetime
+csrf = CSRFProtect(app)
 
 # -------------------------
 # MongoDB Configuration (NO LOCAL DB)
 # -------------------------
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
-db = client["portfolio"] 
+db = client["portfolio"]
 comments_collection = db["comments"]
 admins_collection = db["admins"]
 projects_collection = db["projects"]
@@ -42,6 +43,7 @@ cloudinary.config(
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "webp"}
 app.config["MAX_CONTENT_LENGTH"] = 5 * 1024 * 1024  # 5MB
+
 def allowed_file(file):
     return (
         file
@@ -49,7 +51,7 @@ def allowed_file(file):
         and file.filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
         and file.mimetype.startswith("image/")
     )
-    
+
 # -------------------------
 # Admin Authentication
 # -------------------------
@@ -69,9 +71,7 @@ def admin_required(f):
 # -------------------------
 @app.route('/')
 def home():
-    comments = comments_collection.find(
-        {"approved": True}
-    ).sort("created_at", -1)
+    comments = comments_collection.find({"approved": True}).sort("created_at", -1)
     projects = list(projects_collection.find().sort("created_at", -1))
     certificates = list(certificates_collection.find().sort("created_at", -1))
     return render_template("main/index.html", projects=projects, certificates=certificates)
@@ -91,12 +91,12 @@ def login():
             flash("Login successful!", "success")
             return redirect(url_for("admin_dashboard"))
         flash("Invalid credentials", "danger")
-        
+
     return render_template("login.html")
 
 @app.route('/admin')
 @admin_required
-def admin_dashboard():   
+def admin_dashboard():
     return render_template("admin/dashboard.html")
 
 @app.route('/admin/comments')
@@ -113,33 +113,31 @@ def admin_comments():
             ]
         }
 
-    comments = list(
-        comments_collection.find(query).sort("created_at", -1)
-    )
+    comments = list(comments_collection.find(query).sort("created_at", -1))
 
     return render_template(
         "admin/comments.html",
         comments=comments,
         search_query=q
     )
-    
+
 @app.route("/admin/add-project", methods=["GET"])
 @admin_required
 def add_project_page():
     projects = list(projects_collection.find().sort("created_at", -1))
-    return render_template("admin/add_project.html", projects=projects,)
+    return render_template("admin/add_project.html", projects=projects)
 
-# Page
 @app.route("/admin/add-certificate", methods=["GET"])
 @admin_required
 def add_cert_page():
     certificates = list(certificates_collection.find().sort("created_at", -1))
-    return render_template("admin/add_cert.html",certificates=certificates,)
-    
+    return render_template("admin/add_cert.html", certificates=certificates)
+
 # -------------------------
 # Logics
 # -------------------------
 @app.route('/submit', methods=['POST'])
+@csrf.exempt
 def submit():
     name = request.form.get("name")
     email = request.form.get("email")
@@ -160,9 +158,7 @@ def submit():
 
 @app.route('/comments')
 def get_comments():
-    comments = comments_collection.find(
-        {"approved": True}
-    ).sort("created_at", -1)
+    comments = comments_collection.find({"approved": True}).sort("created_at", -1)
 
     return jsonify([
         {
@@ -173,12 +169,10 @@ def get_comments():
         }
         for c in comments
     ])
-    
+
 @app.route('/logout')
 def logout():
-    session.pop('admin_id', None)
-    session.pop('role', None)
-    session.pop('admin_username', None)
+    session.clear()
     flash('Logged out successfully', 'info')
     return redirect(url_for('login'))
 
@@ -191,12 +185,10 @@ def toggle_approval(comment_id):
         return redirect(url_for("admin_dashboard"))
 
     new_state = not comment["approved"]
-
     comments_collection.update_one(
         {"_id": ObjectId(comment_id)},
         {"$set": {"approved": new_state}}
     )
-
     flash("Approval updated", "success")
     return redirect(url_for("admin_dashboard"))
 
@@ -219,15 +211,16 @@ def add_project():
 
     if not title or not description or not tech_stack:
         flash("Please fill all required fields", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("add_project_page"))
 
     if not image or not allowed_file(image):
         flash("Invalid image file (PNG, JPG, WEBP only, max 5MB)", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("add_project_page"))
 
     try:
+        image.stream.seek(0)  # ensure stream is at start
         upload_result = cloudinary.uploader.upload(
-            image,
+            image.stream,
             folder="portfolio/projects",
             resource_type="image",
             public_id=uuid.uuid4().hex,
@@ -243,14 +236,15 @@ def add_project():
             "github_url": github_url,
             "live_url": live_url,
             "image_url": image_url,
-            "image_public_id": upload_result["public_id"],  # 👈 REQUIRED
+            "image_public_id": upload_result["public_id"],
             "created_at": datetime.utcnow()
         })
         flash("Project added successfully!", "success")
 
     except Exception as e:
-        print("Cloudinary upload failed:", e)
-        flash("Image upload failed. Try again.", "danger")
+        traceback.print_exc()
+        app.logger.error("Cloudinary upload failed (project): %s", e)
+        flash(f"Image upload failed: {e}", "danger")
 
     return redirect(url_for("admin_dashboard"))
 
@@ -264,15 +258,16 @@ def add_certificate():
 
     if not title or not issuer:
         flash("Title and issuer are required", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("add_cert_page"))
 
     if not image or not allowed_file(image):
         flash("Invalid image file (PNG, JPG, WEBP only, max 5MB)", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(url_for("add_cert_page"))
 
     try:
+        image.stream.seek(0)  # ensure stream is at start
         upload_result = cloudinary.uploader.upload(
-            image,
+            image.stream,
             folder="portfolio/certificates",
             resource_type="image",
             public_id=uuid.uuid4().hex,
@@ -293,8 +288,10 @@ def add_certificate():
         flash("Certificate added successfully!", "success")
 
     except Exception as e:
-        print("Cloudinary upload failed:", e)
-        flash("Certificate upload failed. Try again.", "danger")
+        traceback.print_exc()
+        app.logger.error("Cloudinary upload failed (certificate): %s", e)
+        flash(f"Certificate upload failed: {e}", "danger")
+
 
     return redirect(url_for("admin_dashboard"))
 
@@ -314,20 +311,16 @@ def delete_project(project_id):
         return redirect(url_for("admin_dashboard"))
 
     try:
-        # Delete image from Cloudinary
         if project.get("image_public_id"):
             cloudinary.uploader.destroy(
                 project["image_public_id"],
                 resource_type="image"
             )
-
-        # Delete project from DB
         projects_collection.delete_one({"_id": oid})
-
         flash("Project deleted successfully", "success")
 
     except Exception as e:
-        print("Delete project failed:", e)
+        app.logger.error("Delete project failed: %s", e)
         flash("Failed to delete project", "danger")
 
     return redirect(url_for("admin_dashboard"))
@@ -387,20 +380,16 @@ def delete_certificate(cert_id):
         return redirect(url_for("admin_dashboard"))
 
     try:
-        # Delete image from Cloudinary
         if cert.get("image_public_id"):
             cloudinary.uploader.destroy(
                 cert["image_public_id"],
                 resource_type="image"
             )
-
-        # Delete certificate from DB
         certificates_collection.delete_one({"_id": oid})
-
         flash("Certificate deleted successfully", "success")
 
     except Exception as e:
-        print("Delete certificate failed:", e)
+        app.logger.error("Delete certificate failed: %s", e)
         flash("Failed to delete certificate", "danger")
 
     return redirect(url_for("admin_dashboard"))
