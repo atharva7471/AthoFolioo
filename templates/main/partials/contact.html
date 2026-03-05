@@ -1,7 +1,7 @@
 <section class="contact" id="contact">
   <div class="contact-inner">
     <!-- Left: Get In Touch -->
-    <div class="contact-left">
+    <div class="contact-left" data-aos="fade-right" data-aos-duration="800">
       <h1 class="section-title">Get In Touch</h1>
       <p class="contact-intro">
         Open to new opportunities, collaborations, and conversations.
@@ -28,7 +28,8 @@
     </div>
 
     <!-- Right: Form -->
-    <div class="contact-right">
+    <div class="contact-right" data-aos="fade-left" data-aos-duration="800">
+
       <form class="contact-form" id="commentForm" method="POST"
             action="{{ url_for('submit') }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

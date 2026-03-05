@@ -6,15 +6,15 @@
 
     <div class="hero-head">
         <div class="hero-text">
-            <h6>I Build things where,</h6>
-            <h1>Machine Learning meets<span> Web Applications</span></h1>
-            <p>Code is my canvas, logic is my fuel.</p>
-            <p>Full-stack explorer. Python whisperer.</p>
-            <p>Training models, crafting UI, and chasing clean architecture.</p>
-            <h2>And I'm a <span class="text"></span></h2>
+            <h6 data-aos="fade-right" data-aos-delay="100">I Build things where,</h6>
+            <h1 data-aos="fade-right" data-aos-delay="200">Machine Learning meets<span> Web Applications</span></h1>
+            <p data-aos="fade-right" data-aos-delay="300">Code is my canvas, logic is my fuel.</p>
+            <p data-aos="fade-right" data-aos-delay="350">Full-stack explorer. Python whisperer.</p>
+            <p data-aos="fade-right" data-aos-delay="400">Training models, crafting UI, and chasing clean architecture.</p>
+            <h2 data-aos="fade-right" data-aos-delay="480">And I'm a <span class="text"></span></h2>
         </div>
 
-        <div class="image-wrapper reveal reveal-zoom">
+        <div class="image-wrapper" data-aos="zoom-in" data-aos-duration="900" data-aos-delay="150">
             <div class="blob"></div>
             <!-- Lottie Animation -->
             <div class="animation-wrapper">
@@ -30,12 +30,15 @@
     </div>
     <div class="hero-tail">
         <!-- Buttons : View my work and download -->
-        <div class="hero-buttons">
+        <div class="hero-buttons" data-aos="fade-up" data-aos-delay="500">
             <a href="#projects" class="btn-primary">View My Work</a>
             <a href="{{ url_for('static', filename='assets/resume.pdf') }}"
                 class="btn-secondary">Download CV</a>
         </div>
         <!-- Social Links (Icons) -->
-        {% include "main/partials/social_links.html" %}
+        <div data-aos="fade-in" data-aos-delay="600">
+            {% include "main/partials/social_links.html" %}
+        </div>
     </div>
+
 </section>

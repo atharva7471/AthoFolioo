@@ -1,7 +1,7 @@
 <!-- ─── Projects Section ─────────────────────────── -->
 <section class="projects" id="projects">
 
-  <div class="projects-header">
+  <div class="projects-header" data-aos="fade-up">
     <h1 class="section-title">My Projects</h1>
     <p class="projects-sub">Things I've built — from ML pipelines to full-stack apps</p>
   </div>
@@ -10,6 +10,8 @@
   <div class="project-grid">
     {% for project in projects %}
     <article class="project-card"
+      data-aos="fade-up"
+      data-aos-delay="{{ loop.index0 * 80 }}"
       data-title="{{ project.title }}"
       data-desc="{{ project.description }}"
       data-img="{{ project.image_url }}"
@@ -61,5 +63,6 @@
       <div id="modalTech" class="tech-stack"></div>
       <div id="modalLinks" class="proj-modal-links"></div>
     </div>
+
   </div>
 </div>
