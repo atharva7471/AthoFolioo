@@ -5,6 +5,8 @@
     <h1 class="section-title">My Projects</h1>
     <p class="projects-sub">Things I've built — from ML pipelines to full-stack apps</p>
   </div>
+    <p class="projects-sub">Things I've built — from ML pipelines to full-stack apps</p>
+  </div>
 
   {% if projects %}
   <div class="project-grid">
@@ -45,6 +47,27 @@
   {% endif %}
 
 </section>
+
+<!-- ─── Project Modal ─────────────────────────────── -->
+<div id="projectModal" class="proj-modal" role="dialog" aria-modal="true" aria-label="Project details">
+  <div class="proj-modal-backdrop"></div>
+  <div class="proj-modal-box">
+
+    <button class="proj-modal-close" aria-label="Close">&times;</button>
+
+    <div class="proj-modal-img-wrap">
+      <img id="modalImg" src="" alt="">
+    </div>
+
+    <div class="proj-modal-body">
+      <h2 id="modalTitle"></h2>
+      <p id="modalDesc"></p>
+      <div id="modalTech" class="tech-stack"></div>
+      <div id="modalLinks" class="proj-modal-links"></div>
+    </div>
+
+  </div>
+</div>
 
 <!-- ─── Project Modal ─────────────────────────────── -->
 <div id="projectModal" class="proj-modal" role="dialog" aria-modal="true" aria-label="Project details">

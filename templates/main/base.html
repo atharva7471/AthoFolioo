@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Atharva Bhosale — ML Engineer &amp; Full-Stack Developer. Explore my projects, skills, and certifications." />
+    <meta name="author" content="Atharva Bhosale" />
+    <meta property="og:title" content="Atharva Bhosale | ML &amp; Web Dev Portfolio" />
+    <meta property="og:description" content="Machine Learning meets Web Applications — projects, skills, and certifications by Atharva Bhosale." />
+    <meta property="og:type" content="website" />
+    <title>{% block title %}Atharva | ML | WebDev{% endblock %}</title>
+    <!-- Theme (load first to prevent flash-of-wrong-theme) -->
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Atharva Bhosale — ML Engineer &amp; Full-Stack Developer. Explore my projects, skills, and certifications." />
@@ -14,6 +25,7 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+
     <link
       rel="icon"
       type="image/png"
@@ -21,6 +33,18 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
+    <!-- Modular CSS — split from styles.css for better caching & maintainability -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/navbar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/hero.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/about.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/skills.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/certificates.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/projects.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/contact.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/responsive.css') }}">
     <!-- Modular CSS — split from styles.css for better caching & maintainability -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/base.css') }}">
@@ -50,6 +74,12 @@
       {% include "main/partials/footer.html" %}
     </footer>
 
+    <button id="backToTop" title="Back to top" aria-label="Back to top">
+      <svg class="btt-ring" viewBox="0 0 44 44">
+        <circle class="btt-track" cx="22" cy="22" r="19"/>
+        <circle class="btt-progress" cx="22" cy="22" r="19" id="bttCircle"/>
+      </svg>
+      <i class="bi bi-chevron-up"></i>
     <button id="backToTop" title="Back to top" aria-label="Back to top">
       <svg class="btt-ring" viewBox="0 0 44 44">
         <circle class="btt-track" cx="22" cy="22" r="19"/>
