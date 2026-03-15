@@ -1,4 +1,4 @@
-﻿/* ── hero ─────────────────────────────────────── */
+/* ── hero ─────────────────────────────────────── */
 .hero {
     background-color: var(--gradient-light);
     position: relative;
@@ -217,7 +217,7 @@
     border-radius: 8px;
     font-weight: 500;
     text-decoration: none;
-    transition: 0.3s;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
 }
 
 .hero .hero-tail .hero-buttons .btn-primary {
@@ -227,6 +227,8 @@
 
 .hero .hero-tail .hero-buttons .btn-primary:hover {
     background: var(--buttons);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
 }
 
 .hero .hero-tail .hero-buttons .btn-secondary {
@@ -237,6 +239,8 @@
 .hero .hero-tail .hero-buttons .btn-secondary:hover {
     background: var(--color-primary);
     color: var(--color-text);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
 }
 
 /* Social Links */
@@ -251,12 +255,13 @@
 .social-links a {
     font-size: 25px;
     color: var(--color-text);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease, filter 0.3s ease;
 }
 
 .social-links a:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.1);
     color: var(--color-secondary);
+    filter: drop-shadow(0 0 8px var(--color-secondary));
 }
 
 /* Section Titles */

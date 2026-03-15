@@ -1,4 +1,4 @@
-﻿/* ── contact ──────────────────────────────────────── */
+/* ── contact ──────────────────────────────────────── */
 .contact {
     padding: 80px 40px;
     background: var(--gradient-dark);
@@ -41,6 +41,12 @@
     gap: 12px;
     font-size: 0.88rem;
     color: var(--color-text-muted);
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.contact-info-item:hover {
+    transform: translateX(5px);
+    color: var(--color-text);
 }
 
 .contact-info-item i {
@@ -55,6 +61,13 @@
     font-size: 0.95rem;
     color: var(--color-primary);
     flex-shrink: 0;
+    transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.contact-info-item:hover i {
+    background: rgba(56, 189, 248, 0.2);
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
 }
 
 /* Right column */
@@ -111,7 +124,7 @@
     font-size: 0.9rem;
     font-family: inherit;
     outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
     width: 100%;
 }
 
@@ -128,7 +141,8 @@
 .contact-form input:focus,
 .contact-form textarea:focus {
     border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+    background: var(--color-bg-light);
 }
 
 /* Submit button */
@@ -146,13 +160,14 @@
     font-weight: 700;
     font-family: inherit;
     cursor: pointer;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     align-self: flex-start;
 }
 
 .contact-submit:hover {
-    opacity: 0.88;
-    transform: translateY(-2px);
+    opacity: 1;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(56, 189, 248, 0.4);
 }
 
 .contact-submit i {
