@@ -597,6 +597,125 @@ document.addEventListener("DOMContentLoaded", () => {
 })();
 
 
+// ===== Achievement Cards — Interactive Modal =====
+(function () {
+  const modal    = document.getElementById("achModal");
+  if (!modal) return;
+
+  const backdrop = document.getElementById("achModalBackdrop");
+  const closeBtn = document.getElementById("achModalClose");
+  const panel    = modal.querySelector(".ach-modal-panel");
+
+  const elIcon  = document.getElementById("achModalIcon");
+  const elTitle = document.getElementById("achModalTitle");
+  const elEvent = document.getElementById("achModalEventText");
+  const elEventRow = document.getElementById("achModalEvent");
+  const elDate  = document.getElementById("achModalDateText");
+  const elDateRow  = document.getElementById("achModalDateRow");
+  const elDesc  = document.getElementById("achModalDesc");
+  const elRank  = document.getElementById("achModalRank");
+  const elTags  = document.getElementById("achModalTags");
+  const elMedal = document.querySelector(".ach-modal-medal-ring");
+  const elMedalInner = document.querySelector(".ach-modal-medal-inner");
+
+  const tierClasses = ["ach-modal--gold","ach-modal--silver","ach-modal--platinum","ach-modal--bronze"];
+
+  function openModal(card) {
+    const { title, event, desc, date, tier, rank, tags, icon, image } = card.dataset;
+
+    // Tier class on panel
+    panel.classList.remove(...tierClasses);
+    panel.classList.add("ach-modal--" + (tier || "gold"));
+
+    // Icon (used in both medal mode and photo badge)
+    const iconClass = "bi " + (icon || "bi-trophy-fill");
+    elIcon.className = iconClass;
+    const photoIcon = document.getElementById("achModalPhotoIcon");
+    if (photoIcon) photoIcon.className = iconClass;
+
+    elTitle.textContent = title || "";
+    elRank.textContent  = rank  || "";
+    elRank.style.display = rank ? "" : "none";
+
+    if (event) { elEvent.textContent = event; elEventRow.style.display = "flex"; }
+    else        { elEventRow.style.display = "none"; }
+
+    if (date)  { elDate.textContent = date; elDateRow.style.display = "flex"; }
+    else        { elDateRow.style.display = "none"; }
+
+    elDesc.textContent = desc || "";
+
+    elTags.innerHTML = (tags || "").split(",").filter(Boolean)
+      .map(t => `<span>${t.trim()}</span>`).join("");
+
+    // Photo vs medal mode
+    const photoWrap = document.getElementById("achModalPhotoWrap");
+    const photoImg  = document.getElementById("achModalPhoto");
+    if (image && photoWrap && photoImg) {
+      photoImg.src = image;
+      panel.classList.add("has-photo");
+    } else {
+      if (photoImg) photoImg.src = "";
+      panel.classList.remove("has-photo");
+    }
+
+    modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeModal() {
+    modal.classList.remove("open");
+    panel.classList.remove("has-photo");
+    document.body.style.overflow = "";
+  }
+
+  // Open on card click (button or anywhere on card)
+  document.addEventListener("click", (e) => {
+    const card = e.target.closest(".ach-card");
+    if (card) { openModal(card); return; }
+  });
+
+  backdrop.addEventListener("click", closeModal);
+  closeBtn.addEventListener("click", closeModal);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(); });
+})();
+
+
+// ===== Achievements — Stats Counter Animation =====
+(function () {
+  const statNums = document.querySelectorAll(".ach-stat-num[data-count]");
+  if (!statNums.length) return;
+
+  function animateCount(el) {
+    const target = parseInt(el.dataset.count, 10);
+    const duration = 1800;
+    const start = performance.now();
+
+    function tick(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(eased * target);
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        statNums.forEach(animateCount);
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.4 });
+
+  const statsBar = document.querySelector(".ach-stats-bar");
+  if (statsBar) observer.observe(statsBar);
+})();
+
+
 // ===== Tech Arsenal — Floating Dot Particles =====
 (function () {
   const canvas  = document.getElementById("arsenalCanvas");

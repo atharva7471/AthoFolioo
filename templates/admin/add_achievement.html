@@ -1,0 +1,90 @@
+{% extends "admin/base.html" %}
+{% block title %} | Achievements{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/admin_forms.css') }}">
+<style>
+  .tier-preview { display:inline-block;padding:3px 12px;border-radius:16px;font-size:0.78rem;font-weight:700;margin-left:8px;vertical-align:middle; }
+  .ach-order-hint { font-size:0.8rem;color:#94a3b8;margin-top:4px; }
+  .icon-hint { font-size:0.78rem;color:#94a3b8;margin-top:4px; }
+  .icon-hint a { color:#38bdf8;text-decoration:none; }
+  .sort-badge { display:inline-block;background:rgba(56,189,248,0.12);color:#38bdf8;border:1px solid rgba(56,189,248,0.25);padding:2px 10px;border-radius:12px;font-size:0.72rem;font-weight:700;margin-right:8px; }
+  .admin-list-item .tier-dot { width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle; }
+  .tier-dot.gold     { background:#f59e0b;box-shadow:0 0 6px #f59e0b; }
+  .tier-dot.silver   { background:#94a3b8;box-shadow:0 0 6px #94a3b8; }
+  .tier-dot.platinum { background:#8b5cf6;box-shadow:0 0 6px #8b5cf6; }
+  .tier-dot.bronze   { background:#b47840;box-shadow:0 0 6px #b47840; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section id="add-achievement" class="admin-form-section">
+  <h2>Add Achievement</h2>
+  <form action="{{ url_for('add_achievement') }}" method="POST" enctype="multipart/form-data" class="admin-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <input type="text" name="title" placeholder="Achievement Title *" required>
+
+    <input type="text" name="event" placeholder="Event / Competition Name (e.g. Smart India Hackathon 2024)">
+
+    <textarea name="description" rows="3" placeholder="Short description of the achievement…"></textarea>
+
+    <div>
+      <select name="tier" required>
+        <option value="gold">🥇 Gold (1st Place / Top Winner)</option>
+        <option value="silver">🥈 Silver (Runner Up / 2nd)</option>
+        <option value="bronze">🥉 Bronze (3rd / Finalist)</option>
+        <option value="platinum">✨ Platinum (Special / Featured)</option>
+      </select>
+    </div>
+
+    <input type="text" name="rank_label" placeholder="Rank Label shown on badge (e.g. 1st Place, Runner Up, Top 0.5%)">
+
+    <input type="text" name="date" placeholder="Date or Period (e.g. March 2024 · National Level)">
+
+    <div>
+      <label style="font-size:0.82rem;color:#94a3b8;margin-bottom:6px;display:block;">📸 Memory Photo <span style="color:#64748b;">(optional — shown in the enlarged modal)</span></label>
+      <input type="file" name="image" accept="image/png,image/jpeg,image/webp">
+    </div>
+
+    <div>
+      <input type="text" name="icon" placeholder="Bootstrap Icon class (e.g. bi-trophy-fill)" value="bi-trophy-fill">
+      <p class="icon-hint">Browse icons at <a href="https://icons.getbootstrap.com/" target="_blank">icons.getbootstrap.com</a> — use the class name only (e.g. <code>bi-award-fill</code>)</p>
+    </div>
+
+    <input type="text" name="tags" placeholder="Tags, comma separated (e.g. AI/ML, Flask, NLP)">
+
+    <div>
+      <input type="number" name="sort_order" placeholder="Display order (1 = first, lower = higher priority)" value="10" min="1" max="999">
+      <p class="ach-order-hint">Cards are shown sorted by this number ascending. Featured (first) card gets the large center treatment.</p>
+    </div>
+
+    <button type="submit">Add Achievement</button>
+  </form>
+</section>
+
+<section class="admin-list-section">
+  <h2>Achievements ({{ achievements | length }})</h2>
+  {% for ach in achievements %}
+  <div class="admin-list-item">
+    <div>
+      <span class="sort-badge">#{{ ach.sort_order | default('—') }}</span>
+      <span class="tier-dot {{ ach.tier | default('gold') }}"></span>
+      <strong>{{ ach.title }}</strong>
+      {% if ach.rank_label %}<span style="color:#94a3b8;font-size:0.82rem;margin-left:8px;">{{ ach.rank_label }}</span>{% endif %}
+      {% if ach.event %}<span style="color:#64748b;font-size:0.78rem;margin-left:8px;">· {{ ach.event }}</span>{% endif %}
+    </div>
+    <div class="admin-actions">
+      <a href="{{ url_for('edit_achievement', ach_id=ach._id) }}" class="edit-btn">Edit</a>
+      <form method="POST" action="{{ url_for('delete_achievement', ach_id=ach._id) }}"
+            onsubmit="return confirm('Delete this achievement?');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="danger-btn">Delete</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <p>No achievements yet. Add your first one above!</p>
+  {% endfor %}
+</section>
+{% endblock %}

@@ -33,6 +33,7 @@ comments_collection = db["comments"]
 admins_collection = db["admins"]
 projects_collection = db["projects"]
 certificates_collection = db["certificates"]
+achievements_collection = db["achievements"]
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -74,7 +75,8 @@ def home():
     comments = comments_collection.find({"approved": True}).sort("created_at", -1)
     projects = list(projects_collection.find().sort("created_at", -1))
     certificates = list(certificates_collection.find().sort("created_at", -1))
-    return render_template("main/index.html", projects=projects, certificates=certificates)
+    achievements = list(achievements_collection.find().sort([("sort_order", 1), ("created_at", -1)]))
+    return render_template("main/index.html", projects=projects, certificates=certificates, achievements=achievements)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -132,6 +134,81 @@ def add_project_page():
 def add_cert_page():
     certificates = list(certificates_collection.find().sort("created_at", -1))
     return render_template("admin/add_cert.html", certificates=certificates)
+
+@app.route("/admin/add-achievement", methods=["GET"])
+@admin_required
+def add_achievement_page():
+    achievements = list(achievements_collection.find().sort([("sort_order", 1), ("created_at", -1)]))
+    return render_template("admin/add_achievement.html", achievements=achievements)
+
+@app.route("/admin/achievements/edit/<ach_id>", methods=["GET", "POST"])
+@admin_required
+def edit_achievement(ach_id):
+    try:
+        oid = ObjectId(ach_id)
+    except InvalidId:
+        flash("Invalid achievement ID", "danger")
+        return redirect(url_for("add_achievement_page"))
+
+    ach = achievements_collection.find_one({"_id": oid})
+    if not ach:
+        flash("Achievement not found", "danger")
+        return redirect(url_for("add_achievement_page"))
+
+    if request.method == "POST":
+        title       = request.form.get("title", "").strip()
+        event       = request.form.get("event", "").strip()
+        description = request.form.get("description", "").strip()
+        icon        = request.form.get("icon", "bi-trophy-fill").strip()
+        tier        = request.form.get("tier", "gold").strip()
+        rank_label  = request.form.get("rank_label", "").strip()
+        date        = request.form.get("date", "").strip()
+        tags        = request.form.get("tags", "").strip()
+        sort_order  = int(request.form.get("sort_order", 99))
+        new_image   = request.files.get("image")
+
+        if not title:
+            flash("Title is required", "danger")
+            return redirect(url_for("edit_achievement", ach_id=ach_id))
+
+        update_fields = {
+            "title":      title,
+            "event":      event,
+            "description": description,
+            "icon":       icon,
+            "tier":       tier,
+            "rank_label": rank_label,
+            "date":       date,
+            "tags":       [t.strip() for t in tags.split(",") if t.strip()],
+            "sort_order": sort_order,
+            "updated_at": datetime.utcnow()
+        }
+
+        if new_image and allowed_file(new_image):
+            try:
+                # Delete old image if exists
+                if ach.get("image_public_id"):
+                    cloudinary.uploader.destroy(ach["image_public_id"], resource_type="image")
+                new_image.stream.seek(0)
+                upload_result = cloudinary.uploader.upload(
+                    new_image.stream,
+                    folder="portfolio/achievements",
+                    resource_type="image",
+                    public_id=uuid.uuid4().hex,
+                    overwrite=True
+                )
+                update_fields["image_url"]       = upload_result["secure_url"]
+                update_fields["image_public_id"] = upload_result["public_id"]
+            except Exception as e:
+                app.logger.error("Achievement image update failed: %s", e)
+                flash(f"Image upload failed: {e}", "danger")
+                return redirect(url_for("edit_achievement", ach_id=ach_id))
+
+        achievements_collection.update_one({"_id": oid}, {"$set": update_fields})
+        flash("Achievement updated!", "success")
+        return redirect(url_for("add_achievement_page"))
+
+    return render_template("admin/edit_achievement.html", ach=ach)
 
 # -------------------------
 # Logics
@@ -363,6 +440,79 @@ def edit_project(project_id):
         return redirect(url_for("admin_dashboard"))
 
     return render_template("admin/edit_project.html", project=project)
+
+@app.route("/admin/add-achievement", methods=["POST"])
+@admin_required
+def add_achievement():
+    title       = request.form.get("title", "").strip()
+    event       = request.form.get("event", "").strip()
+    description = request.form.get("description", "").strip()
+    icon        = request.form.get("icon", "bi-trophy-fill").strip()
+    tier        = request.form.get("tier", "gold").strip()
+    rank_label  = request.form.get("rank_label", "").strip()
+    date        = request.form.get("date", "").strip()
+    tags        = request.form.get("tags", "").strip()
+    sort_order  = int(request.form.get("sort_order", 99))
+    image       = request.files.get("image")
+
+    if not title:
+        flash("Title is required", "danger")
+        return redirect(url_for("add_achievement_page"))
+
+    image_url = ""
+    image_public_id = ""
+    if image and allowed_file(image):
+        try:
+            image.stream.seek(0)
+            upload_result = cloudinary.uploader.upload(
+                image.stream,
+                folder="portfolio/achievements",
+                resource_type="image",
+                public_id=uuid.uuid4().hex,
+                overwrite=True
+            )
+            image_url = upload_result["secure_url"]
+            image_public_id = upload_result["public_id"]
+        except Exception as e:
+            app.logger.error("Achievement image upload failed: %s", e)
+            flash(f"Image upload failed: {e}", "danger")
+            return redirect(url_for("add_achievement_page"))
+
+    achievements_collection.insert_one({
+        "title":            title,
+        "event":            event,
+        "description":      description,
+        "icon":             icon,
+        "tier":             tier,
+        "rank_label":       rank_label,
+        "date":             date,
+        "tags":             [t.strip() for t in tags.split(",") if t.strip()],
+        "sort_order":       sort_order,
+        "image_url":        image_url,
+        "image_public_id":  image_public_id,
+        "created_at":       datetime.utcnow()
+    })
+    flash("Achievement added!", "success")
+    return redirect(url_for("add_achievement_page"))
+
+@app.route("/admin/delete-achievement/<ach_id>", methods=["POST"])
+@admin_required
+def delete_achievement(ach_id):
+    try:
+        oid = ObjectId(ach_id)
+    except InvalidId:
+        flash("Invalid achievement ID", "danger")
+        return redirect(url_for("add_achievement_page"))
+
+    ach = achievements_collection.find_one({"_id": oid})
+    if ach and ach.get("image_public_id"):
+        try:
+            cloudinary.uploader.destroy(ach["image_public_id"], resource_type="image")
+        except Exception:
+            pass
+    achievements_collection.delete_one({"_id": oid})
+    flash("Achievement deleted", "success")
+    return redirect(url_for("add_achievement_page"))
 
 @app.route("/admin/delete-certificate/<cert_id>", methods=["POST"])
 @admin_required

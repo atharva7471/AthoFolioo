@@ -1,0 +1,160 @@
+<!-- ════════════════════════════════════════════════════════
+     Achievements Section — sits ABOVE the certificate slider
+     ════════════════════════════════════════════════════════ -->
+<section class="achievements-section" id="achievements">
+  <!-- Ambient orbs -->
+  <div class="ach-orb ach-orb-1"></div>
+  <div class="ach-orb ach-orb-2"></div>
+  <div class="ach-orb ach-orb-3"></div>
+
+  <!-- ── Section Header ── -->
+  <div class="ach-header">
+    <h2 class="ach-section-title">
+      <span class="ach-title-highlight">Milestones</span>
+    </h2>
+    <p class="ach-section-sub">Moments that define the journey</p>
+  </div>
+
+  {% if achievements %}
+  <!-- ── Trophy Showcase ── -->
+  <div class="ach-trophy-showcase" id="achShowcase">
+    {% for ach in achievements %}
+    {%- set tier = ach.tier | default('gold') -%}
+    {%- set is_featured = loop.index == 1 -%}
+
+    <div class="ach-card ach-card--{{ tier }}{% if is_featured %} ach-card--featured{% endif %}"
+         data-ach-id="{{ loop.index }}"
+         data-title="{{ ach.title | e }}"
+         data-event="{{ ach.event | default('') | e }}"
+         data-desc="{{ ach.description | default('') | e }}"
+         data-date="{{ ach.date | default('') | e }}"
+         data-tier="{{ tier }}"
+         data-rank="{{ ach.rank_label | default('') | e }}"
+         data-tags="{{ (ach.tags | join(',')) if ach.tags else '' }}"
+         data-icon="{{ ach.icon | default('bi-trophy-fill') }}"
+         data-image="{{ ach.image_url | default('') }}">
+
+      <div class="ach-card-sparkle"></div>
+      <div class="ach-card-rays"></div>
+
+      {% if is_featured %}
+      <div class="ach-confetti-burst">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
+      </div>
+      {% endif %}
+
+      <!-- Medal -->
+      <div class="ach-medal">
+        <div class="ach-medal-ring">
+          <div class="ach-medal-inner">
+            <i class="bi {{ ach.icon | default('bi-trophy-fill') }}"></i>
+          </div>
+        </div>
+        <div class="ach-medal-ribbon ach-medal-ribbon--left"></div>
+        <div class="ach-medal-ribbon ach-medal-ribbon--right"></div>
+      </div>
+
+      {% if ach.rank_label %}
+      <div class="ach-rank-label">{{ ach.rank_label }}</div>
+      {% endif %}
+
+      <h3 class="ach-card-title">{{ ach.title }}</h3>
+
+      {% if ach.event %}
+      <p class="ach-card-event">
+        <i class="bi bi-calendar3"></i> {{ ach.event }}
+      </p>
+      {% endif %}
+
+      {% if ach.description %}
+      <p class="ach-card-desc">{{ ach.description | truncate(110) }}</p>
+      {% endif %}
+
+      {% if ach.tags %}
+      <div class="ach-card-tags">
+        {% for tag in ach.tags %}<span>{{ tag }}</span>{% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Expand hint -->
+      <button class="ach-expand-btn" aria-label="View achievement details">
+        <i class="bi bi-arrows-fullscreen"></i> View Details
+      </button>
+
+      <div class="ach-card-glow-border"></div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="ach-empty">
+    <i class="bi bi-trophy"></i>
+    <p>Achievements coming soon…</p>
+  </div>
+  {% endif %}
+</section>
+
+<!-- ══════════════════════════════════════════════════════════
+     Achievement Detail Modal
+     ══════════════════════════════════════════════════════════ -->
+<div class="ach-modal" id="achModal" role="dialog" aria-modal="true" aria-label="Achievement detail">
+  <div class="ach-modal-backdrop" id="achModalBackdrop"></div>
+  <div class="ach-modal-panel">
+
+    <!-- Close -->
+    <button class="ach-modal-close" id="achModalClose" aria-label="Close">
+      <i class="bi bi-x-lg"></i>
+    </button>
+
+    <!-- Glowing medal / photo display -->
+    <div class="ach-modal-hero" id="achModalHero">
+
+      <!-- Photo mode: shown when achievement has an image -->
+      <div class="ach-modal-photo" id="achModalPhotoWrap">
+        <!-- "Memory" label top-left -->
+        <div class="ach-modal-photo-label">
+          <i class="bi bi-camera-fill"></i> Memory
+        </div>
+        <img id="achModalPhoto" src="" alt="Achievement memory" loading="lazy">
+        <div class="ach-modal-photo-overlay"></div>
+        <!-- Small medal badge overlaid on the photo -->
+        <div class="ach-modal-photo-badge" id="achModalPhotoBadge">
+          <i id="achModalPhotoIcon" class="bi bi-trophy-fill"></i>
+        </div>
+      </div>
+
+      <!-- Medal mode: shown when no image uploaded -->
+      <div class="ach-modal-medal" id="achModalMedal">
+        <div class="ach-modal-medal-ring">
+          <div class="ach-modal-medal-inner">
+            <i id="achModalIcon" class="bi bi-trophy-fill"></i>
+          </div>
+        </div>
+        <div class="ach-modal-orbit">
+          <div class="ach-modal-orbit-dot"></div>
+        </div>
+      </div>
+
+      <div class="ach-modal-rays-bg"></div>
+    </div>
+
+
+    <!-- Content -->
+    <div class="ach-modal-body">
+      <div class="ach-modal-rank" id="achModalRank"></div>
+      <h3 class="ach-modal-title" id="achModalTitle"></h3>
+      <p class="ach-modal-event" id="achModalEvent">
+        <i class="bi bi-calendar3"></i>
+        <span id="achModalEventText"></span>
+      </p>
+      <p class="ach-modal-date" id="achModalDateRow">
+        <i class="bi bi-clock-history"></i>
+        <span id="achModalDateText"></span>
+      </p>
+      <p class="ach-modal-desc" id="achModalDesc"></p>
+      <div class="ach-modal-tags" id="achModalTags"></div>
+    </div>
+
+  </div>
+</div>
