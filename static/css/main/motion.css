@@ -1,0 +1,369 @@
+/* ══════════════════════════════════════════════════════════════
+   motion.css  —  Atharva Bhosale Portfolio Motion Design System
+   
+   ONE language. ONE family. Every animation belongs here.
+   
+   Tokens → Keyframes → Utility classes → Component states
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Motion Tokens ──────────────────────────────────────────── */
+:root {
+  /* Duration Scale — Named by feel, not milliseconds */
+  --dur-instant:  0.06s;   /* Micro: button press, click flash */
+  --dur-fast:     0.18s;   /* Quick: hover state changes */
+  --dur-normal:   0.42s;   /* Default: UI transitions */
+  --dur-slow:     0.85s;   /* Reveals: sections, panels */
+  --dur-epic:     1.6s;    /* Cinematic: page load, hero */
+
+  /* Easing Scale — One family, four roles */
+  --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);      /* Primary: all enters */
+  --ease-in:      cubic-bezier(0.7, 0, 0.84, 0);       /* Exits only */
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);   /* Elastic: lifts, bounces */
+  --ease-smooth:  cubic-bezier(0.25, 0.46, 0.45, 0.94);/* Scroll parallax, glides */
+  --ease-linear:  linear;                               /* Scrubs, continuous loops */
+
+  /* Stagger — one value, used consistently */
+  --stagger:      0.08s;
+  --stagger-sm:   0.04s;
+  --stagger-lg:   0.14s;
+
+  /* Overwrite base.css transition shorthands with motion tokens */
+  --transition-fast:   var(--dur-fast) var(--ease-out);
+  --transition-normal: var(--dur-normal) var(--ease-out);
+  --transition-slow:   var(--dur-slow) var(--ease-out);
+}
+
+
+/* ── Keyframe Library ────────────────────────────────────────── */
+
+/* Reveal upward from clipped container */
+@keyframes reveal-up {
+  from { transform: translateY(102%); }
+  to   { transform: translateY(0); }
+}
+
+/* Fade in with upward drift */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Fade in only */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Blur to sharp reveal */
+@keyframes blur-reveal {
+  from { opacity: 0; filter: blur(12px); transform: translateY(16px); }
+  to   { opacity: 1; filter: blur(0);    transform: translateY(0); }
+}
+
+/* Scale reveal (for images, cards) */
+@keyframes scale-reveal {
+  from { opacity: 0; transform: scale(1.06); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Continuous ambient pulse */
+@keyframes ambient-pulse {
+  0%, 100% { opacity: 0.5; transform: translateX(-50%) scale(1); }
+  50%       { opacity: 0.8; transform: translateX(-50%) scale(1.08); }
+}
+
+/* Loader bar sweep */
+@keyframes loader-sweep {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+
+/* Subtle float (scroll indicator) */
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
+}
+
+/* Shimmer for skeleton loaders */
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position: 400px 0; }
+}
+
+/* Dot pulse (journey timeline nodes) */
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+}
+
+/* Marquee scroll — smooth infinite */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Link underline sweep */
+@keyframes underline-sweep {
+  from { transform: scaleX(0); transform-origin: left; }
+  to   { transform: scaleX(1); transform-origin: left; }
+}
+
+/* Nav link stagger in */
+@keyframes nav-link-in {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Success checkmark draw */
+@keyframes check-draw {
+  from { stroke-dashoffset: 30; }
+  to   { stroke-dashoffset: 0; }
+}
+
+
+/* ── Utility: Reveal Wrappers ─────────────────────────────────
+   Apply to the PARENT element to clip children during animation  */
+
+.clip-wrap {
+  overflow: hidden;
+  display: block; /* Ensure block context for child transform */
+}
+
+/* Lines of text get this — clips the upward reveal */
+.line-wrap {
+  overflow: hidden;
+  display: block;
+  padding-bottom: 0.08em; /* Prevent descender clips */
+}
+
+
+/* ── Utility: GSAP Initial States ────────────────────────────
+   Elements start invisible. GSAP sets them visible via scroll.
+   Using CSS initial state prevents FOUC on slow connections.    */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  will-change: transform, opacity;
+}
+
+[data-reveal="blur"] {
+  opacity: 0;
+  filter: blur(10px);
+  transform: translateY(18px);
+  will-change: transform, opacity, filter;
+}
+
+[data-reveal="scale"] {
+  opacity: 0;
+  transform: scale(1.05);
+  will-change: transform, opacity;
+}
+
+[data-reveal="left"] {
+  opacity: 0;
+  transform: translateX(-32px);
+  will-change: transform, opacity;
+}
+
+/* Line reveals: child spans start offset, clip-wrap on parent */
+[data-reveal="line"] {
+  /* Parent wraps children */
+}
+[data-reveal="line"] .line-inner {
+  display: block;
+  transform: translateY(104%);
+  will-change: transform;
+}
+
+
+/* ── Utility: Interactive Element Base States ─────────────────── */
+
+/* Underline animation for links */
+.animated-link {
+  position: relative;
+  display: inline-block;
+}
+
+.animated-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-normal) var(--ease-out);
+}
+
+.animated-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+
+/* ── Button Motion Layer ─────────────────────────────────────── */
+
+/* Magnetic button base — JS adds inline transform offset */
+.btn-premium,
+.btn-outline {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--dur-normal) var(--ease-spring),
+    box-shadow var(--dur-normal) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+  will-change: transform;
+}
+
+/* Ripple pseudo-element — JS triggers via .ripple-active class */
+.btn-premium::after,
+.btn-outline::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(0);
+  opacity: 0;
+  transition: transform var(--dur-normal) var(--ease-out), opacity var(--dur-normal) var(--ease-out);
+  pointer-events: none;
+}
+
+.btn-premium.ripple-active::after,
+.btn-outline.ripple-active::after {
+  transform: scale(1);
+  opacity: 0;
+  transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-slow) var(--ease-out);
+}
+
+.btn-premium:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(255, 255, 255, 0.15);
+}
+
+.btn-premium:active {
+  transform: scale(0.96) !important;
+  transition: transform var(--dur-instant) var(--ease-in) !important;
+}
+
+.btn-outline:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-2px);
+}
+
+.btn-outline:active {
+  transform: scale(0.97) !important;
+  transition: transform var(--dur-instant) var(--ease-in) !important;
+}
+
+
+/* ── Card Motion Layer ───────────────────────────────────────── */
+
+/* 3D tilt card — perspective set on parent */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition:
+    transform var(--dur-normal) var(--ease-spring),
+    box-shadow var(--dur-normal) var(--ease-out);
+  will-change: transform;
+}
+
+.tilt-card:hover {
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+}
+
+/* Tilt-card image inner — scale on hover */
+.tilt-card .tilt-img {
+  overflow: hidden;
+}
+
+.tilt-card .tilt-img img {
+  transition: transform var(--dur-slow) var(--ease-out);
+  will-change: transform;
+}
+
+.tilt-card:hover .tilt-img img {
+  transform: scale(1.06);
+}
+
+/* Work card lift */
+.work-card {
+  transition:
+    transform var(--dur-normal) var(--ease-spring),
+    box-shadow var(--dur-normal) var(--ease-out);
+  will-change: transform;
+}
+
+.work-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+
+/* ── Form Motion Layer ───────────────────────────────────────── */
+
+.input-group {
+  position: relative;
+}
+
+.input-group::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-text-primary);
+  transition: width var(--dur-normal) var(--ease-out);
+}
+
+.input-group:focus-within::after {
+  width: 100%;
+}
+
+
+/* ── Skeleton Loader ─────────────────────────────────────────── */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.10) 50%,
+    rgba(255,255,255,0.04) 100%
+  );
+  background-size: 800px 100%;
+  animation: shimmer 1.6s var(--ease-linear) infinite;
+  border-radius: var(--radius-md);
+}
+
+
+/* ── Reduced Motion Overrides ────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-reveal="blur"],
+  [data-reveal="scale"],
+  [data-reveal="left"],
+  [data-reveal="line"] .line-inner {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .btn-premium,
+  .btn-outline,
+  .tilt-card,
+  .work-card {
+    transition: none !important;
+  }
+
+  .animated-link::after {
+    transition: none !important;
+  }
+}

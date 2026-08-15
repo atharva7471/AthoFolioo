@@ -1,0 +1,149 @@
+/* ══════════════════════════════════════════════════════════════
+   cursor.css  —  Premium Two-Layer Cursor System
+   ══════════════════════════════════════════════════════════════ */
+
+/* Hide native cursor everywhere */
+*, *::before, *::after {
+  cursor: none !important;
+}
+
+/* ── Cursor Dot (instant follower) ──────────────────────────── */
+#cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+  /* translate is set via JS transform directly for instant snap */
+  mix-blend-mode: difference;
+  transition:
+    width  var(--dur-fast) var(--ease-out),
+    height var(--dur-fast) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+/* ── Cursor Ring (lagged follower) ──────────────────────────── */
+#cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99998;
+  will-change: transform;
+  /* JS lerps this behind the dot */
+  transition:
+    width    var(--dur-normal) var(--ease-out),
+    height   var(--dur-normal) var(--ease-out),
+    border   var(--dur-normal) var(--ease-out),
+    opacity  var(--dur-fast)   var(--ease-out),
+    background var(--dur-normal) var(--ease-out);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Ring label (shown on project card hover) */
+#cursor-ring::before {
+  content: attr(data-label);
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #000;
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+/* ── Cursor State: Link / Button Hover ──────────────────────── */
+body.cursor-hover #cursor-dot {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+body.cursor-hover #cursor-ring {
+  width: 56px;
+  height: 56px;
+  border-color: rgba(255, 255, 255, 0.9);
+  background: transparent;
+}
+
+/* ── Cursor State: Project Card Hover ───────────────────────── */
+body.cursor-project #cursor-dot {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+body.cursor-project #cursor-ring {
+  width: 72px;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.92);
+  border-color: transparent;
+}
+
+body.cursor-project #cursor-ring::before {
+  opacity: 1;
+}
+
+/* ── Cursor State: Image / Certificate Hover ────────────────── */
+body.cursor-image #cursor-dot {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+body.cursor-image #cursor-ring {
+  width: 60px;
+  height: 60px;
+  border-color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ── Cursor State: Click / Press ────────────────────────────── */
+body.cursor-click #cursor-dot {
+  transform: scale(0) !important;
+  opacity: 0;
+}
+
+body.cursor-click #cursor-ring {
+  width: 20px;
+  height: 20px;
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+/* ── Cursor State: Text / Input ─────────────────────────────── */
+body.cursor-text #cursor-dot {
+  width: 2px;
+  height: 20px;
+  border-radius: 1px;
+  background: rgba(255,255,255,0.8);
+}
+
+body.cursor-text #cursor-ring {
+  opacity: 0;
+}
+
+/* ── Mobile: No custom cursor ───────────────────────────────── */
+@media (hover: none) or (pointer: coarse) {
+  #cursor-dot,
+  #cursor-ring {
+    display: none !important;
+  }
+  *, *::before, *::after {
+    cursor: auto !important;
+  }
+}

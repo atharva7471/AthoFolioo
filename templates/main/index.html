@@ -1,24 +1,10 @@
 {% extends "main/base.html" %}
-{% block hero %}
+
+{% block content %}
   {% include "main/partials/hero.html" %}
-{% endblock %}
-
-{% block skills %}
-  {% include "main/partials/skills.html" %}
-{% endblock %}
-
-{% block achievements %}
-  {% include "main/partials/achievements.html" %}
-{% endblock %}
-
-{% block certificates %}
-  {% include "main/partials/certificates.html" %}
-{% endblock %}
-
-{% block projects %}
+  {% include "main/partials/about_journey.html" %}
   {% include "main/partials/projects.html" %}
-{% endblock %}
-
-{% block contact %}
+  {% include "main/partials/achievements.html" %}
   {% include "main/partials/contact.html" %}
+  {% include "main/partials/footer.html" %}
 {% endblock %}

@@ -1,83 +1,126 @@
-<section class="contact" id="contact">
-  <div class="contact-inner">
-    <!-- Left: Get In Touch -->
-    <div class="contact-left">
-      <h1 class="section-title">Get In Touch</h1>
-      <p class="contact-intro">
-        Open to new opportunities, collaborations, and conversations.
-        Whether it's a project, a question, or just a hello — I'd love to hear from you.
-      </p>
+<!-- ─── The Conclusion (Contact) ────────────────────────────── -->
+<section class="contact-conclusion relative pt-[clamp(6rem,10vw,8rem)] pb-[clamp(4rem,6vw,6rem)] flex flex-col justify-center bg-[#000] overflow-hidden" id="contact">
+  <div class="contact-spotlight absolute top-[-20%] left-1/2 -translate-x-1/2 w-[80vw] h-[80vh] bg-[radial-gradient(circle,rgba(255,255,255,0.05)_0%,rgba(0,0,0,0)_70%)] rounded-full pointer-events-none z-0"></div>
 
-      <!-- Info pills -->
-      <div class="contact-info">
-        <div class="contact-info-item">
-          <i class="bi bi-envelope-fill"></i>
-          <span>atharva7471@gmail.com</span>
-        </div>
-        <div class="contact-info-item">
-          <i class="bi bi-geo-alt-fill"></i>
-          <span>Pune, India</span>
-        </div>
-        <div class="contact-info-item">
-          <i class="bi bi-linkedin"></i>
-          <span>linkedin.com/in/atharva-bhosale-7471abc</span>
+  <div class="container contact-container relative z-[1]">
+    
+    <div class="contact-grid grid grid-cols-2 gap-[var(--space-12)] items-center max-lg:grid-cols-1 max-lg:gap-[var(--space-8)]">
+      <!-- Left: Contact Info -->
+      <div class="contact-narrative reveal">
+        <h2 class="epic-title text-[clamp(3rem,5vw,4.5rem)] uppercase font-display font-black text-text-primary leading-[1.1] mb-[var(--space-8)]"><span class="title-outline text-transparent [-webkit-text-stroke:2px_rgba(255,255,255,0.85)] relative">LET'S BUILD</span> <br>THE FUTURE.</h2>
+        
+        <div class="contact-profile flex flex-col gap-[var(--space-4)] mt-[var(--space-2)]">
+          <a href="{{ url_for('static', filename='assets/resume.pdf') }}" class="profile-link group/link flex items-center gap-[1.5rem] py-[1rem] text-text-secondary no-underline relative w-full border-b border-[rgba(255,255,255,0.05)] transition-all duration-[0.4s] ease hover:bg-[rgba(255,255,255,0.02)] hover:pl-[1rem] hover:border-transparent after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:w-0 after:h-[1px] after:bg-primary after:transition-all after:duration-[0.4s] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:w-full" target="_blank" rel="noopener">
+            <div class="glass-icon flex items-center justify-center w-[50px] h-[50px] rounded-[12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.1)] text-[1.4rem] text-text-primary transition-all duration-[0.4s] ease group-hover/link:bg-[rgba(74,144,226,0.15)] group-hover/link:border-[rgba(74,144,226,0.4)] group-hover/link:text-[#4a90e2] group-hover/link:shadow-[0_0_20px_rgba(74,144,226,0.2)] group-hover/link:scale-[1.05]"><i class="bi bi-file-earmark-pdf"></i></div>
+            <div class="profile-info flex flex-col gap-[0.2rem] grow">
+              <span class="link-label text-[0.8rem] uppercase tracking-[0.1em] text-text-muted">Resume</span>
+              <span class="link-value text-[1.1rem] text-text-primary font-sans transition-colors duration-[0.3s] ease group-hover/link:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">View my Resume</span>
+            </div>
+            <i class="bi bi-arrow-up-right arrow-icon text-[1.1rem] opacity-0 -translate-x-[10px] translate-y-[10px] transition-all duration-[0.3s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/link:opacity-100 group-hover/link:translate-x-0 group-hover/link:translate-y-0 group-hover/link:text-[#4a90e2]"></i>
+          </a>
+          
+          <a href="mailto:atharva7471@gmail.com" class="profile-link group/link flex items-center gap-[1.5rem] py-[1rem] text-text-secondary no-underline relative w-full border-b border-[rgba(255,255,255,0.05)] transition-all duration-[0.4s] ease hover:bg-[rgba(255,255,255,0.02)] hover:pl-[1rem] hover:border-transparent after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:w-0 after:h-[1px] after:bg-primary after:transition-all after:duration-[0.4s] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:w-full" target="_blank" rel="noopener">
+            <div class="glass-icon flex items-center justify-center w-[50px] h-[50px] rounded-[12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.1)] text-[1.4rem] text-text-primary transition-all duration-[0.4s] ease group-hover/link:bg-[rgba(74,144,226,0.15)] group-hover/link:border-[rgba(74,144,226,0.4)] group-hover/link:text-[#4a90e2] group-hover/link:shadow-[0_0_20px_rgba(74,144,226,0.2)] group-hover/link:scale-[1.05]"><i class="bi bi-envelope"></i></div>
+            <div class="profile-info flex flex-col gap-[0.2rem] grow">
+              <span class="link-label text-[0.8rem] uppercase tracking-[0.1em] text-text-muted">Email</span>
+              <span class="link-value text-[1.1rem] text-text-primary font-sans transition-colors duration-[0.3s] ease group-hover/link:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">atharva7471@gmail.com</span>
+            </div>
+          </a>
+          
+          <a href="https://linkedin.com/in/atharvabhosale-ai" class="profile-link group/link flex items-center gap-[1.5rem] py-[1rem] text-text-secondary no-underline relative w-full border-b border-[rgba(255,255,255,0.05)] transition-all duration-[0.4s] ease hover:bg-[rgba(255,255,255,0.02)] hover:pl-[1rem] hover:border-transparent after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:w-0 after:h-[1px] after:bg-primary after:transition-all after:duration-[0.4s] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:w-full" target="_blank" rel="noopener">
+            <div class="glass-icon flex items-center justify-center w-[50px] h-[50px] rounded-[12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.1)] text-[1.4rem] text-text-primary transition-all duration-[0.4s] ease group-hover/link:bg-[rgba(74,144,226,0.15)] group-hover/link:border-[rgba(74,144,226,0.4)] group-hover/link:text-[#4a90e2] group-hover/link:shadow-[0_0_20px_rgba(74,144,226,0.2)] group-hover/link:scale-[1.05]"><i class="bi bi-linkedin"></i></div>
+            <div class="profile-info flex flex-col gap-[0.2rem] grow">
+              <span class="link-label text-[0.8rem] uppercase tracking-[0.1em] text-text-muted">LinkedIn</span>
+              <span class="link-value text-[1.1rem] text-text-primary font-sans transition-colors duration-[0.3s] ease group-hover/link:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">linkedin.com/in/atharva-bhosale</span>
+            </div>
+            <i class="bi bi-arrow-up-right arrow-icon text-[1.1rem] opacity-0 -translate-x-[10px] translate-y-[10px] transition-all duration-[0.3s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/link:opacity-100 group-hover/link:translate-x-0 group-hover/link:translate-y-0 group-hover/link:text-[#4a90e2]"></i>
+          </a>
+          
+          <a href="https://github.com/atharva7471" class="profile-link group/link flex items-center gap-[1.5rem] py-[1rem] text-text-secondary no-underline relative w-full border-b border-[rgba(255,255,255,0.05)] transition-all duration-[0.4s] ease hover:bg-[rgba(255,255,255,0.02)] hover:pl-[1rem] hover:border-transparent after:content-[''] after:absolute after:-bottom-[1px] after:left-0 after:w-0 after:h-[1px] after:bg-primary after:transition-all after:duration-[0.4s] after:ease-[cubic-bezier(0.16,1,0.3,1)] hover:after:w-full" target="_blank" rel="noopener">
+            <div class="glass-icon flex items-center justify-center w-[50px] h-[50px] rounded-[12px] bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.1)] text-[1.4rem] text-text-primary transition-all duration-[0.4s] ease group-hover/link:bg-[rgba(74,144,226,0.15)] group-hover/link:border-[rgba(74,144,226,0.4)] group-hover/link:text-[#4a90e2] group-hover/link:shadow-[0_0_20px_rgba(74,144,226,0.2)] group-hover/link:scale-[1.05]"><i class="bi bi-github"></i></div>
+            <div class="profile-info flex flex-col gap-[0.2rem] grow">
+              <span class="link-label text-[0.8rem] uppercase tracking-[0.1em] text-text-muted">GitHub</span>
+              <span class="link-value text-[1.1rem] text-text-primary font-sans transition-colors duration-[0.3s] ease group-hover/link:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">github.com/atharva7471</span>
+            </div>
+            <i class="bi bi-arrow-up-right arrow-icon text-[1.1rem] opacity-0 -translate-x-[10px] translate-y-[10px] transition-all duration-[0.3s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/link:opacity-100 group-hover/link:translate-x-0 group-hover/link:translate-y-0 group-hover/link:text-[#4a90e2]"></i>
+          </a>
         </div>
       </div>
 
-      {% include "main/partials/social_links.html" %}
-    </div>
+      <!-- Right: Form -->
+      <div class="contact-action reveal">
+        <form class="glass-form flex flex-col gap-[1.5rem] max-md:gap-[1rem] p-[2.5rem] max-md:p-[1.25rem] bg-[rgba(20,20,25,0.4)] backdrop-blur-[20px] border border-[rgba(255,255,255,0.08)] rounded-[20px] shadow-[0_30px_60px_rgba(0,0,0,0.3)]" id="commentForm" method="POST" action="{{ url_for('submit') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-    <!-- Right: Form -->
-    <div class="contact-right">
-
-      <form class="contact-form" id="commentForm" method="POST"
-            action="{{ url_for('submit') }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="name"><i class="bi bi-person"></i> Name</label>
-            <input type="text" id="name" name="name" placeholder="Your name" required>
+          <div class="input-floating relative w-full group/input">
+            <input type="text" id="name" name="name" placeholder=" " required class="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.1)] rounded-[8px] text-text-primary text-[1.1rem] px-[1rem] pb-[0.5rem] pt-[1.25rem] font-sans resize-none transition-all duration-[0.3s] ease outline-none focus:border-[rgba(255,255,255,0.4)] focus:bg-[rgba(255,255,255,0.03)] focus:shadow-[0_0_20px_rgba(255,255,255,0.05)] peer">
+            <label for="name" class="absolute left-[1rem] top-1/2 -translate-y-1/2 text-[1rem] text-[rgba(255,255,255,0.5)] pointer-events-none transition-all duration-[0.3s] ease peer-focus:top-[0.5rem] peer-focus:text-[0.75rem] peer-focus:text-[rgba(255,255,255,0.8)] peer-[:not(:placeholder-shown)]:top-[0.5rem] peer-[:not(:placeholder-shown)]:text-[0.75rem] peer-[:not(:placeholder-shown)]:text-[rgba(255,255,255,0.8)]">Your Name</label>
           </div>
-          <div class="form-group">
-            <label for="email"><i class="bi bi-envelope"></i> Email</label>
-            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+          
+          <div class="input-floating relative w-full group/input">
+            <input type="email" id="email" name="email" placeholder=" " required class="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.1)] rounded-[8px] text-text-primary text-[1.1rem] px-[1rem] pb-[0.5rem] pt-[1.25rem] font-sans resize-none transition-all duration-[0.3s] ease outline-none focus:border-[rgba(255,255,255,0.4)] focus:bg-[rgba(255,255,255,0.03)] focus:shadow-[0_0_20px_rgba(255,255,255,0.05)] peer">
+            <label for="email" class="absolute left-[1rem] top-1/2 -translate-y-1/2 text-[1rem] text-[rgba(255,255,255,0.5)] pointer-events-none transition-all duration-[0.3s] ease peer-focus:top-[0.5rem] peer-focus:text-[0.75rem] peer-focus:text-[rgba(255,255,255,0.8)] peer-[:not(:placeholder-shown)]:top-[0.5rem] peer-[:not(:placeholder-shown)]:text-[0.75rem] peer-[:not(:placeholder-shown)]:text-[rgba(255,255,255,0.8)]">Email Address</label>
           </div>
-        </div>
+          
+          <div class="input-floating relative w-full group/input">
+            <textarea id="message" name="message" placeholder=" " rows="4" required class="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.1)] rounded-[8px] text-text-primary text-[1.1rem] px-[1rem] pb-[0.5rem] pt-[1.25rem] font-sans resize-none transition-all duration-[0.3s] ease outline-none focus:border-[rgba(255,255,255,0.4)] focus:bg-[rgba(255,255,255,0.03)] focus:shadow-[0_0_20px_rgba(255,255,255,0.05)] peer"></textarea>
+            <label for="message" class="absolute left-[1rem] top-[1.5rem] text-[1rem] text-[rgba(255,255,255,0.5)] pointer-events-none transition-all duration-[0.3s] ease peer-focus:top-[0.5rem] peer-focus:text-[0.75rem] peer-focus:text-[rgba(255,255,255,0.8)] peer-[:not(:placeholder-shown)]:top-[0.5rem] peer-[:not(:placeholder-shown)]:text-[0.75rem] peer-[:not(:placeholder-shown)]:text-[rgba(255,255,255,0.8)]">Tell me about your idea...</label>
+          </div>
+          
+          <p class="form-footer-note mt-[1.5rem] text-[0.8rem] text-text-muted leading-[1.5]">Your feedback, collaboration request, or message may be featured anonymously in the "What Others Say" section after moderation.</p>
 
-        <div class="form-group">
-          <label for="message"><i class="bi bi-chat-dots"></i> Message</label>
-          <textarea id="message" name="message" placeholder="What's on your mind?" rows="5" required></textarea>
-        </div>
-
-        <button type="submit" class="contact-submit">
-          Send Message <i class="bi bi-send"></i>
-        </button>
-      </form>
+          <button type="submit" class="btn-premium form-submit-btn group/btn mt-[1rem] self-start flex items-center gap-[0.5rem]">
+            Let's Build Together <i class="bi bi-arrow-right transition-transform duration-[0.3s] ease group-hover/btn:translate-x-[5px]"></i>
+          </button>
+        </form>
+      </div>
     </div>
-
   </div>
+</section>
 
-  <!-- ── User Comments ── -->
-  <section id="comments" class="comments-section">
-    <h2 class="section-title">What People Say</h2>
-    <p class="comments-sub">Feedback &amp; thoughts from collaborators</p>
+<!-- ─── Testimonials (Proof of Excellence) ────────────────────────────── -->
+<section class="testimonial-section relative py-[clamp(4rem,8vw,8rem)] bg-bg overflow-hidden isolate reveal" id="comments">
+  <!-- Subtle futuristic background treatment -->
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(74,144,226,0.03)_0%,transparent_60%)] pointer-events-none -z-10"></div>
+  <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:3rem_3rem] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_20%,transparent_100%)] pointer-events-none -z-10"></div>
 
-    <div class="slider-container">
-      <div class="testimonial-slider" id="commentsContainer"></div>
-
-      <div class="slider-controls">
-        <button class="slider-prev" aria-label="Previous comment">
-          <i class="bi bi-chevron-left"></i>
-        </button>
-        <div class="slider-dots" id="sliderDots"></div>
-        <button class="slider-next" aria-label="Next comment">
-          <i class="bi bi-chevron-right"></i>
-        </button>
+  <div class="container max-w-[1400px] mx-auto relative z-10">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-[3rem] lg:gap-[4rem] items-center">
+      
+      <!-- Left Column: Editorial Info -->
+      <div class="flex flex-col max-lg:text-center max-lg:items-center">
+        <span class="font-display text-[clamp(2.5rem,5vw,4.5rem)] font-bold text-text-primary uppercase leading-[1.1] mb-[1.5rem]">What Others Say</span>
+        
+        <p class="text-[1.1rem] text-text-secondary leading-[1.6] max-w-[400px]">
+          Real feedback from people I've collaborated with, worked alongside, and connected with.
+        </p>
       </div>
-    </div>
-  </section>
 
+      <!-- Right Column: Card & Controls -->
+      <div class="relative w-full max-w-[90vw] md:max-w-[800px] mx-auto lg:ml-auto">
+        <!-- JS Carousel Container -->
+        <div id="commentsContainer" class="relative w-full min-h-[400px] md:min-h-[350px]">
+          <!-- Testimonial Slides will be injected here by app.js -->
+        </div>
+
+        <!-- Controls (Bottom Right aligned to the card) -->
+        <div class="flex items-center justify-end gap-[1.5rem] mt-[1.5rem] max-lg:justify-center">
+          <button class="carousel-btn w-[40px] h-[40px] rounded-full border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-text-secondary transition-all duration-[0.3s] ease hover:bg-[rgba(255,255,255,0.05)] hover:text-text-primary hover:border-[rgba(255,255,255,0.3)] prev-btn" id="prevTestimonial" aria-label="Previous">
+            <i class="bi bi-arrow-left"></i>
+          </button>
+          
+          <div class="testimonial-indicators flex items-center font-mono text-[0.9rem] text-text-secondary tracking-[0.1em]" id="testimonialIndicators">
+            <!-- JS injected text e.g. 01 / 05 -->
+          </div>
+          
+          <button class="carousel-btn w-[40px] h-[40px] rounded-full border border-[rgba(255,255,255,0.1)] flex items-center justify-center text-text-secondary transition-all duration-[0.3s] ease hover:bg-[rgba(255,255,255,0.05)] hover:text-text-primary hover:border-[rgba(255,255,255,0.3)] next-btn" id="nextTestimonial" aria-label="Next">
+            <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
 </section>
 
 <script>

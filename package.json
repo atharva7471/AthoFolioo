@@ -1,0 +1,26 @@
+{
+  "name": "flask-folio",
+  "version": "1.0.0",
+  "description": "A modern and responsive **personal portfolio website** built using **HTML, CSS, JavaScript, and Flask**.   This website showcases my **projects, skills, resume, achievements, and contact information** in a clean and interactive way.",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/css/tailwind.css -o ./static/css/output.css --watch",
+    "build": "tailwindcss -i ./static/css/tailwind.css -o ./static/css/output.css --minify && mkdir -p public && cp -r static public/",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atharva7471/AthoFolioo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/atharva7471/AthoFolioo/issues"
+  },
+  "homepage": "https://github.com/atharva7471/AthoFolioo#readme",
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}

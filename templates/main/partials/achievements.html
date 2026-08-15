@@ -1,160 +1,199 @@
-<!-- ════════════════════════════════════════════════════════
-     Achievements Section — sits ABOVE the certificate slider
-     ════════════════════════════════════════════════════════ -->
-<section class="achievements-section" id="achievements">
-  <!-- Ambient orbs -->
-  <div class="ach-orb ach-orb-1"></div>
-  <div class="ach-orb ach-orb-2"></div>
-  <div class="ach-orb ach-orb-3"></div>
+<!-- ─── Proof of Excellence ────────────────────────────────────── -->
+<section class="excellence-section py-[var(--space-10)] relative bg-bg max-md:isolate max-md:overflow-hidden" id="achievements">
+  
+  <div class="excellence-container max-w-[1200px] mx-auto px-[var(--space-4)]">
+    <div class="excellence-header reveal text-left mb-[var(--space-8)]">
+      <span class="chapter-label">05 / Certificates Collected</span>
+    </div>
 
-  <!-- ── Section Header ── -->
-  <div class="ach-header">
-    <h2 class="ach-section-title">
-      <span class="ach-title-highlight">Exprience</span>
-    </h2>
-    <p class="ach-section-sub">So farr work life...</p>
-  </div>
-
-  {% if achievements %}
-  <!-- ── Trophy Showcase ── -->
-  <div class="ach-trophy-showcase" id="achShowcase">
-    {% for ach in achievements %}
-    {%- set tier = ach.tier | default('gold') -%}
-    {%- set is_featured = loop.index == 1 -%}
-
-    <div class="ach-card ach-card--{{ tier }}{% if is_featured %} ach-card--featured{% endif %}"
-         data-ach-id="{{ loop.index }}"
-         data-title="{{ ach.title | e }}"
-         data-event="{{ ach.event | default('') | e }}"
-         data-desc="{{ ach.description | default('') | e }}"
-         data-date="{{ ach.date | default('') | e }}"
-         data-tier="{{ tier }}"
-         data-rank="{{ ach.rank_label | default('') | e }}"
-         data-tags="{{ (ach.tags | join(',')) if ach.tags else '' }}"
-         data-icon="{{ ach.icon | default('bi-trophy-fill') }}"
-         data-image="{{ ach.image_url | default('') }}">
-
-      <div class="ach-card-sparkle"></div>
-      <div class="ach-card-rays"></div>
-
-      {% if is_featured %}
-      <div class="ach-confetti-burst">
-        <span></span><span></span><span></span><span></span>
-        <span></span><span></span><span></span><span></span>
-      </div>
-      {% endif %}
-
-      <!-- Medal -->
-      <div class="ach-medal">
-        <div class="ach-medal-ring">
-          <div class="ach-medal-inner">
-            <i class="bi {{ ach.icon | default('bi-trophy-fill') }}"></i>
+    {% if certificates %}
+    <div class="excellence-grid-wrapper flex flex-col gap-[var(--space-8)]" id="excellenceWrapper">
+      <div class="excellence-grid grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-[var(--space-8)] [perspective:1500px]">
+        {% for cert in certificates %}
+        <div class="excellence-card cert-item group/cert relative rounded-[var(--radius-2xl,24px)] overflow-hidden flex flex-col border border-[rgba(255,255,255,0.1)] bg-[linear-gradient(145deg,rgba(30,30,35,0.7)_0%,rgba(15,15,18,0.9)_100%)] backdrop-blur-[20px] shadow-[inset_0_1px_1px_rgba(255,255,255,0.15),0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-[0.4s] ease-[cubic-bezier(0.16,1,0.3,1)] [transform-style:preserve-3d] h-[clamp(320px,60vh,420px)] hover:-translate-y-[8px] hover:scale-[1.02] hover:shadow-[0_30px_60px_rgba(0,0,0,0.6),0_0_40px_rgba(255,255,255,0.04)] hover:border-[rgba(255,255,255,0.2)] hover:z-10 [&.show-cert]:!flex [&.show-cert]:!opacity-100 [&.show-cert]:!translate-y-0 {% if loop.index > 6 %}hidden-cert hidden opacity-0 translate-y-[30px] transition-all duration-[0.4s] ease-[cubic-bezier(0.16,1,0.3,1)]{% endif %} {% if loop.index > 3 %}hidden-cert-mobile max-md:hidden max-md:opacity-0 max-md:translate-y-[30px] transition-all duration-[0.4s] ease-[cubic-bezier(0.16,1,0.3,1)]{% endif %}">
+          
+          <div class="cert-image-wrapper relative w-full h-[45%] min-h-[180px] overflow-hidden shrink-0 bg-[rgba(5,5,7,0.8)] flex items-center justify-center border-b border-[rgba(255,255,255,0.08)] p-[var(--space-3)]">
+            <img src="{{ cert.image_url }}" alt="{{ cert.title }}" loading="lazy" class="w-full h-full object-contain transition-transform duration-[0.8s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/cert:scale-[1.05]">
+            <div class="cert-glow absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.5)_100%)] opacity-0 transition-opacity duration-[0.6s] ease pointer-events-none group-hover/cert:opacity-100"></div>
+          </div>
+          
+          <div class="cert-footer p-[1.5rem] flex flex-col bg-transparent flex-1 min-h-0">
+            <h3 class="cert-title text-[clamp(1rem,1.6vw,1.3rem)] font-medium text-text-primary leading-[1.3] font-serif mb-[0.5rem] [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] overflow-hidden text-ellipsis min-h-[2em] shrink-0" title="{{ cert.title }}">{{ cert.title }}</h3>
+            
+            <div class="cert-issuer-group flex flex-col gap-[0.1rem] mb-[0.1rem] shrink-0">
+              <span class="issuer-label text-[0.7rem] uppercase tracking-[0.15em] text-text-muted">Issued By</span>
+              <span class="cert-issuer text-[1rem] font-medium text-primary whitespace-nowrap overflow-hidden text-ellipsis">{{ cert.issuer }}</span>
+            </div>
+            
+            <div class="cert-meta flex flex-col gap-[0.2rem] text-[0.85rem] text-text-secondary mb-[0.8rem] shrink-0">
+              {% if cert.date %}<span class="cert-date flex items-center gap-[0.4rem]">{{ cert.date }}</span>{% endif %}
+              {% if cert.credential_id %}<span class="cert-id flex items-center gap-[0.4rem] font-mono opacity-70 text-[0.8rem]">{{ cert.credential_id }}</span>{% endif %}
+            </div>
+            
+            {% if cert.image_url %}
+            <div class="cert-btn-wrapper mt-[1.5rem] shrink-0">
+              <button class="cert-verify-btn inline-flex items-center justify-center gap-[0.6rem] px-[1.5rem] py-[0.8rem] bg-transparent border border-[rgba(255,255,255,0.2)] rounded-[40px] text-text-primary text-[0.9rem] no-underline transition-all duration-[0.3s] ease uppercase tracking-[0.08em] w-full hover:bg-[rgba(255,255,255,1)] hover:text-bg hover:border-[rgba(255,255,255,1)] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] cursor-pointer" onclick="openCertModal({
+                title: '{{ cert.title|escape }}',
+                issuer: '{{ cert.issuer|escape }}',
+                date: '{{ cert.date|default('')|escape }}',
+                credentialId: '{{ cert.credential_id|default('')|escape }}',
+                imageUrl: '{{ cert.image_url }}',
+                verifyUrl: '{{ cert.certificate_url|default('') }}'
+              })">
+                View Credential <i class="bi bi-arrows-fullscreen"></i>
+              </button>
+            </div>
+            {% elif cert.certificate_url %}
+            <div class="cert-btn-wrapper mt-[1.5rem] shrink-0">
+              <a href="{{ cert.certificate_url }}" target="_blank" class="cert-verify-btn inline-flex items-center justify-center gap-[0.6rem] px-[1.5rem] py-[0.8rem] bg-transparent border border-[rgba(255,255,255,0.2)] rounded-[40px] text-text-primary text-[0.9rem] no-underline transition-all duration-[0.3s] ease uppercase tracking-[0.08em] w-full hover:bg-[rgba(255,255,255,1)] hover:text-bg hover:border-[rgba(255,255,255,1)] hover:shadow-[0_0_15px_rgba(255,255,255,0.3)] cursor-pointer">
+                Verify Credential <i class="bi bi-arrow-right"></i>
+              </a>
+            </div>
+            {% endif %}
           </div>
         </div>
-        <div class="ach-medal-ribbon ach-medal-ribbon--left"></div>
-        <div class="ach-medal-ribbon ach-medal-ribbon--right"></div>
+        {% endfor %}
       </div>
-
-      {% if ach.rank_label %}
-      <div class="ach-rank-label">{{ ach.rank_label }}</div>
-      {% endif %}
-
-      <h3 class="ach-card-title">{{ ach.title }}</h3>
-
-      {% if ach.event %}
-      <p class="ach-card-event">
-        <i class="bi bi-calendar3"></i> {{ ach.event }}
-      </p>
-      {% endif %}
-
-      {% if ach.description %}
-      <p class="ach-card-desc">{{ ach.description | truncate(110) }}</p>
-      {% endif %}
-
-      {% if ach.tags %}
-      <div class="ach-card-tags">
-        {% for tag in ach.tags %}<span>{{ tag }}</span>{% endfor %}
+      
+      {% if certificates|length > 3 %}
+      <div class="excellence-actions flex justify-center mt-[var(--space-6)] reveal {% if certificates|length <= 6 %}mobile-only-btn hidden max-md:!flex{% endif %}">
+        <button class="expand-certs-btn inline-flex items-center mb-[1rem] gap-[0.8rem] px-[2rem] py-[1rem] bg-[rgba(20,20,25,0.8)] backdrop-blur-[12px] border border-[rgba(255,255,255,0.1)] rounded-[40px] text-text-primary text-[1rem] cursor-pointer transition-all duration-[0.3s] ease uppercase tracking-[0.1em] hover:bg-[rgba(255,255,255,0.1)] hover:border-[rgba(255,255,255,0.3)] hover:-translate-y-[3px] hover:shadow-[0_10px_20px_rgba(0,0,0,0.3)] group/btn" id="toggleCertsBtn">
+          <span class="btn-text">View All Credentials</span>
+          <i class="bi bi-chevron-down text-[1.2rem] transition-transform duration-[0.3s] ease"></i>
+        </button>
       </div>
       {% endif %}
-
-      <!-- Expand hint -->
-      <button class="ach-expand-btn" aria-label="View achievement details">
-        <i class="bi bi-arrows-fullscreen"></i> View Details
-      </button>
-
-      <div class="ach-card-glow-border"></div>
     </div>
-    {% endfor %}
+    {% else %}
+    <div class="excellence-empty text-center py-[var(--space-10)] text-text-muted text-[1.2rem]">
+      <p>Certifications will be displayed here soon.</p>
+    </div>
+    {% endif %}
   </div>
 
-  {% else %}
-  <div class="ach-empty">
-    <i class="bi bi-trophy"></i>
-    <p>Achievements coming soon…</p>
-  </div>
-  {% endif %}
 </section>
 
-<!-- ══════════════════════════════════════════════════════════
-     Achievement Detail Modal
-     ══════════════════════════════════════════════════════════ -->
-<div class="ach-modal" id="achModal" role="dialog" aria-modal="true" aria-label="Achievement detail">
-  <div class="ach-modal-backdrop" id="achModalBackdrop"></div>
-  <div class="ach-modal-panel">
-
-    <!-- Close -->
-    <button class="ach-modal-close" id="achModalClose" aria-label="Close">
-      <i class="bi bi-x-lg"></i>
-    </button>
-
-    <!-- Glowing medal / photo display -->
-    <div class="ach-modal-hero" id="achModalHero">
-
-      <!-- Photo mode: shown when achievement has an image -->
-      <div class="ach-modal-photo" id="achModalPhotoWrap">
-        <!-- "Memory" label top-left -->
-        <div class="ach-modal-photo-label">
-          <i class="bi bi-camera-fill"></i> Memory
-        </div>
-        <img id="achModalPhoto" src="" alt="Achievement memory" loading="lazy">
-        <div class="ach-modal-photo-overlay"></div>
-        <!-- Small medal badge overlaid on the photo -->
-        <div class="ach-modal-photo-badge" id="achModalPhotoBadge">
-          <i id="achModalPhotoIcon" class="bi bi-trophy-fill"></i>
-        </div>
+<!-- Certificate Modal -->
+<div id="certModal" class="cert-modal hidden fixed inset-0 z-[9999] bg-[rgba(0,0,0,0.85)] backdrop-blur-[8px] items-center justify-center p-[var(--space-4)]" onclick="closeCertModal(event)">
+  <div class="cert-modal-content relative w-[90vw] max-w-[1000px] max-h-[90vh] flex justify-center items-center">
+    <span class="cert-modal-close absolute -top-[40px] right-0 text-[rgba(255,255,255,0.7)] text-[35px] font-light cursor-pointer transition-colors duration-[0.3s] ease leading-none z-10 md:-top-[15px] md:-right-[45px] hover:text-white" onclick="closeCertModal(event)">&times;</span>
+    <div class="cert-modal-body flex flex-col w-full bg-[rgba(20,20,25,0.95)] rounded-[var(--radius-2xl,24px)] border border-[rgba(255,255,255,0.1)] shadow-[0_30px_60px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.1)] overflow-hidden md:flex-row">
+      <div class="cert-modal-image-col flex-[1.5] bg-[rgba(10,10,12,1)] flex items-center justify-center p-[var(--space-4)] min-h-[300px]">
+        <img id="certModalImg" src="" alt="Certificate" class="max-w-full max-h-[80vh] object-contain rounded-[var(--radius-md,8px)]">
       </div>
-
-      <!-- Medal mode: shown when no image uploaded -->
-      <div class="ach-modal-medal" id="achModalMedal">
-        <div class="ach-modal-medal-ring">
-          <div class="ach-modal-medal-inner">
-            <i id="achModalIcon" class="bi bi-trophy-fill"></i>
-          </div>
+      <div class="cert-modal-info-col flex-1 p-[var(--space-8)] flex flex-col justify-center">
+        <h3 id="certModalTitle" class="cert-modal-title text-[1.8rem] font-semibold font-serif text-white mb-[var(--space-6)] leading-[1.3]"></h3>
+        
+        <div class="cert-modal-issuer-group flex flex-col mb-[var(--space-4)]">
+          <span class="issuer-label text-[0.8rem] uppercase tracking-[0.15em] text-text-muted mb-[0.3rem]">Issued By</span>
+          <span id="certModalIssuer" class="cert-issuer text-[1.2rem] text-primary font-medium"></span>
         </div>
-        <div class="ach-modal-orbit">
-          <div class="ach-modal-orbit-dot"></div>
+        
+        <div class="cert-modal-meta flex flex-col gap-[0.5rem] text-text-secondary mb-[var(--space-8)] text-[0.95rem]">
+          <p id="certModalDate" style="display:none;"></p>
+          <p id="certModalId" style="display:none;"></p>
         </div>
+        
+        <a id="certModalVerifyBtn" href="#" target="_blank" class="cert-verify-link-btn inline-flex items-center justify-center gap-[0.8rem] px-[1.5rem] py-[1rem] bg-white text-black rounded-[40px] no-underline font-semibold uppercase tracking-[0.05em] transition-all duration-[0.3s] ease hover:-translate-y-[2px] hover:shadow-[0_10px_20px_rgba(255,255,255,0.2)]" style="display:none;">
+          Verify Original Credential <i class="bi bi-box-arrow-up-right"></i>
+        </a>
       </div>
-
-      <div class="ach-modal-rays-bg"></div>
     </div>
-
-
-    <!-- Content -->
-    <div class="ach-modal-body">
-      <div class="ach-modal-rank" id="achModalRank"></div>
-      <h3 class="ach-modal-title" id="achModalTitle"></h3>
-      <p class="ach-modal-event" id="achModalEvent">
-        <i class="bi bi-calendar3"></i>
-        <span id="achModalEventText"></span>
-      </p>
-      <p class="ach-modal-date" id="achModalDateRow">
-        <i class="bi bi-clock-history"></i>
-        <span id="achModalDateText"></span>
-      </p>
-      <p class="ach-modal-desc" id="achModalDesc"></p>
-      <div class="ach-modal-tags" id="achModalTags"></div>
-    </div>
-
   </div>
 </div>
+
+<script>
+  function openCertModal(cert) {
+    const modal = document.getElementById('certModal');
+    
+    document.getElementById('certModalImg').src = cert.imageUrl || '';
+    document.getElementById('certModalImg').alt = cert.title || 'Certificate';
+    
+    document.getElementById('certModalTitle').textContent = cert.title || '';
+    document.getElementById('certModalIssuer').textContent = cert.issuer || '';
+    
+    const dateEl = document.getElementById('certModalDate');
+    if (cert.date) {
+      dateEl.textContent = `Date: ${cert.date}`;
+      dateEl.style.display = 'flex';
+    } else {
+      dateEl.style.display = 'none';
+    }
+    
+    const idEl = document.getElementById('certModalId');
+    if (cert.credentialId) {
+      idEl.textContent = `Credential ID: ${cert.credentialId}`;
+      idEl.style.display = 'flex';
+    } else {
+      idEl.style.display = 'none';
+    }
+    
+    const verifyBtn = document.getElementById('certModalVerifyBtn');
+    if (cert.verifyUrl) {
+      verifyBtn.href = cert.verifyUrl;
+      verifyBtn.style.display = 'inline-flex';
+    } else {
+      verifyBtn.style.display = 'none';
+    }
+
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+  }
+
+  function closeCertModal(event) {
+    if (event.target.id === 'certModal' || event.target.className.includes('cert-modal-close')) {
+      const modal = document.getElementById('certModal');
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('toggleCertsBtn');
+    const hiddenCerts = document.querySelectorAll('.hidden-cert, .hidden-cert-mobile');
+    let isExpanded = false;
+
+    if (toggleBtn && hiddenCerts.length > 0) {
+      toggleBtn.addEventListener('click', () => {
+        isExpanded = !isExpanded;
+        
+        const btnText = toggleBtn.querySelector('.btn-text');
+        const btnIcon = toggleBtn.querySelector('i');
+
+        if (isExpanded) {
+          // Expand
+          hiddenCerts.forEach((cert, index) => {
+            cert.style.display = 'flex';
+            // Trigger reflow for transition
+            cert.offsetHeight;
+            cert.classList.add('show-cert');
+            cert.style.transitionDelay = `${index * 0.1}s`;
+          });
+          btnText.textContent = 'Show Less';
+          btnIcon.classList.remove('bi-chevron-down');
+          btnIcon.classList.add('bi-chevron-up');
+        } else {
+          // Collapse
+          hiddenCerts.forEach(cert => {
+            cert.classList.remove('show-cert');
+            cert.style.transitionDelay = '0s';
+            // Wait for transition to end before hiding completely
+            setTimeout(() => {
+              if(!isExpanded) cert.style.display = ''; // Empty string lets CSS take over
+            }, 400); // Matches CSS transition duration
+          });
+          btnText.textContent = 'View All Credentials';
+          btnIcon.classList.remove('bi-chevron-up');
+          btnIcon.classList.add('bi-chevron-down');
+
+          // Scroll back to section top slightly
+          const section = document.getElementById('achievements');
+          if (section) {
+            const y = section.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({top: y, behavior: 'smooth'});
+          }
+        }
+      });
+    }
+  });
+</script>

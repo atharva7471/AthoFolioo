@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+  body {
+    @apply font-sans bg-bg text-text-primary overflow-x-hidden antialiased;
+    line-height: 1.5;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display font-medium tracking-tight;
+    line-height: 1.1;
+  }
+  a {
+    @apply text-text-primary no-underline;
+  }
+  ::selection {
+    @apply bg-text-primary text-bg;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .container {
+    @apply w-full max-w-[1440px] mx-auto px-[5vw];
+  }
+  .text-gradient {
+    background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+  }
+  .btn-premium {
+    @apply inline-flex items-center justify-center px-8 py-4 bg-[#ffffff] text-[#000000] rounded-full font-sans font-medium text-base cursor-pointer border-none transition-all duration-fast ease-fast;
+  }
+  .btn-premium:hover {
+    transform: translateY(-3px) scale(1.02);
+    background: #e8e8e8;
+    box-shadow: 0 12px 40px rgba(255,255,255,0.15);
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center px-8 py-4 bg-transparent text-text-primary border border-border rounded-full font-sans font-medium cursor-pointer transition-all duration-fast ease-fast;
+  }
+  .btn-outline:hover {
+    @apply border-text-primary bg-white/5;
+  }
+  
+  /* Hero Shooting Stars */
+  .shooting-star {
+    @apply absolute w-[3px] h-[3px] bg-white rounded-full pointer-events-none;
+    box-shadow: 0 0 10px 2px rgba(139, 92, 246, 0.6), 0 0 4px 1px rgba(255, 255, 255, 0.9);
+  }
+  
+  /* Unified trailing tail. The JS rotation will point the X-axis in the direction of motion. */
+  .shooting-star::before {
+    content: '';
+    @apply absolute top-1/2 -translate-y-1/2 right-[50%] w-[120px] h-[1px];
+    background: linear-gradient(-90deg, rgba(255,255,255,1), rgba(139, 92, 246, 0.5), transparent);
+    border-radius: 2px;
+  }
+}

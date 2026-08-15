@@ -1,66 +1,102 @@
-<!-- ─── Projects Section ─────────────────────────── -->
-<section class="projects" id="projects">
+<!-- ─── The Work (Horizontal Scroll) ───────────────────────── -->
+<section class="work-section relative bg-bg max-md:isolate max-md:overflow-hidden" id="projects">
+  
+  <!-- Pinned Container -->
+  <div class="work-pin-container h-[100vh] w-full overflow-hidden relative flex items-center" id="workPinContainer">
+    
+    <div class="work-header absolute left-[5vw] top-[50%] -translate-y-1/2 z-0 pointer-events-none select-none max-w-[36vw]">
+      <h2 class="work-title font-display text-[clamp(4.5rem,11vw,10rem)] leading-[1.05] uppercase text-[rgba(255,255,255,0.85)] tracking-[-0.01em] font-black">The <br><span class="text-gradient bg-[linear-gradient(135deg,var(--color-primary),var(--color-secondary))] [-webkit-background-clip:text] bg-clip-text text-transparent inline-block [-webkit-text-fill-color:rgba(194,190,190,0.85)]">Work.</span></h2>
+      <p class="work-subtitle mt-[1.8rem] font-sans text-[clamp(0.7rem,1vw,0.88rem)] text-[rgba(255,255,255,0.45)] tracking-[0.25em] uppercase font-medium">Scroll to explore</p>
+    </div>
 
-  <div class="projects-header">
-    <h1 class="section-title">My Projects</h1>
-    <p class="projects-sub">Things I've built — from ML pipelines to full-stack apps</p>
-  </div>
+    <!-- Horizontal Track -->
+    <div class="work-track flex h-full items-center will-change-transform relative z-10" id="workTrack">
+      
+      <div class="work-spacer w-[42vw] h-full shrink-0"></div>
 
-  {% if projects %}
-  <div class="project-grid">
-    {% for project in projects %}
-    <article class="project-card"
-      data-title="{{ project.title }}"
-      data-desc="{{ project.description }}"
-      data-img="{{ project.image_url }}"
-      data-live="{{ project.live_url or '' }}"
-      data-github="{{ project.github_url or '' }}"
-      data-tech="{{ project.tech_stack | join(',') }}">
+      {% for p in projects %}
+      <div class="work-panel w-[88vw] max-w-[1300px] h-[72vh] shrink-0 px-[clamp(1.5rem,3vw,3rem)] flex items-center [perspective:1200px] [perspective-origin:center_center] max-xl:w-[92vw] max-xl:h-[70vh] max-md:w-[90vw] max-md:h-[75vh] max-md:min-h-[550px] max-md:px-[1rem]">
+        <div class="work-card project-card w-full h-full flex items-center justify-center cursor-pointer relative group/card max-md:flex-col"
+             data-id="{{ p.id }}"
+             data-title="{{ p.title | e }}"
+             data-desc="{{ p.description | e }}"
+             data-img="{{ p.image_url }}"
+             data-live="{{ p.live_url or '' }}"
+             data-github="{{ p.github_url or '' }}"
+             data-tech="{{ p.tech_stack | join(',') }}">
 
-      <!-- Thumbnail image -->
-      <div class="project-img-wrap">
-        <img src="{{ project.image_url }}" alt="{{ project.title }}" loading="lazy">
-        <!-- "click to expand" hint -->
-        <div class="project-hint"><i class="bi bi-arrows-fullscreen"></i></div>
-      </div>
+          <div class="work-mockup-wrap flex-[1.15] h-[88%] flex flex-col rounded-[24px] overflow-hidden relative z-[2] bg-[rgba(22,22,26,0.58)] backdrop-blur-[24px] saturate-[1.5] border border-[rgba(255,255,255,0.12)] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.45),0_0_35px_rgba(90,120,255,0.08),inset_0_1px_0_rgba(255,255,255,0.15)] transition-all duration-[0.6s] ease-[cubic-bezier(0.16,1,0.3,1)] after:content-[''] after:absolute after:inset-0 after:rounded-[inherit] after:pointer-events-none after:bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02)_35%,transparent_70%)] after:z-10 group-hover/card:-translate-y-[8px] group-hover/card:border-[rgba(255,255,255,0.25)] group-hover/card:shadow-[0_35px_70px_-15px_rgba(0,0,0,0.7),0_0_45px_rgba(90,120,255,0.15),inset_0_1px_0_rgba(255,255,255,0.25)] max-xl:flex-1 max-md:flex-none max-md:w-full max-md:h-[38%] max-md:min-h-[180px]">
+            <div class="work-browser-chrome flex items-center gap-[12px] p-[10px_16px] bg-[rgba(26,29,36,0.6)] border-b border-[rgba(255,255,255,0.06)] shrink-0">
+              <div class="browser-dots flex gap-[6px] shrink-0">
+                <span class="w-[11px] h-[11px] rounded-full bg-[#ff5f57]"></span><span class="w-[11px] h-[11px] rounded-full bg-[#febc2e]"></span><span class="w-[11px] h-[11px] rounded-full bg-[#28c840]"></span>
+              </div>
+              <div class="browser-url-bar flex-1 bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.06)] rounded-[6px] px-[12px] py-[5px] overflow-hidden">
+                <span class="font-sans text-[0.68rem] text-[rgba(255,255,255,0.3)] tracking-[0.02em] whitespace-nowrap overflow-hidden text-ellipsis block">{{ p.live_url or 'localhost:3000' }}</span>
+              </div>
+            </div>
+            <div class="work-mockup-screen flex-1 relative overflow-hidden bg-[#000]">
+              <img src="{{ p.image_url }}" alt="{{ p.title }}" loading="lazy" class="w-full h-full object-cover object-top block opacity-100 filter brightness-[1.2] contrast-[1.1] transition-all duration-[0.6s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/card:scale-[1.04] group-hover/card:brightness-[1.25] group-hover/card:contrast-[1.15]">
+              <div class="work-image-overlay absolute inset-0 bg-[linear-gradient(to_bottom,transparent_80%,rgba(0,0,0,0.2)_100%)] pointer-events-none"></div>
+            </div>
+          </div>
 
-      <!-- Card body (compact) -->
-      <div class="project-body">
-        <h3 class="project-title">{{ project.title }}</h3>
-        <p class="project-desc">{{ project.description }}</p>
-        <div class="tech-stack">
-          {% for tech in project.tech_stack %}
-          <span>{{ tech }}</span>
-          {% endfor %}
+          <div class="work-connector w-[clamp(1.5rem,3.5vw,3.5rem)] h-[120px] relative z-[3] -mx-[3px] bg-[rgba(22,22,26,0.58)] backdrop-blur-[24px] saturate-[1.5] border-y border-[rgba(255,255,255,0.12)] shadow-[0_15px_30px_-10px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.15)] transition-all duration-[0.6s] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/card:-translate-y-[8px] group-hover/card:border-[rgba(255,255,255,0.25)] group-hover/card:shadow-[0_35px_70px_-15px_rgba(0,0,0,0.7),0_0_45px_rgba(90,120,255,0.15),inset_0_1px_0_rgba(255,255,255,0.25)] max-md:w-[60px] max-md:h-[clamp(1.5rem,4vw,2rem)] max-md:mx-auto max-md:-my-[3px] max-md:border-y-0 max-md:border-x max-md:border-[rgba(255,255,255,0.12)]"></div>
+
+          <div class="work-info-panel flex-1 relative z-[2] flex flex-col gap-[1.5rem] p-[2rem] bg-[rgba(22,22,26,0.58)] backdrop-blur-[24px] saturate-[1.5] border border-[rgba(255,255,255,0.12)] rounded-[24px] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.45),0_0_35px_rgba(90,120,255,0.08),inset_0_1px_0_rgba(255,255,255,0.15)] overflow-hidden transition-all duration-[0.6s] ease-[cubic-bezier(0.16,1,0.3,1)] before:content-[''] before:absolute before:inset-0 before:rounded-[inherit] before:pointer-events-none before:z-10 before:bg-[linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.02)_35%,transparent_70%)] group-hover/card:-translate-y-[8px] group-hover/card:border-[rgba(255,255,255,0.25)] group-hover/card:shadow-[0_35px_70px_-15px_rgba(0,0,0,0.7),0_0_45px_rgba(90,120,255,0.15),inset_0_1px_0_rgba(255,255,255,0.25)] max-md:w-full max-md:p-[1.5rem]">
+            <span class="work-project-index font-sans text-[clamp(0.85rem,1.2vw,1rem)] font-semibold tracking-[0.15em] text-[rgba(255,255,255,0.6)] uppercase flex items-center gap-[10px] after:content-[''] after:h-[1px] after:w-[30px] after:bg-[rgba(255,255,255,0.3)]">{{ '%02d' | format(loop.index) }}</span>
+            <h3 class="work-project-title font-display text-[clamp(2rem,3.5vw,3.5rem)] font-extrabold leading-[1.05] tracking-[-0.01em] text-[#ffffff] max-xl:text-[clamp(1.5rem,3.5vw,2.4rem)]">{{ p.title }}</h3>
+            <p class="work-project-desc font-sans text-[clamp(0.9rem,1.15vw,1.05rem)] leading-[1.7] text-[rgba(255,255,255,0.85)] max-w-[45ch] font-normal max-md:hidden">{{ p.description[:120] }}{% if p.description|length > 120 %}…{% endif %}</p>
+
+            <div class="work-tags flex flex-wrap gap-[10px]">
+              {% for tech in p.tech_stack[:4] %}
+              <span class="work-tag font-sans text-[0.75rem] font-semibold tracking-[0.08em] uppercase text-[rgba(255,255,255,0.85)] px-[14px] py-[6px] border border-[rgba(255,255,255,0.2)] rounded-full bg-[rgba(255,255,255,0.05)] transition-all duration-[0.3s] ease hover:bg-[rgba(255,255,255,0.15)] hover:text-[#fff] hover:border-[rgba(255,255,255,0.4)]">{{ tech }}</span>
+              {% endfor %}
+              {% if p.tech_stack|length > 4 %}
+              <span class="work-tag work-tag--more font-sans text-[0.75rem] font-semibold tracking-[0.08em] uppercase text-[rgba(255,255,255,0.85)] px-[14px] py-[6px] border border-[rgba(255,255,255,0.2)] rounded-full bg-[rgba(255,255,255,0.05)] transition-all duration-[0.3s] ease hover:bg-[rgba(255,255,255,0.15)] hover:text-[#fff] hover:border-[rgba(255,255,255,0.4)]">+{{ p.tech_stack|length - 4 }}</span>
+              {% endif %}
+            </div>
+
+            <div class="work-actions flex items-center gap-[1.5rem] mt-[1rem] max-md:flex-wrap max-md:gap-[1rem]">
+              <button class="work-btn-primary view-project-btn inline-flex items-center gap-[0.6rem] px-[1.8rem] py-[0.85rem] bg-[#ffffff] text-[#000000] border-none rounded-full font-sans text-[0.9rem] font-semibold tracking-[0.02em] cursor-pointer transition-all duration-[0.3s] ease-[cubic-bezier(0.16,1,0.3,1)] shadow-[0_4px_15px_rgba(0,0,0,0.2)] hover:-translate-y-[2px] hover:shadow-[0_8px_25px_rgba(255,255,255,0.25)] active:scale-[0.98] group/btn">
+                Explore Project
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="transition-transform duration-[0.3s] ease group-hover/btn:translate-x-[4px]">
+                  <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              {% if p.live_url %}
+              <a href="{{ p.live_url }}" target="_blank" rel="noopener" class="work-btn-live inline-flex items-center gap-[6px] font-sans text-[0.9rem] font-medium text-[rgba(255,255,255,0.7)] no-underline px-[1.5rem] py-[0.85rem] rounded-full border border-[rgba(255,255,255,0.15)] bg-[rgba(255,255,255,0.03)] transition-all duration-[0.3s] ease hover:text-[#ffffff] hover:bg-[rgba(255,255,255,0.1)] hover:border-[rgba(255,255,255,0.3)]">
+                Live <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M1.5 8.5L8.5 1.5M8.5 1.5H3M8.5 1.5V7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+              </a>
+              {% endif %}
+            </div>
+          </div>
+
         </div>
       </div>
+      {% endfor %}
+      
+      <!-- Spacer at the end for smooth unpin -->
+      <div class="work-spacer-end w-[15vw] h-full shrink-0"></div>
 
-    </article>
-    {% endfor %}
+    </div>
   </div>
-  {% else %}
-  <p class="empty-msg">No projects added yet.</p>
-  {% endif %}
+
+  <div class="proj-modal fixed inset-0 z-[2000] flex items-center justify-center p-[1rem] opacity-0 pointer-events-none transition-opacity duration-[0.6s] ease-[cubic-bezier(0.16,1,0.3,1)] [&.open]:opacity-100 [&.open]:pointer-events-auto group/modal" id="projectModal" role="dialog" aria-modal="true" aria-label="Project Details">
+    <div class="proj-modal-backdrop absolute inset-0 bg-[rgba(0,0,0,0.95)] backdrop-blur-[20px]"></div>
+    <div class="proj-modal-panel relative w-full max-w-[1200px] h-[85vh] bg-[rgba(22,22,26,0.75)] backdrop-blur-[24px] saturate-[1.5] border border-[rgba(255,255,255,0.12)] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6),0_0_45px_rgba(90,120,255,0.1),inset_0_1px_0_rgba(255,255,255,0.15)] rounded-[24px] overflow-hidden scale-[0.98] translate-y-[20px] transition-transform duration-[0.6s] ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform group-[.open]/modal:scale-100 group-[.open]/modal:translate-y-0 max-md:h-[90vh]">
+      <button class="proj-modal-close absolute top-[1.5rem] right-[1.5rem] z-10 w-[44px] h-[44px] rounded-full border border-[rgba(255,255,255,0.2)] bg-[rgba(255,255,255,0.1)] backdrop-blur-[10px] text-[#fff] cursor-pointer text-[1.1rem] flex items-center justify-center transition-all duration-[0.3s] ease hover:bg-[#fff] hover:text-[#000] hover:rotate-90" aria-label="Close Project"><i class="bi bi-x-lg"></i></button>
+      <div class="proj-modal-grid grid grid-cols-[1.2fr_1fr] h-full max-md:grid-cols-1 max-md:grid-rows-[40%_60%]">
+        <div class="proj-modal-image-col h-full bg-[#000] relative">
+          <img id="modalImg" src="" alt="Project Preview" class="w-full h-full object-cover opacity-90">
+        </div>
+        <div class="proj-modal-content-col p-[3rem] flex flex-col justify-center overflow-y-auto max-md:p-[1.5rem] max-md:justify-start max-md:min-h-0">
+          <h2 id="modalTitle" class="proj-modal-title font-display text-[clamp(2.5rem,4vw,3.5rem)] font-extrabold text-[#fff] mb-[1rem] tracking-[-0.01em]"></h2>
+          <div id="modalTech" class="proj-modal-tech flex flex-wrap gap-[10px] mb-[2rem]"></div>
+          <p id="modalDesc" class="proj-modal-desc font-sans text-[1.1rem] leading-[1.8] text-[rgba(255,255,255,0.8)] mb-[2.5rem]"></p>
+          <div id="modalLinks" class="proj-modal-links flex gap-[1.5rem] flex-wrap"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </section>
-
-<!-- ─── Project Modal ─────────────────────────────── -->
-<div id="projectModal" class="proj-modal" role="dialog" aria-modal="true" aria-label="Project details">
-  <div class="proj-modal-backdrop"></div>
-  <div class="proj-modal-box">
-
-    <button class="proj-modal-close" aria-label="Close">&times;</button>
-
-    <div class="proj-modal-img-wrap">
-      <img id="modalImg" src="" alt="">
-    </div>
-
-    <div class="proj-modal-body">
-      <h2 id="modalTitle"></h2>
-      <p id="modalDesc"></p>
-      <div id="modalTech" class="tech-stack"></div>
-      <div id="modalLinks" class="proj-modal-links"></div>
-    </div>
-
-  </div>
-</div>

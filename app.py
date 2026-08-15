@@ -7,12 +7,13 @@ from bson.objectid import ObjectId
 from bson.errors import InvalidId
 from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
-import traceback
-import uuid
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
 import os
+import random
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # -------------------------
 # Configuration
@@ -22,6 +23,46 @@ load_dotenv()
 app.secret_key = os.getenv("APP_SECRET_KEY")
 app.jinja_env.globals["datetime"] = datetime
 csrf = CSRFProtect(app)
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://"
+)
+
+# -------------------------
+# Security Headers
+# -------------------------
+@app.after_request
+def set_security_headers(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    return response
+
+# -------------------------
+# Error Handlers
+# -------------------------
+@app.errorhandler(404)
+def not_found_error(error):
+    return render_template("main/error.html", error_code="404", error_title="Lost in the Void", error_message="The page you are looking for has been moved, deleted, or never existed in this dimension."), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template("main/error.html", error_code="500", error_title="System Anomaly", error_message="A critical exception occurred within the core architecture. My systems have been notified."), 500
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Pass through HTTP errors
+    if hasattr(e, 'code') and isinstance(e.code, int):
+        if e.code == 404:
+            return not_found_error(e)
+        return render_template("main/error.html", error_code=str(e.code), error_title="Unexpected State", error_message=str(e)), e.code
+    
+    app.logger.error(f"Unhandled Exception: {e}")
+    return internal_error(e)
 
 # -------------------------
 # MongoDB Configuration (NO LOCAL DB)
@@ -33,7 +74,6 @@ comments_collection = db["comments"]
 admins_collection = db["admins"]
 projects_collection = db["projects"]
 certificates_collection = db["certificates"]
-achievements_collection = db["achievements"]
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -72,11 +112,27 @@ def admin_required(f):
 # -------------------------
 @app.route('/')
 def home():
-    comments = comments_collection.find({"approved": True}).sort("created_at", -1)
-    projects = list(projects_collection.find().sort("created_at", -1))
-    certificates = list(certificates_collection.find().sort("created_at", -1))
-    achievements = list(achievements_collection.find().sort([("sort_order", 1), ("created_at", -1)]))
-    return render_template("main/index.html", projects=projects, certificates=certificates, achievements=achievements)
+    try:
+        comments = comments_collection.find({"approved": True}).sort("created_at", -1)
+        projects = list(projects_collection.find().sort("created_at", -1))
+        certificates = list(certificates_collection.find().sort("created_at", -1))
+        
+        # Get random hero background image
+        hero_bg = 'mountain.jpg'
+        try:
+            image_dir = os.path.join(app.root_path, 'static', 'assets', 'images')
+            valid_extensions = ('.jpg', '.jpeg', '.png', '.webp')
+            images = [f for f in os.listdir(image_dir) if os.path.isfile(os.path.join(image_dir, f)) and f.lower().endswith(valid_extensions)]
+            if images:
+                hero_bg = random.choice(images)
+        except Exception as e:
+            app.logger.warning(f"Could not load random hero image: {e}")
+
+        return render_template("main/index.html", projects=projects, certificates=certificates, hero_bg=hero_bg)
+    except Exception as e:
+        app.logger.error(f"Database error on home page: {e}")
+        # Fallback to empty data gracefully instead of 500
+        return render_template("main/index.html", projects=[], certificates=[], hero_bg='mountain.jpg')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -135,86 +191,12 @@ def add_cert_page():
     certificates = list(certificates_collection.find().sort("created_at", -1))
     return render_template("admin/add_cert.html", certificates=certificates)
 
-@app.route("/admin/add-achievement", methods=["GET"])
-@admin_required
-def add_achievement_page():
-    achievements = list(achievements_collection.find().sort([("sort_order", 1), ("created_at", -1)]))
-    return render_template("admin/add_achievement.html", achievements=achievements)
-
-@app.route("/admin/achievements/edit/<ach_id>", methods=["GET", "POST"])
-@admin_required
-def edit_achievement(ach_id):
-    try:
-        oid = ObjectId(ach_id)
-    except InvalidId:
-        flash("Invalid achievement ID", "danger")
-        return redirect(url_for("add_achievement_page"))
-
-    ach = achievements_collection.find_one({"_id": oid})
-    if not ach:
-        flash("Achievement not found", "danger")
-        return redirect(url_for("add_achievement_page"))
-
-    if request.method == "POST":
-        title       = request.form.get("title", "").strip()
-        event       = request.form.get("event", "").strip()
-        description = request.form.get("description", "").strip()
-        icon        = request.form.get("icon", "bi-trophy-fill").strip()
-        tier        = request.form.get("tier", "gold").strip()
-        rank_label  = request.form.get("rank_label", "").strip()
-        date        = request.form.get("date", "").strip()
-        tags        = request.form.get("tags", "").strip()
-        sort_order  = int(request.form.get("sort_order", 99))
-        new_image   = request.files.get("image")
-
-        if not title:
-            flash("Title is required", "danger")
-            return redirect(url_for("edit_achievement", ach_id=ach_id))
-
-        update_fields = {
-            "title":      title,
-            "event":      event,
-            "description": description,
-            "icon":       icon,
-            "tier":       tier,
-            "rank_label": rank_label,
-            "date":       date,
-            "tags":       [t.strip() for t in tags.split(",") if t.strip()],
-            "sort_order": sort_order,
-            "updated_at": datetime.utcnow()
-        }
-
-        if new_image and allowed_file(new_image):
-            try:
-                # Delete old image if exists
-                if ach.get("image_public_id"):
-                    cloudinary.uploader.destroy(ach["image_public_id"], resource_type="image")
-                new_image.stream.seek(0)
-                upload_result = cloudinary.uploader.upload(
-                    new_image.stream,
-                    folder="portfolio/achievements",
-                    resource_type="image",
-                    public_id=uuid.uuid4().hex,
-                    overwrite=True
-                )
-                update_fields["image_url"]       = upload_result["secure_url"]
-                update_fields["image_public_id"] = upload_result["public_id"]
-            except Exception as e:
-                app.logger.error("Achievement image update failed: %s", e)
-                flash(f"Image upload failed: {e}", "danger")
-                return redirect(url_for("edit_achievement", ach_id=ach_id))
-
-        achievements_collection.update_one({"_id": oid}, {"$set": update_fields})
-        flash("Achievement updated!", "success")
-        return redirect(url_for("add_achievement_page"))
-
-    return render_template("admin/edit_achievement.html", ach=ach)
-
 # -------------------------
 # Logics
 # -------------------------
 @app.route('/submit', methods=['POST'])
 @csrf.exempt
+@limiter.limit("5 per minute")
 def submit():
     name = request.form.get("name")
     email = request.form.get("email")
@@ -441,79 +423,6 @@ def edit_project(project_id):
 
     return render_template("admin/edit_project.html", project=project)
 
-@app.route("/admin/add-achievement", methods=["POST"])
-@admin_required
-def add_achievement():
-    title       = request.form.get("title", "").strip()
-    event       = request.form.get("event", "").strip()
-    description = request.form.get("description", "").strip()
-    icon        = request.form.get("icon", "bi-trophy-fill").strip()
-    tier        = request.form.get("tier", "gold").strip()
-    rank_label  = request.form.get("rank_label", "").strip()
-    date        = request.form.get("date", "").strip()
-    tags        = request.form.get("tags", "").strip()
-    sort_order  = int(request.form.get("sort_order", 99))
-    image       = request.files.get("image")
-
-    if not title:
-        flash("Title is required", "danger")
-        return redirect(url_for("add_achievement_page"))
-
-    image_url = ""
-    image_public_id = ""
-    if image and allowed_file(image):
-        try:
-            image.stream.seek(0)
-            upload_result = cloudinary.uploader.upload(
-                image.stream,
-                folder="portfolio/achievements",
-                resource_type="image",
-                public_id=uuid.uuid4().hex,
-                overwrite=True
-            )
-            image_url = upload_result["secure_url"]
-            image_public_id = upload_result["public_id"]
-        except Exception as e:
-            app.logger.error("Achievement image upload failed: %s", e)
-            flash(f"Image upload failed: {e}", "danger")
-            return redirect(url_for("add_achievement_page"))
-
-    achievements_collection.insert_one({
-        "title":            title,
-        "event":            event,
-        "description":      description,
-        "icon":             icon,
-        "tier":             tier,
-        "rank_label":       rank_label,
-        "date":             date,
-        "tags":             [t.strip() for t in tags.split(",") if t.strip()],
-        "sort_order":       sort_order,
-        "image_url":        image_url,
-        "image_public_id":  image_public_id,
-        "created_at":       datetime.utcnow()
-    })
-    flash("Achievement added!", "success")
-    return redirect(url_for("add_achievement_page"))
-
-@app.route("/admin/delete-achievement/<ach_id>", methods=["POST"])
-@admin_required
-def delete_achievement(ach_id):
-    try:
-        oid = ObjectId(ach_id)
-    except InvalidId:
-        flash("Invalid achievement ID", "danger")
-        return redirect(url_for("add_achievement_page"))
-
-    ach = achievements_collection.find_one({"_id": oid})
-    if ach and ach.get("image_public_id"):
-        try:
-            cloudinary.uploader.destroy(ach["image_public_id"], resource_type="image")
-        except Exception:
-            pass
-    achievements_collection.delete_one({"_id": oid})
-    flash("Achievement deleted", "success")
-    return redirect(url_for("add_achievement_page"))
-
 @app.route("/admin/delete-certificate/<cert_id>", methods=["POST"])
 @admin_required
 def delete_certificate(cert_id):
@@ -548,8 +457,9 @@ def delete_certificate(cert_id):
 # App run / DB init
 # -------------------------
 if __name__ == "__main__":
+    is_debug = os.environ.get("FLASK_DEBUG", "0") == "1"
     app.run(
-        debug=os.environ.get("FLASK_DEBUG", "1") == "1",
+        debug=is_debug,
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 5000))
     )

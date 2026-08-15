@@ -1,44 +1,61 @@
-<section class="hero" id="home">
-    <!-- Interactive Canvas Background -->
-    <canvas id="heroCanvas"></canvas>
-    <!-- Cursor spotlight -->
-    <div class="hero-spotlight" id="heroSpotlight"></div>
+<!-- ─── Hero Section: Cinematic Futuristic Experience ──────── -->
+<section class="hero-sequence relative w-full h-[100vh] bg-bg overflow-x-hidden max-lg:!h-auto max-lg:min-h-[100svh] max-md:!h-auto max-md:!min-h-auto max-md:isolate max-md:overflow-hidden [&.hero-canvas-hidden_#neuralCanvas]:opacity-0 [&.hero-canvas-hidden_#neuralCanvas]:transition-opacity [&.hero-canvas-hidden_#neuralCanvas]:duration-[0.6s]" id="home" aria-label="Introduction">
+  <canvas id="neuralCanvas" class="absolute top-0 left-0 w-full h-full z-0 opacity-0 pointer-events-none will-change-opacity" aria-hidden="true"></canvas>
 
-    <div class="hero-head">
-        <div class="hero-text">
-            <h6>I Build things where,</h6>
-            <h1>Machine Learning meets<span> Web Applications</span></h1>
-            <p>Code is my canvas, logic is my fuel.</p>
-            <p>Full-stack explorer. Python whisperer.</p>
-            <p>Training models, crafting UI, and chasing clean architecture.</p>
-            <h2>And I'm a <span class="text"></span></h2>
-        </div>
+  <div class="hero-grid-overlay absolute inset-0 z-[1] pointer-events-none opacity-0 bg-[repeating-linear-gradient(-55deg,transparent,transparent_80px,rgba(255,255,255,0.018)_80px,rgba(255,255,255,0.018)_81px)] will-change-opacity" aria-hidden="true"></div>
 
-        <div class="image-wrapper">
-            <div class="blob"></div>
-            <!-- Lottie Animation -->
-            <div class="animation-wrapper">
-                <lottie-player
-                    src="{{ url_for('static', filename='assets/images/profile/Webdesign.json') }}"
-                    background="transparent"
-                    speed="0.75"
-                    loop
-                    autoplay>
-                </lottie-player>
-            </div>
+  <div class="hero-shooting-stars absolute top-0 left-0 w-full h-[40vh] pointer-events-none z-[4] overflow-hidden" id="heroShootingStars" aria-hidden="true"></div>
+
+  <div class="hero-ambient-glow absolute top-[-10vh] left-[35%] w-[55vw] h-[55vw] bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.09)_0%,rgba(139,92,246,0.06)_35%,transparent_70%)] rounded-full blur-[80px] z-[2] pointer-events-none opacity-0 will-change-[opacity,transform]" id="heroAmbientGlow" aria-hidden="true"></div>
+
+  <div class="hero-cinematic-bg absolute inset-0 w-full h-full z-[3] pointer-events-none overflow-hidden opacity-0 will-change-opacity" id="heroCinematicBg" aria-hidden="true">
+    <div class="hero-mountain-image absolute inset-0 w-full h-full bg-cover bg-center max-md:bg-[85%_center] [image-rendering:high-quality] contrast-[1.15] brightness-[0.85] saturate-[1.2] transition-opacity duration-[1s] ease-in-out after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(135deg,rgba(99,102,241,0.5),rgba(139,92,246,0.3))] after:mix-blend-soft-light after:pointer-events-none" style="background-image: url('{{ url_for('static', filename='assets/images/' ~ hero_bg) }}');"></div>
+    <div class="hero-mountain-overlay absolute inset-0 bg-[linear-gradient(to_top,var(--color-bg)_0%,rgba(3,3,3,0.9)_5%,transparent_30%),linear-gradient(to_bottom,rgba(32,26,45,0.5)_0.5%,transparent_10%)]"></div>
+  </div>
+
+  <div class="hero-sticky-container sticky top-0 w-full h-[100vh] flex items-center z-[10] overflow-hidden max-lg:!relative max-lg:!top-auto max-lg:!h-auto max-lg:min-h-[100svh] max-md:!relative max-md:!top-auto max-md:!h-auto max-md:!min-h-auto" id="heroSticky">
+    <div class="hero-layout relative w-full max-w-[1440px] mx-auto px-[5vw] flex flex-col justify-center h-full pt-[15vh] pb-[6vh] gap-0 max-lg:h-auto max-lg:min-h-[100svh] max-lg:pt-[14svh] max-lg:pb-[25svh] max-lg:justify-center max-md:h-auto max-md:min-h-auto max-md:pt-[16svh] max-md:pb-[8svh] max-md:justify-center max-sm:pt-[18svh] max-sm:pb-[8svh] 3xl:px-[6vw] 3xl:pt-[12vh] 3xl:pb-[6vh]"> 
+      
+      <!-- Mobile-only subtle atmospheric illumination behind text -->
+      <div class="hidden max-md:block absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140vw] h-[65vh] bg-[radial-gradient(ellipse_at_center,rgba(10,14,28,0.75)_0%,rgba(60,45,90,0.15)_45%,transparent_75%)] blur-[40px] z-[-1] pointer-events-none" aria-hidden="true"></div>
+
+      <div class="hero-headline-block self-start relative z-[1]" id="heroHeadlineBlock">
+        <h1 class="hero-title" aria-label="Hello I'm Atharva, Mountain Explorer">
+          <div class="title-clip overflow-hidden leading-[0.88] pb-[0.06em] block"><span class="title-word title-word--outline block font-display text-[clamp(3.2rem,9vw,8.5rem)] font-black uppercase tracking-[-0.04em] text-transparent translate-y-[105%] will-change-transform [-webkit-text-stroke:2px_rgba(255,255,255,0.95)] relative text-shadow-[0_0_20px_rgba(255,255,255,0.3)] max-lg:text-[clamp(3rem,10vw,6rem)] max-md:text-[clamp(2.8rem,12vw,4.8rem)] max-md:[-webkit-text-stroke-width:1.5px] max-sm:text-[clamp(2.8rem,16vw,4.5rem)] max-sm:tracking-[-0.03em] 3xl:text-[clamp(7rem,9vw,11rem)]" id="titleWord1">HELLO, I'M</span></div>
+          <div class="title-clip overflow-hidden leading-[0.88] pb-[0.06em] block"><span class="title-word title-word--outline block font-display text-[clamp(3.2rem,9vw,8.5rem)] font-black uppercase tracking-[-0.04em] text-transparent translate-y-[105%] will-change-transform [-webkit-text-stroke:2px_rgba(255,255,255,0.95)] relative text-shadow-[0_0_20px_rgba(255,255,255,0.3)] max-lg:text-[clamp(3rem,10vw,6rem)] max-md:text-[clamp(2.8rem,12vw,4.8rem)] max-md:[-webkit-text-stroke-width:1.5px] max-sm:text-[clamp(2.8rem,16vw,4.5rem)] max-sm:tracking-[-0.03em] 3xl:text-[clamp(7rem,9vw,11rem)]" id="titleWord2">ATHARVA</span></div>
+          <div class="title-clip overflow-hidden leading-[0.88] pb-[0.06em] block">
+            <span class="title-word block font-display text-[clamp(3.2rem,9vw,8.5rem)] font-black uppercase tracking-[-0.04em] text-text-primary translate-y-[105%] will-change-transform max-lg:text-[clamp(3rem,10vw,6rem)] max-md:text-[clamp(2.8rem,12vw,4.8rem)] max-sm:text-[clamp(2.8rem,16vw,4.5rem)] max-sm:tracking-[-0.03em] 3xl:text-[clamp(7rem,9vw,11rem)]" id="titleWord3">&  I  LOVE MOUNTAINS</span>
+          </div>
+        </h1>
+        
+        <div class="hero-role-badge flex items-center gap-[12px] mt-[clamp(28px,4vh,40px)] opacity-0 translate-x-[30px] will-change-[transform,opacity]" id="heroRoleBadge">
+          <span class="role-dot w-[6px] h-[6px] rounded-full bg-[rgba(99,102,241,0.9)] shadow-[0_0_8px_rgba(99,102,241,0.6)] shrink-0 animate-[role-pulse_2.4s_ease-in-out_infinite]"></span>
+          <span class="role-text font-sans text-[clamp(0.7rem,1vw,0.85rem)] font-medium tracking-[0.3em] uppercase text-[rgba(255,255,255,0.65)]">BE STUDENT / AI ENGINEER</span>
         </div>
+      </div>
+
+      <div class="hero-cta-group relative z-[1] flex items-center gap-[clamp(1.2rem,2.5vw,1.8rem)] mt-[clamp(44px,6vh,60px)] opacity-0 scale-[0.9] will-change-[transform,opacity] max-md:flex-col max-md:items-start max-md:gap-[0.75rem]" id="heroCtas">
+        <a href="#projects" class="btn-hero-primary inline-flex items-center gap-[0.75rem] px-[1.8rem] py-[0.85rem] bg-[rgba(255,255,255,0.96)] text-[#000] rounded-full font-sans text-[clamp(0.8rem,1.1vw,0.9rem)] font-medium tracking-[0.04em] no-underline relative overflow-hidden transition-all duration-normal will-change-transform shadow-[0_10px_30px_rgba(0,0,0,0.5),0_0_0_1px_rgba(255,255,255,0.05)] hover:bg-[#ffffff] hover:-translate-y-[3px] hover:shadow-[0_16px_48px_rgba(255,255,255,0.18)] active:scale-[0.96] active:transition-transform active:duration-[0ms] group max-md:w-full max-md:justify-center">
+          <span class="btn-hero-label">Explore My Work</span>
+          <span class="btn-hero-icon flex items-center justify-center transition-transform duration-normal group-hover:translate-x-[3px] group-hover:-translate-y-[2px]" aria-hidden="true">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </a>
+        <a href="#contact" class="btn-hero-secondary inline-flex items-center px-[1.8rem] py-[0.85rem] bg-[rgba(255,255,255,0.02)] text-[rgba(255,255,255,0.65)] border border-[rgba(255,255,255,0.08)] rounded-full font-sans text-[clamp(0.8rem,1.1vw,0.9rem)] font-normal tracking-[0.04em] no-underline relative overflow-hidden transition-all duration-normal will-change-transform backdrop-blur-[16px] shadow-[0_10px_30px_rgba(0,0,0,0.3)] hover:text-[rgba(255,255,255,0.95)] hover:border-[rgba(255,255,255,0.35)] hover:bg-[rgba(255,255,255,0.04)] hover:-translate-y-[2px] active:scale-[0.97] active:transition-transform active:duration-[0ms] max-md:w-full max-md:justify-center">
+          <span>Let's Build Something</span>
+        </a>
+      </div>
+
+      <a href="#about" class="hero-scroll-cue absolute bottom-[clamp(40px,6vh,60px)] left-1/2 -translate-x-1/2 flex flex-col items-center gap-[12px] opacity-0 will-change-[opacity,transform] no-underline z-[15] transition-transform duration-[0.3s] ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-[4px] max-md:!hidden group/scroll" id="heroScrollCue" aria-label="Scroll down">
+        <div class="mouse-scroll-indicator w-[22px] h-[34px] border-[1.5px] border-[rgba(255,255,255,0.25)] rounded-[12px] relative flex justify-center shadow-[0_0_12px_rgba(255,255,255,0.03)] transition-all duration-[0.4s] will-change-[border-color,box-shadow] group-hover/scroll:border-[rgba(255,255,255,0.5)] group-hover/scroll:shadow-[0_0_16px_rgba(255,255,255,0.08)]">
+          <div class="mouse-dot w-[4px] h-[6px] bg-[rgba(255,255,255,0.85)] rounded-[4px] mt-[6px] shadow-[0_0_6px_rgba(99,102,241,0.6)] animate-[mouse-scroll-dot_2.2s_cubic-bezier(0.65,0,0.35,1)_infinite] will-change-[transform,opacity]"></div>
+        </div>
+        <span class="scroll-cue-label font-sans text-[0.65rem] tracking-[0.25em] uppercase text-[rgba(255,255,255,0.35)] transition-colors duration-[0.4s] group-hover/scroll:text-[rgba(255,255,255,0.9)]">Explore</span>
+      </a>
+
+
     </div>
-    <div class="hero-tail">
-        <!-- Buttons : View my work and download -->
-        <div class="hero-buttons">
-            <a href="#projects" class="btn-primary">View My Work</a>
-            <a href="{{ url_for('static', filename='assets/resume.pdf') }}"
-                class="btn-secondary">Download CV</a>
-        </div>
-        <!-- Social Links (Icons) -->
-        <div>
-            {% include "main/partials/social_links.html" %}
-        </div>
-    </div>
-
+  </div>
 </section>

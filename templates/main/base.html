@@ -3,68 +3,65 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Atharva Bhosale — ML Engineer &amp; Full-Stack Developer. Explore my projects, skills, and certifications." />
+    <meta name="description" content="Atharva Bhosale — Digital Experience & ML Engineering." />
     <meta name="author" content="Atharva Bhosale" />
-    <meta property="og:title" content="Atharva Bhosale | ML &amp; Web Dev Portfolio" />
-    <meta property="og:description" content="Machine Learning meets Web Applications — projects, skills, and certifications by Atharva Bhosale." />
+    <meta property="og:title" content="Atharva Bhosale | Digital Experience" />
+    <meta property="og:description" content="An immersive journey through Machine Learning and Web Architecture." />
     <meta property="og:type" content="website" />
-    <title>{% block title %}Atharva | ML | WebDev{% endblock %}</title>
-    <!-- Theme (load first to prevent flash-of-wrong-theme) -->
-    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+    <title>{% block title %}Atharva | Digital Experience{% endblock %}</title>
 
-    <link
-      rel="icon"
-      type="image/png"
-      href="{{ url_for('static', filename='assets/images/profile/letter-a.png') }}" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
-    <!-- Modular CSS — split from styles.css for better caching & maintainability -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/animations.css') }}">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='assets/images/profile/favicon.svg') }}" />
+
+    <!-- Core Design System (Order matters: base → motion → components) -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/base.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/navbar.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/hero.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/about.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/skills.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/achievements.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/certificates.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/projects.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/contact.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/footer.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/responsive.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/motion.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/cursor.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/loader.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/animations.css') }}">
   </head>
-  <body>
-    <div id="scrollProgress"></div>
-    <header>
+  <body class="loading">
+
+    <!-- ── Cinematic Page Loader ──────────────────────────────── -->
+    <div id="page-loader" aria-hidden="true">
+      <span class="loader-logo">A.</span>
+      <div class="loader-count" id="loaderCount">Loading</div>
+      <div class="loader-tagline">Digital Experience & ML Engineering</div>
+      <div class="loader-bar-wrap">
+        <div class="loader-bar" id="loaderBar"></div>
+      </div>
+    </div>
+
+    <!-- ── Custom Cursor ──────────────────────────────────────── -->
+    <div id="cursor-dot" aria-hidden="true"></div>
+    <div id="cursor-ring" aria-hidden="true" data-label="View"></div>
+
+    <!-- ── Navigation Header ─────────────────────────────────── -->
+    <header id="global-header" class="header fixed top-0 left-0 w-full z-[9999] px-[5vw] py-4 pointer-events-none transition-all duration-[400ms] ease-fast will-change-transform [&.nav-hidden]:-translate-y-[110%] [&.nav-hidden]:opacity-0 [&.nav-hidden]:pointer-events-none [&.menu-active]:z-[99999]">
       {% include "main/partials/navbar.html" %}
     </header>
 
-    {% block hero %}{% endblock %}
-    {% block skills %}{% endblock %}
-    {% block achievements %}{% endblock %}
-    {% block certificates %}{% endblock %}
-    {% block projects %}{% endblock %}
-    {% block contact %}{% endblock %}
+    <!-- ── Navigation Overlay ────────────────────────────────── -->
+    {% include "main/partials/nav_overlay.html" %}
 
-    <footer class="footer">
-      {% include "main/partials/footer.html" %}
-    </footer>
+    <!-- ── Main Scroll Container ─────────────────────────────── -->
+    <main id="smooth-wrapper">
+      <div id="smooth-content">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
 
-    <button id="backToTop" title="Back to top" aria-label="Back to top">
-      <svg class="btt-ring" viewBox="0 0 44 44">
-        <circle class="btt-track" cx="22" cy="22" r="19"/>
-        <circle class="btt-progress" cx="22" cy="22" r="19" id="bttCircle"/>
-      </svg>
-      <i class="bi bi-chevron-up"></i>
-    </button>
-
-    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-    <script src="https://unpkg.com/typed.js@2.0.16/dist/typed.umd.js"></script>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-
+    <!-- ── Scripts ───────────────────────────────────────────── -->
+    <!-- Smooth scroll -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
+    <!-- GSAP Core + ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <!-- Motion Engine (all animations) — loads before app.js -->
+    <script src="{{ url_for('static', filename='js/motion.js') }}"></script>
+    <!-- App Logic (data: comments, modals, form) -->
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
   </body>
 </html>
