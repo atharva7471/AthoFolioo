@@ -21,53 +21,113 @@ function getLenis() {
 
 
 /* ══════════════════════════════════════════════════════════════
-   PROJECT MODAL
+   PROJECT MODAL  (desktop + mobile dual-panel)
    ══════════════════════════════════════════════════════════════ */
 (function initProjectModal() {
   const modal    = document.getElementById('projectModal');
   if (!modal) return;
 
-  const backdrop = modal.querySelector('.proj-modal-backdrop');
-  const closeBtn = modal.querySelector('.proj-modal-close');
-  const modalImg    = document.getElementById('modalImg');
-  const modalTitle  = document.getElementById('modalTitle');
-  const modalDesc   = document.getElementById('modalDesc');
-  const modalTech   = document.getElementById('modalTech');
-  const modalLinks  = document.getElementById('modalLinks');
+  const backdrop  = modal.querySelector('.proj-modal-backdrop');
+  const closeDesk = modal.querySelector('.proj-modal-close');       // desktop X
+  const closeMob  = modal.querySelector('.proj-modal-close--mobile'); // mobile X
+
+  // ── Desktop DOM nodes ──────────────────────────────────────────
+  const modalImg   = document.getElementById('modalImg');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDesc  = document.getElementById('modalDesc');
+  const modalTech  = document.getElementById('modalTech');
+  const modalLinks = document.getElementById('modalLinks');
+
+  // ── Mobile DOM nodes ───────────────────────────────────────────
+  const modalImgM   = document.getElementById('modalImgMobile');
+  const modalTitleM = document.getElementById('modalTitleMobile');
+  const modalDescM  = document.getElementById('modalDescMobile');
+  const modalTechM  = document.getElementById('modalTechMobile');
+  const modalLinksM = document.getElementById('modalLinksMobile');
+  const modalNumM   = document.getElementById('modalNumMobile');
+  const mobilePanelEl = document.getElementById('projectModalMobile');
+
+  const isMobile = () => window.innerWidth < 768;
+
+  // ── Tag builder ────────────────────────────────────────────────
+  function buildTags(tech, compact = false) {
+    const cls = compact
+      ? 'px-[11px] py-[5px] text-[0.68rem] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.14)] rounded-[20px] font-sans font-semibold tracking-[0.06em] uppercase text-[rgba(255,255,255,0.85)]'
+      : 'px-[16px] py-[8px] text-[0.8rem] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.15)] rounded-[30px] font-sans font-semibold tracking-[0.05em] uppercase text-[rgba(255,255,255,0.9)]';
+    return (tech || '').split(',').filter(Boolean)
+      .map(t => `<span class="${cls}">${t.trim()}</span>`).join('');
+  }
+
+  // ── Link builder ───────────────────────────────────────────────
+  function buildLinks(live, github, compact = false) {
+    const cls = compact
+      ? 'inline-flex items-center gap-[6px] font-sans text-[0.85rem] font-semibold text-[#fff] px-[18px] py-[10px] bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.18)] rounded-[24px] no-underline transition-all duration-[0.25s] ease hover:bg-[#fff] hover:text-[#000]'
+      : 'flex items-center gap-[8px] font-sans text-[1rem] font-semibold text-[#fff] px-[24px] py-[12px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] rounded-[30px] transition-all duration-[0.3s] ease no-underline hover:bg-[#fff] hover:text-[#000] hover:-translate-y-[2px]';
+    let h = '';
+    if (live)   h += `<a href="${live}"   target="_blank" rel="noopener" class="${cls}">Live Demo <i class="bi bi-arrow-up-right"></i></a>`;
+    if (github) h += `<a href="${github}" target="_blank" rel="noopener" class="${cls}">Source Code <i class="bi bi-github"></i></a>`;
+    return h;
+  }
 
   function openModal(card) {
     const { title, desc, img, live, github, tech } = card.dataset;
 
-    if (modalImg)   modalImg.src = img;
-    if (modalTitle) modalTitle.textContent = title || '';
-    if (modalDesc)  modalDesc.textContent  = desc  || '';
+    // Project index (1-based) for the "01 / PROJECT" label
+    const allCards = Array.from(document.querySelectorAll('.project-card'));
+    const idx = String(allCards.indexOf(card) + 1).padStart(2, '0');
 
-    if (modalTech) {
-      modalTech.innerHTML = (tech || '')
-        .split(',')
-        .filter(Boolean)
-        .map(t => `<span class="px-[16px] py-[8px] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.15)] rounded-[30px] font-sans text-[0.8rem] font-semibold tracking-[0.05em] uppercase text-[rgba(255,255,255,0.9)]">${t.trim()}</span>`)
-        .join('');
-    }
+    // ── Populate desktop ───────────────────────────────────────
+    if (modalImg)   modalImg.src             = img;
+    if (modalTitle) modalTitle.textContent   = title || '';
+    if (modalDesc)  modalDesc.textContent    = desc  || '';
+    if (modalTech)  modalTech.innerHTML      = buildTags(tech);
+    if (modalLinks) modalLinks.innerHTML     = buildLinks(live, github);
 
-    if (modalLinks) {
-      modalLinks.innerHTML = '';
-      if (live)   modalLinks.innerHTML += `<a href="${live}"   target="_blank" rel="noopener" class="flex items-center gap-[8px] font-sans text-[1rem] font-semibold text-[#fff] px-[24px] py-[12px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] rounded-[30px] transition-all duration-[0.3s] ease no-underline hover:bg-[#fff] hover:text-[#000] hover:-translate-y-[2px]">Live Demo <i class="bi bi-arrow-up-right"></i></a>`;
-      if (github) modalLinks.innerHTML += `<a href="${github}" target="_blank" rel="noopener" class="flex items-center gap-[8px] font-sans text-[1rem] font-semibold text-[#fff] px-[24px] py-[12px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] rounded-[30px] transition-all duration-[0.3s] ease no-underline hover:bg-[#fff] hover:text-[#000] hover:-translate-y-[2px]">Source Code <i class="bi bi-github"></i></a>`;
-    }
+    // ── Populate mobile ────────────────────────────────────────
+    if (modalImgM)   modalImgM.src           = img;
+    if (modalTitleM) modalTitleM.textContent = title || '';
+    if (modalDescM)  modalDescM.textContent  = desc  || '';
+    if (modalTechM)  modalTechM.innerHTML    = buildTags(tech, true);
+    if (modalLinksM) modalLinksM.innerHTML   = buildLinks(live, github, true);
+    if (modalNumM)   modalNumM.textContent   = `${idx} / PROJECT`;
 
     modal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    getLenis()?.stop();
+
+    if (isMobile()) {
+      modal.scrollTop = 0;   // reset scroll position
+      getLenis()?.stop();    // pause Lenis so native modal scroll works
+      // Animate mobile panel in via inline styles (no Tailwind build needed)
+      if (mobilePanelEl) {
+        mobilePanelEl.style.transition = 'none';
+        mobilePanelEl.style.opacity    = '0';
+        mobilePanelEl.style.transform  = 'translateY(18px)';
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            mobilePanelEl.style.transition = 'opacity 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1)';
+            mobilePanelEl.style.opacity    = '1';
+            mobilePanelEl.style.transform  = 'translateY(0)';
+          });
+        });
+      }
+    } else {
+      document.body.style.overflow = 'hidden';
+      getLenis()?.stop();
+    }
   }
 
   function closeModal() {
     modal.classList.remove('open');
+    // Reset mobile panel animation state for next open
+    if (mobilePanelEl) {
+      mobilePanelEl.style.transition = '';
+      mobilePanelEl.style.opacity    = '';
+      mobilePanelEl.style.transform  = '';
+    }
     document.body.style.overflow = '';
     getLenis()?.start();
   }
 
-  // Open via the "Explore" button inside work-card
+  // Open via "Explore Project" button
   document.addEventListener('click', (e) => {
     const btn = e.target.closest('.view-project-btn');
     if (btn) {
@@ -77,7 +137,8 @@ function getLenis() {
   });
 
   backdrop?.addEventListener('click', closeModal);
-  closeBtn?.addEventListener('click', closeModal);
+  closeDesk?.addEventListener('click', closeModal);
+  closeMob?.addEventListener('click', closeModal);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
 })();
 
@@ -355,4 +416,46 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 1000); // CSS transition is 1s
     }, 15000);
   }
+
+  /* ── Footer Quick Links Smooth Scroll ─────────────────────── */
+  const footerLinks = document.querySelectorAll('.footer-nav-link');
+  footerLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const lenis = getLenis();
+          if (lenis) {
+            lenis.scrollTo(target, { offset: -100, duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+          } else {
+            const y = target.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }
+      }
+    });
+  });
+
+  /* ── Hero CTA Buttons Smooth Scroll ───────────────────────── */
+  const heroCtas = document.querySelectorAll('.btn-hero-primary, .btn-hero-secondary');
+  heroCtas.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const lenis = getLenis();
+          if (lenis) {
+            lenis.scrollTo(target, { offset: -100, duration: 1.4, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+          } else {
+            const y = target.getBoundingClientRect().top + window.pageYOffset - 100;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+          }
+        }
+      }
+    });
+  });
 });

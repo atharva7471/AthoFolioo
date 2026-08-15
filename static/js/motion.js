@@ -255,9 +255,10 @@ if (typeof gsap !== 'undefined') {
 (function initNav() {
   const header     = document.getElementById('global-header');
   const menuToggle = document.getElementById('menuToggle');
-  const navOverlay = document.getElementById('navOverlay');
-  const navLinks   = document.querySelectorAll('.nav-link');
+  const navOverlay = document.querySelector('.nav-overlay');
   const navLeft    = document.querySelector('.nav-left');
+  const navLinks   = document.querySelectorAll('.nav-link');
+  const navItems   = document.querySelectorAll('.nav-links li');
   const firstLink  = navLinks[0];
 
   if (!menuToggle || !navOverlay) return;
