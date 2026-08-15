@@ -179,11 +179,13 @@ if (typeof gsap !== 'undefined') {
   let ringX  = mouseX;
   let ringY  = mouseY;
 
-  // Track mouse
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-  });
+  // Track mouse (desktop only to save event overhead)
+  if (window.matchMedia('(min-width: 768px)').matches) {
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+  }
 
   // RAF lerp loop — cursor NEVER uses GSAP (lighter, more responsive)
   const LERP = 0.10; // ring lag amount
@@ -202,7 +204,10 @@ if (typeof gsap !== 'undefined') {
 
     rafId = requestAnimationFrame(tickCursor);
   }
-  requestAnimationFrame(tickCursor);
+  
+  if (window.matchMedia('(min-width: 768px)').matches) {
+    requestAnimationFrame(tickCursor);
+  }
 
   // ── Cursor State Handlers ──────────────────────────────────
   const states = {
@@ -1375,7 +1380,7 @@ function initHeroParallax() {
 
   // 3. Mouse Movement Glow
   const mouseGlow = document.getElementById('footerMouseGlow');
-  if (mouseGlow) {
+  if (mouseGlow && window.matchMedia('(min-width: 768px)').matches) {
     footer.addEventListener('mousemove', (e) => {
       const rect = footer.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -1426,7 +1431,21 @@ function initHeroParallax() {
   const container = document.getElementById('heroShootingStars');
   if (!container) return;
 
+  let running = true;
+  if (typeof ScrollTrigger !== 'undefined') {
+    ScrollTrigger.create({
+      trigger: '.hero-sequence',
+      start: 'top bottom',
+      end: 'bottom top',
+      onLeave: () => { running = false; },
+      onEnter: () => { running = true; scheduleNextStar(); },
+      onEnterBack: () => { running = true; scheduleNextStar(); }
+    });
+  }
+
   function createStar() {
+    if (!running) return;
+
     // Allow max 25 stars at a time
     if (container.children.length >= 25) {
       scheduleNextStar();
@@ -1500,12 +1519,15 @@ function initHeroParallax() {
     });
   }
 
+  let timeoutId = null;
   function scheduleNextStar() {
+    if (!running) return;
+    clearTimeout(timeoutId);
     // Randomize heavily: 1 star every 0.1 to 1.5 seconds
     const delay = 100 + Math.random() * 1400;
-    setTimeout(createStar, delay);
+    timeoutId = setTimeout(createStar, delay);
   }
 
   // Start the loop after a small initial delay
-  setTimeout(scheduleNextStar, 2000);
+  timeoutId = setTimeout(scheduleNextStar, 2000);
 })();
