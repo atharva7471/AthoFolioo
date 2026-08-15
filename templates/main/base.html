@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/cursor.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/loader.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/animations.css') }}">
+    {% if hero_bg %}
+    <!-- Preload Hero Image for LCP Optimization -->
+    <link rel="preload" as="image" href="{{ url_for('static', filename='assets/images/' ~ hero_bg) }}">
+    {% endif %}
   </head>
   <body class="loading">
 

@@ -121,8 +121,7 @@ def home():
         hero_bg = 'mountain.jpg'
         try:
             image_dir = os.path.join(app.root_path, 'static', 'assets', 'images')
-            valid_extensions = ('.jpg', '.jpeg', '.png', '.webp')
-            images = [f for f in os.listdir(image_dir) if os.path.isfile(os.path.join(image_dir, f)) and f.lower().endswith(valid_extensions)]
+            images = [f for f in os.listdir(image_dir) if os.path.isfile(os.path.join(image_dir, f)) and f.lower().endswith('.webp') and 'mountain' in f.lower()]
             if images:
                 hero_bg = random.choice(images)
         except Exception as e:

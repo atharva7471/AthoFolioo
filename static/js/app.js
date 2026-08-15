@@ -331,17 +331,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const heroBgElement = document.querySelector('.hero-mountain-image');
   if (heroBgElement) {
     const bgImages = [
-      'mountain1.jpg',
-      'mountain2.jpg',
-      'mountain3.jpg',
-      'mountain4.jpg',
-      'mountain5.jpg'
+      'mountain1.webp',
+      'mountain2.webp',
+      'mountain3.webp',
+      'mountain4.webp',
+      'mountain5.webp'
     ];
     let currentBgIndex = 0;
     
     // Find starting index from the element's style
     const currentStyle = heroBgElement.style.backgroundImage;
-    const match = currentStyle.match(/mountain(\d+)\.jpg/);
+    const match = currentStyle.match(/mountain(\d+)\.webp/);
     if (match) {
       currentBgIndex = parseInt(match[1]) - 1;
     }
