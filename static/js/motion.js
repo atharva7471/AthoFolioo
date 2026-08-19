@@ -113,8 +113,8 @@ if (typeof gsap !== 'undefined') {
     barStart:  500,   // bar starts sweeping
     tagIn:     600,   // tagline appears
     countIn:   300,   // counter appears
-    exit:      1350,  // loader starts leaving
-    complete:  1700,  // loader fully gone, scroll unlocked
+    exit:      800,   // loader starts leaving (reduced from 1350 for faster LCP)
+    complete:  1100,  // loader fully gone, scroll unlocked (reduced from 1700)
   };
 
   // Logo in

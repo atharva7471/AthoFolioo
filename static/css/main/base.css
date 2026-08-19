@@ -1,8 +1,6 @@
 /* ── base.css ─────────────────────────────────────── */
 /* Immersive Editorial Digital Experience Design System */
 
-@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Inter:wght@300;400;500&display=swap");
-
 :root {
   /* Pitch black canvas for cinematic immersion */
   --color-bg: #030303; 
