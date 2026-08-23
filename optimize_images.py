@@ -4,7 +4,7 @@ from PIL import Image
 def optimize_images():
     img_dir = r"d:\Atharva\Flask-Folio\static\assets\images"
     for filename in os.listdir(img_dir):
-        if filename.lower().endswith(".jpg") or filename.lower().endswith(".jpeg"):
+        if filename.lower().endswith((".jpg", ".jpeg", ".png")):
             filepath = os.path.join(img_dir, filename)
             try:
                 img = Image.open(filepath)

@@ -12,6 +12,8 @@ import cloudinary.uploader
 import cloudinary.api
 import os
 import random
+import uuid
+import traceback
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
