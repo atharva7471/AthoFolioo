@@ -3,12 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Atharva Bhosale — Digital Experience & ML Engineering." />
+    <meta name="description" content="Atharva Bhosale — Machine Learning Engineer & Web Architect. View my portfolio, projects, and achievements." />
     <meta name="author" content="Atharva Bhosale" />
-    <meta property="og:title" content="Atharva Bhosale | Digital Experience" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Atharva Bhosale | ML & Web Architecture" />
     <meta property="og:description" content="An immersive journey through Machine Learning and Web Architecture." />
     <meta property="og:type" content="website" />
-    <title>{% block title %}Athaarvaaa{% endblock %}</title>
+    <meta property="og:url" content="{{ request.url }}" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Atharva Bhosale | Portfolio">
+    <meta name="twitter:description" content="An immersive journey through Machine Learning and Web Architecture.">
+
+    <link rel="canonical" href="{{ request.url }}">
+    <title>{% block title %}Atharva Bhosale | ML Engineer & Web Architect{% endblock %}</title>
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Person",
+      "name": "Atharva Bhosale",
+      "jobTitle": "Machine Learning Engineer",
+      "url": "{{ request.url_root }}",
+      "sameAs": [
+        "https://github.com/atharva7471",
+        "https://linkedin.com/in/atharva-bhosale"
+      ]
+    }
+    </script>
 
     <!-- Preconnect to font and icon servers -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

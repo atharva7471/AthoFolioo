@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://athoofolio.vercel.app/sitemap.xml

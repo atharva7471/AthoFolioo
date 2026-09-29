@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, jsonify, flash, request, session
+from flask import Flask, render_template, redirect, url_for, jsonify, flash, request, session, send_from_directory
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 from functools import wraps
@@ -110,8 +110,31 @@ def admin_required(f):
     return wrapper
 
 # -------------------------
+# Jinja Filters
+# -------------------------
+@app.template_filter('cloudinary_opt')
+def cloudinary_opt(url, width=None):
+    if not url or 'cloudinary' not in url:
+        return url
+    parts = url.split('upload/')
+    if len(parts) == 2:
+        transform = "f_auto,q_auto"
+        if width:
+            transform += f",c_limit,w_{width}"
+        return f"{parts[0]}upload/{transform}/{parts[1]}"
+    return url
+
+# -------------------------
 # Routes
 # -------------------------
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'robots.txt')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'sitemap.xml')
+
 @app.route('/')
 def home():
     try:

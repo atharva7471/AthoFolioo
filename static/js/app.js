@@ -24,107 +24,85 @@ function getLenis() {
    PROJECT MODAL  (desktop + mobile dual-panel)
    ══════════════════════════════════════════════════════════════ */
 (function initProjectModal() {
-  const modal    = document.getElementById('projectModal');
+  const modal = document.getElementById('projectModal');
   if (!modal) return;
 
-  const backdrop  = modal.querySelector('.proj-modal-backdrop');
-  const closeDesk = modal.querySelector('.proj-modal-close');       // desktop X
-  const closeMob  = modal.querySelector('.proj-modal-close--mobile'); // mobile X
+  const backdrop = modal.querySelector('.proj-modal-backdrop');
+  const closeBtns = modal.querySelectorAll('.proj-modal-close'); 
 
-  // ── Desktop DOM nodes ──────────────────────────────────────────
+  // Unified DOM nodes
   const modalImg   = document.getElementById('modalImg');
   const modalTitle = document.getElementById('modalTitle');
   const modalDesc  = document.getElementById('modalDesc');
   const modalTech  = document.getElementById('modalTech');
   const modalLinks = document.getElementById('modalLinks');
+  const modalNumM  = document.getElementById('modalNumMobile');
 
-  // ── Mobile DOM nodes ───────────────────────────────────────────
-  const modalImgM   = document.getElementById('modalImgMobile');
-  const modalTitleM = document.getElementById('modalTitleMobile');
-  const modalDescM  = document.getElementById('modalDescMobile');
-  const modalTechM  = document.getElementById('modalTechMobile');
-  const modalLinksM = document.getElementById('modalLinksMobile');
-  const modalNumM   = document.getElementById('modalNumMobile');
-  const mobilePanelEl = document.getElementById('projectModalMobile');
-
-  const isMobile = () => window.innerWidth < 768;
+  // Focus management
+  let previousActiveElement = null;
 
   // ── Tag builder ────────────────────────────────────────────────
-  function buildTags(tech, compact = false) {
-    const cls = compact
-      ? 'px-[11px] py-[5px] text-[0.68rem] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.14)] rounded-[20px] font-sans font-semibold tracking-[0.06em] uppercase text-[rgba(255,255,255,0.85)]'
-      : 'px-[16px] py-[8px] text-[0.8rem] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.15)] rounded-[30px] font-sans font-semibold tracking-[0.05em] uppercase text-[rgba(255,255,255,0.9)]';
+  function buildTags(tech) {
+    const cls = 'px-[11px] lg:px-[16px] py-[5px] lg:py-[8px] text-[0.68rem] lg:text-[0.8rem] bg-[rgba(255,255,255,0.05)] border border-[rgba(255,255,255,0.15)] rounded-[30px] font-sans font-semibold tracking-[0.05em] uppercase text-[rgba(255,255,255,0.9)]';
     return (tech || '').split(',').filter(Boolean)
       .map(t => `<span class="${cls}">${t.trim()}</span>`).join('');
   }
 
   // ── Link builder ───────────────────────────────────────────────
-  function buildLinks(live, github, compact = false) {
-    const cls = compact
-      ? 'inline-flex items-center gap-[6px] font-sans text-[0.85rem] font-semibold text-[#fff] px-[18px] py-[10px] bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.18)] rounded-[24px] no-underline transition-all duration-[0.25s] ease hover:bg-[#fff] hover:text-[#000]'
-      : 'flex items-center gap-[8px] font-sans text-[1rem] font-semibold text-[#fff] px-[24px] py-[12px] bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] rounded-[30px] transition-all duration-[0.3s] ease no-underline hover:bg-[#fff] hover:text-[#000] hover:-translate-y-[2px]';
+  function buildLinks(live, github) {
+    const cls = 'flex items-center justify-center gap-[6px] lg:gap-[8px] font-sans text-[0.85rem] lg:text-[1rem] font-semibold text-[#fff] px-[18px] lg:px-[24px] py-[10px] lg:py-[12px] bg-[rgba(255,255,255,0.08)] lg:bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.18)] lg:border-[rgba(255,255,255,0.2)] rounded-[30px] transition-all duration-[0.3s] ease no-underline hover:bg-[#fff] hover:text-[#000] hover:-translate-y-[2px] flex-1 lg:flex-none text-center';
     let h = '';
     if (live)   h += `<a href="${live}"   target="_blank" rel="noopener" class="${cls}">Live Demo <i class="bi bi-arrow-up-right"></i></a>`;
     if (github) h += `<a href="${github}" target="_blank" rel="noopener" class="${cls}">Source Code <i class="bi bi-github"></i></a>`;
     return h;
   }
 
-  function openModal(card) {
+  function openModal(card, triggerBtn) {
+    previousActiveElement = triggerBtn || document.activeElement;
     const { title, desc, img, live, github, tech } = card.dataset;
 
-    // Project index (1-based) for the "01 / PROJECT" label
+    // Project index (1-based)
     const allCards = Array.from(document.querySelectorAll('.project-card'));
     const idx = String(allCards.indexOf(card) + 1).padStart(2, '0');
 
-    // ── Populate desktop ───────────────────────────────────────
-    if (modalImg)   modalImg.src             = img;
+    // Populate
+    if (modalImg)   modalImg.src             = img || '';
     if (modalTitle) modalTitle.textContent   = title || '';
     if (modalDesc)  modalDesc.textContent    = desc  || '';
     if (modalTech)  modalTech.innerHTML      = buildTags(tech);
     if (modalLinks) modalLinks.innerHTML     = buildLinks(live, github);
+    if (modalNumM)  modalNumM.textContent    = `${idx} / PROJECT`;
 
-    // ── Populate mobile ────────────────────────────────────────
-    if (modalImgM)   modalImgM.src           = img;
-    if (modalTitleM) modalTitleM.textContent = title || '';
-    if (modalDescM)  modalDescM.textContent  = desc  || '';
-    if (modalTechM)  modalTechM.innerHTML    = buildTags(tech, true);
-    if (modalLinksM) modalLinksM.innerHTML   = buildLinks(live, github, true);
-    if (modalNumM)   modalNumM.textContent   = `${idx} / PROJECT`;
+    // Reset scroll position of the scrollable container
+    const scrollContainer = modal.querySelector('.overflow-y-auto');
+    if (scrollContainer) scrollContainer.scrollTop = 0;
 
     modal.classList.add('open');
-
-    if (isMobile()) {
-      modal.scrollTop = 0;   // reset scroll position
-      getLenis()?.stop();    // pause Lenis so native modal scroll works
-      // Animate mobile panel in via inline styles (no Tailwind build needed)
-      if (mobilePanelEl) {
-        mobilePanelEl.style.transition = 'none';
-        mobilePanelEl.style.opacity    = '0';
-        mobilePanelEl.style.transform  = 'translateY(18px)';
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            mobilePanelEl.style.transition = 'opacity 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1)';
-            mobilePanelEl.style.opacity    = '1';
-            mobilePanelEl.style.transform  = 'translateY(0)';
-          });
-        });
-      }
-    } else {
-      document.body.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    
+    if (typeof getLenis === 'function') {
       getLenis()?.stop();
+    }
+
+    // Focus management: focus the modal container or close button
+    const firstCloseBtn = closeBtns[0];
+    if (firstCloseBtn) {
+      setTimeout(() => firstCloseBtn.focus(), 100);
     }
   }
 
   function closeModal() {
     modal.classList.remove('open');
-    // Reset mobile panel animation state for next open
-    if (mobilePanelEl) {
-      mobilePanelEl.style.transition = '';
-      mobilePanelEl.style.opacity    = '';
-      mobilePanelEl.style.transform  = '';
-    }
     document.body.style.overflow = '';
-    getLenis()?.start();
+    
+    if (typeof getLenis === 'function') {
+      getLenis()?.start();
+    }
+
+    // Restore focus
+    if (previousActiveElement && typeof previousActiveElement.focus === 'function') {
+      previousActiveElement.focus();
+    }
   }
 
   // Open via "Explore Project" button
@@ -132,14 +110,18 @@ function getLenis() {
     const btn = e.target.closest('.view-project-btn');
     if (btn) {
       const card = btn.closest('.project-card');
-      if (card) openModal(card);
+      if (card) openModal(card, btn);
     }
   });
 
   backdrop?.addEventListener('click', closeModal);
-  closeDesk?.addEventListener('click', closeModal);
-  closeMob?.addEventListener('click', closeModal);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
+  closeBtns.forEach(btn => btn.addEventListener('click', closeModal));
+  
+  document.addEventListener('keydown', (e) => { 
+    if (e.key === 'Escape' && modal.classList.contains('open')) {
+      closeModal();
+    }
+  });
 })();
 
 
