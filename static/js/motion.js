@@ -99,6 +99,8 @@ if (typeof gsap !== 'undefined') {
     loader.style.display = 'none';
     document.body.classList.remove('loading');
     document.body.classList.add('loaded');
+    document.body.style.overflow = ''; // Safety: ensure no stale inline overflow lock
+    lenis.start();                      // Safety: ensure lenis isn't stopped from a prior visit
     runHeroSequence();
     return;
   }
@@ -154,9 +156,18 @@ if (typeof gsap !== 'undefined') {
   setTimeout(() => {
     loader.style.display = 'none';
     document.body.classList.add('loaded');
+    document.body.style.overflow = '';
     lenis.start();
     runHeroSequence();
   }, T.complete);
+
+  // Absolute safety-net: if anything above failed, force-unlock after 3s
+  setTimeout(() => {
+    document.body.classList.remove('loading');
+    document.body.classList.add('loaded');
+    document.body.style.overflow = '';
+    lenis.start();
+  }, 3000);
 })();
 
 
@@ -1530,4 +1541,96 @@ function initHeroParallax() {
 
   // Start the loop after a small initial delay
   timeoutId = setTimeout(scheduleNextStar, 2000);
+})();
+
+
+/* ══════════════════════════════════════════════════════════════
+   EDITORIAL PROJECT SHOWCASE — Scroll Reveal + Parallax
+   ══════════════════════════════════════════════════════════════ */
+(function initProjectShowcaseAnimations() {
+  const projItems = document.querySelectorAll('.proj-item');
+  if (!projItems.length) return;
+
+  // 1. Entrance animation (IntersectionObserver for better performance than ScrollTrigger for lists)
+  projItems.forEach((item, i) => {
+    item.style.opacity = '0';
+    item.style.transform = 'translateY(40px)';
+    item.style.transition = `opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1)`;
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+  projItems.forEach(item => observer.observe(item));
+
+  // 2. Generic data-reveal support for internal project elements
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    gsap.utils.toArray('[data-reveal]').forEach(el => {
+      // Check if it's inside a project section (we only handle projects here for safety, or generic)
+      gsap.fromTo(el, 
+        { y: 30, opacity: 0 },
+        {
+          y: 0, opacity: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+    });
+
+    gsap.utils.toArray('[data-reveal="scale"]').forEach(el => {
+      gsap.fromTo(el,
+        { scale: 0.95, opacity: 0 },
+        {
+          scale: 1, opacity: 1,
+          duration: 1,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 85%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+    });
+  }
+
+  // 3. Subtle mouse parallax on project preview images (desktop only)
+  if (window.matchMedia('(min-width: 1024px) and (hover: hover)').matches) {
+    projItems.forEach(item => {
+      const img = item.querySelector('.proj-img');
+      const frame = item.querySelector('.proj-img-frame');
+      if (!img || !frame) return;
+
+      frame.addEventListener('mousemove', (e) => {
+        const rect = frame.getBoundingClientRect();
+        const relY = (e.clientY - rect.top) / rect.height - 0.5; // -0.5 to 0.5
+        const relX = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+        
+        // Very gentle nudge
+        const nudgeY = relY * 12;
+        const nudgeX = relX * 8;
+        
+        // Apply on top of existing scale(1) from CSS hover
+        img.style.transform = `scale(1) translate(${nudgeX}px, ${nudgeY}px)`;
+      });
+
+      frame.addEventListener('mouseleave', () => {
+        // Reset to CSS default hover state (it will scale out gracefully via CSS transition)
+        img.style.transform = '';
+      });
+    });
+  }
 })();
