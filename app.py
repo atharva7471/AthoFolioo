@@ -139,8 +139,8 @@ def sitemap():
 def home():
     try:
         comments = comments_collection.find({"approved": True}).sort("created_at", -1)
-        projects = list(projects_collection.find().sort("created_at", -1))
-        certificates = list(certificates_collection.find().sort("created_at", -1))
+        projects = list(projects_collection.find().sort([("priority", 1), ("created_at", -1)]))
+        certificates = list(certificates_collection.find().sort([("priority", 1), ("created_at", -1)]))
         
         # Get random hero background image
         hero_bg = 'mountain.jpg'
@@ -290,6 +290,13 @@ def add_project():
     tech_stack = request.form.get("tech_stack", "").strip()
     github_url = request.form.get("github_url", "").strip()
     live_url = request.form.get("live_url", "").strip()
+    
+    priority_str = request.form.get("priority", "100").strip()
+    try:
+        priority = int(priority_str)
+    except ValueError:
+        priority = 100
+        
     image = request.files.get("image")
 
     if not title or not description or not tech_stack:
@@ -318,6 +325,7 @@ def add_project():
             "tech_stack": [t.strip() for t in tech_stack.split(",") if t.strip()],
             "github_url": github_url,
             "live_url": live_url,
+            "priority": priority,
             "image_url": image_url,
             "image_public_id": upload_result["public_id"],
             "created_at": datetime.utcnow()
@@ -337,6 +345,13 @@ def add_certificate():
     title = request.form.get("title", "").strip()
     issuer = request.form.get("issuer", "").strip()
     certificate_url = request.form.get("certificate_url", "").strip()
+    
+    priority_str = request.form.get("priority", "100").strip()
+    try:
+        priority = int(priority_str)
+    except ValueError:
+        priority = 100
+        
     image = request.files.get("image")
 
     if not title or not issuer:
@@ -363,6 +378,7 @@ def add_certificate():
             "title": title,
             "issuer": issuer,
             "certificate_url": certificate_url,
+            "priority": priority,
             "image_url": image_url,
             "image_public_id": upload_result["public_id"],
             "created_at": datetime.utcnow()
@@ -427,6 +443,12 @@ def edit_project(project_id):
         title = request.form.get("title", "").strip()
         description = request.form.get("description", "").strip()
         tech_stack = request.form.get("tech_stack", "").strip()
+        
+        priority_str = request.form.get("priority", "100").strip()
+        try:
+            priority = int(priority_str)
+        except ValueError:
+            priority = 100
 
         if not title or not description or not tech_stack:
             flash("All fields are required", "danger")
@@ -438,6 +460,7 @@ def edit_project(project_id):
                 "title": title,
                 "description": description,
                 "tech_stack": [t.strip() for t in tech_stack.split(",") if t.strip()],
+                "priority": priority,
                 "updated_at": datetime.utcnow()
             }}
         )

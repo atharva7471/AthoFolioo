@@ -57,7 +57,7 @@
     {%- set is_even = loop.index is even %}
 
     <article
-      class="proj-item grid grid-cols-1 md:grid-cols-2 items-center relative md:even:[direction:rtl] [&>*]:[direction:ltr]"
+      class="proj-item grid grid-cols-1 md:grid-cols-2 items-center relative md:even:[direction:rtl] [&>*]:[direction:ltr] [&.show-proj]:!grid {% if loop.index > 4 %}hidden-proj hidden opacity-0 translate-y-[30px] transition-all duration-[0.4s] ease-[cubic-bezier(0.16,1,0.3,1)]{% endif %} {% if loop.index > 3 %}hidden-proj-mobile max-md:hidden max-md:opacity-0 max-md:translate-y-[30px] transition-all duration-[0.4s] ease-[cubic-bezier(0.16,1,0.3,1)]{% endif %}"
       style="padding-top: clamp(2rem, 3.5vw, 3.5rem); padding-bottom: clamp(2rem, 3.5vw, 3.5rem); gap: clamp(2rem, 4vw, 4.5rem);"
       data-proj-item
       data-id="{{ p.id }}"
@@ -100,16 +100,16 @@
         <div class="flex flex-wrap gap-3 items-center mt-2">
           <button class="proj-case-btn btn-premium group" data-open-proj="{{ loop_idx - 1 }}" aria-label="View details for {{ p.title }}">
             <span>View Details</span>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="ml-1.5 transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
           {% if p.github_url %}
           <a href="{{ p.github_url }}" target="_blank" rel="noopener noreferrer" class="proj-link-btn btn-outline" aria-label="GitHub: {{ p.title }}">
-            <i class="bi bi-github" aria-hidden="true"></i><span>GitHub</span>
+            <i class="bi bi-github mr-1.5" aria-hidden="true"></i><span>GitHub</span>
           </a>
           {% endif %}
           {% if p.live_url %}
           <a href="{{ p.live_url }}" target="_blank" rel="noopener noreferrer" class="proj-link-btn btn-outline" aria-label="Live demo: {{ p.title }}">
-            <i class="bi bi-arrow-up-right" aria-hidden="true"></i><span>Live Demo</span>
+            <i class="bi bi-arrow-up-right mr-1.5" aria-hidden="true"></i><span>Live Demo</span>
           </a>
           {% endif %}
         </div>
@@ -128,7 +128,7 @@
       </div>
 
     </article>
-    {% if not loop.last %}<div class="h-[1px] bg-white/5" aria-hidden="true"></div>{% endif %}
+    {% if not loop.last %}<div class="h-[1px] bg-white/5 [&.show-proj]:!block {% if loop.index >= 4 %}hidden-proj hidden opacity-0 transition-all duration-[0.4s]{% endif %} {% if loop.index >= 3 %}hidden-proj-mobile max-md:hidden max-md:opacity-0 transition-all duration-[0.4s]{% endif %}" aria-hidden="true"></div>{% endif %}
     {% endfor %}
 
     {% if not projects %}
@@ -139,6 +139,15 @@
     {% endif %}
 
   </div>
+  
+  {% if projects|length > 3 %}
+  <div class="flex justify-center mt-12 mb-8 reveal {% if projects|length <= 4 %}mobile-only-btn hidden max-md:!flex{% endif %}">
+    <button class="inline-flex items-center gap-[0.8rem] px-[2rem] py-[1rem] bg-[rgba(20,20,25,0.8)] backdrop-blur-[12px] border border-[rgba(255,255,255,0.1)] rounded-[40px] text-white text-[1rem] cursor-pointer transition-all duration-[0.3s] ease uppercase tracking-[0.1em] hover:bg-[rgba(255,255,255,0.1)] hover:border-[rgba(255,255,255,0.3)] hover:-translate-y-[3px] hover:shadow-[0_10px_20px_rgba(0,0,0,0.3)] group/btn" id="toggleProjBtn">
+      <span class="btn-text">View All Projects</span>
+      <i class="bi bi-chevron-down text-[1.2rem] transition-transform duration-[0.3s] ease"></i>
+    </button>
+  </div>
+  {% endif %}
 
   <div class="h-[clamp(4rem,8vw,8rem)]"></div>
 
@@ -173,3 +182,53 @@
   </div>
 
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('toggleProjBtn');
+    const hiddenProjs = document.querySelectorAll('.hidden-proj, .hidden-proj-mobile');
+    let isExpanded = false;
+
+    if (toggleBtn && hiddenProjs.length > 0) {
+      toggleBtn.addEventListener('click', () => {
+        isExpanded = !isExpanded;
+        
+        const btnText = toggleBtn.querySelector('.btn-text');
+        const btnIcon = toggleBtn.querySelector('i');
+
+        if (isExpanded) {
+          hiddenProjs.forEach((proj, index) => {
+            if (proj.tagName.toLowerCase() === 'article') {
+              proj.style.display = 'grid';
+            } else {
+              proj.style.display = 'block';
+            }
+            proj.offsetHeight;
+            proj.classList.add('show-proj');
+            proj.style.transitionDelay = `${index * 0.1}s`;
+          });
+          btnText.textContent = 'Show Less';
+          btnIcon.classList.remove('bi-chevron-down');
+          btnIcon.classList.add('bi-chevron-up');
+        } else {
+          hiddenProjs.forEach(proj => {
+            proj.classList.remove('show-proj');
+            proj.style.transitionDelay = '0s';
+            setTimeout(() => {
+              if(!isExpanded) proj.style.display = '';
+            }, 400);
+          });
+          btnText.textContent = 'View All Projects';
+          btnIcon.classList.remove('bi-chevron-up');
+          btnIcon.classList.add('bi-chevron-down');
+
+          const section = document.getElementById('projShowcase');
+          if (section) {
+            const y = section.getBoundingClientRect().top + window.scrollY - 100;
+            window.scrollTo({top: y, behavior: 'smooth'});
+          }
+        }
+      });
+    }
+  });
+</script>
