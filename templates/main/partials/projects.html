@@ -5,7 +5,7 @@
     <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 md:gap-8 w-full">
       <div class="flex flex-wrap items-baseline gap-3 md:gap-5 shrink-0">
         <span class="font-display font-bold text-white/20 tabular-nums leading-none flex items-baseline gap-3 md:gap-5" style="font-size: clamp(2.5rem, 5.5vw, 4rem);">
-          {%- if projects %}{{ '%02d' | format(projects|length) }}{% else %}00{% endif -%}
+          04
           <span class="text-white/10 font-light">/</span>
         </span>
         <h2 class="font-display m-0 flex flex-wrap items-baseline gap-3 md:gap-4 uppercase leading-none">
@@ -75,15 +75,7 @@
         <div class="flex items-center gap-6">
           <span class="font-sans text-[0.7rem] font-bold tracking-[0.14em] text-white/20 tabular-nums">{{ '%02d' | format(loop_idx) }}</span>
           <span class="font-sans text-[0.65rem] font-semibold tracking-[0.18em] uppercase text-white/30">
-            {%- if p.tech_stack -%}
-              {%- set ft = p.tech_stack[0] -%}
-              {%- if 'python' in ft|lower or 'ml' in ft|lower or 'machine' in ft|lower %}AI / Machine Learning
-              {%- elif 'react' in ft|lower or 'next' in ft|lower or 'vue' in ft|lower %}Frontend / Web
-              {%- elif 'node' in ft|lower or 'flask' in ft|lower or 'django' in ft|lower %}Full Stack
-              {%- elif 'matlab' in ft|lower or 'simulink' in ft|lower %}Engineering
-              {%- elif 'android' in ft|lower or 'kotlin' in ft|lower or 'swift' in ft|lower %}Mobile
-              {%- else %}Software Engineering{%- endif -%}
-            {%- else %}Software Engineering{%- endif %}
+            {{ p.category | default('Software Engineering') }}
           </span>
         </div>
 

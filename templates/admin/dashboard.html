@@ -1,6 +1,6 @@
 {% extends "admin/base.html" %}
 
-{% block title %}Admin Dashboard{% endblock %}
+{% block title %}| Dashboard{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/admin/dashboard.css') }}">
@@ -27,6 +27,16 @@
     <a href="{{ url_for('admin_comments') }}" class="dashboard-card">
       <h3>💬 Comments</h3>
       <p>Review user feedback and messages</p>
+    </a>
+
+    <a href="{{ url_for('admin_wallpapers') }}" class="dashboard-card">
+      <h3>🖼️ Wallpapers</h3>
+      <p>Manage homepage background images</p>
+    </a>
+
+    <a href="{{ url_for('admin_resume') }}" class="dashboard-card">
+      <h3>📄 Resume</h3>
+      <p>Update your resume file</p>
     </a>
   </div>
 

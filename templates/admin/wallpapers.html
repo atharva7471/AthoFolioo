@@ -1,0 +1,55 @@
+{% extends "admin/base.html" %}
+{% block title %}| Manage Wallpapers{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/admin_forms.css') }}">
+{% endblock %}
+{% block content %}
+<section class="admin-form-section">
+  <div class="admin-header">
+    <h2>Manage Wallpapers</h2>
+    <a href="{{ url_for('admin_dashboard') }}" class="back-btn">Back</a>
+  </div>
+  
+  <form
+    action="{{ url_for('add_wallpaper') }}"
+    method="POST"
+    enctype="multipart/form-data"
+    class="admin-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="file" name="image" accept="image/*" required>
+    <button type="submit">Upload Wallpaper</button>
+  </form>
+</section>
+
+<section class="admin-list-section">
+  <h2>Current Wallpapers</h2>
+  {% for wp in wallpapers %}
+  <div class="admin-list-item" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+    <div style="position: relative;">
+      <img src="{{ wp.image_url }}" alt="Wallpaper" style="width: 150px; height: auto; border-radius: 4px; {% if wp.active == False %}opacity: 0.5; filter: grayscale(100%);{% endif %}">
+      {% if wp.active != False %}
+      <span style="position: absolute; top: -8px; right: -8px; background: #10b981; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; font-weight: bold;">Active</span>
+      {% else %}
+      <span style="position: absolute; top: -8px; right: -8px; background: #ef4444; color: white; font-size: 0.7rem; padding: 2px 6px; border-radius: 10px; font-weight: bold;">Inactive</span>
+      {% endif %}
+    </div>
+    <div class="admin-actions" style="display: flex; gap: 0.5rem;">
+      <form method="POST" action="{{ url_for('toggle_wallpaper', wp_id=wp._id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="primary-btn" style="background: var(--color-primary-dark); padding: 0.5rem 1rem;">
+          {% if wp.active != False %}Deactivate{% else %}Activate{% endif %}
+        </button>
+      </form>
+      <form method="POST"
+        action="{{ url_for('delete_wallpaper', wp_id=wp._id) }}"
+        onsubmit="return confirm('Delete this wallpaper?');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="danger-btn">Delete</button>
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <p>No wallpapers found.</p>
+  {% endfor %}
+</section>
+{% endblock %}

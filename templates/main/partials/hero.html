@@ -9,9 +9,13 @@
   <div class="hero-ambient-glow absolute top-[-10vh] left-[35%] w-[55vw] h-[55vw] bg-[radial-gradient(ellipse_at_center,rgba(99,102,241,0.09)_0%,rgba(139,92,246,0.06)_35%,transparent_70%)] rounded-full blur-[80px] z-[2] pointer-events-none opacity-0 will-change-[opacity,transform]" id="heroAmbientGlow" aria-hidden="true"></div>
 
   <div class="hero-cinematic-bg absolute inset-0 w-full h-full z-[3] pointer-events-none overflow-hidden opacity-0 will-change-opacity" id="heroCinematicBg" aria-hidden="true">
-    <div class="hero-mountain-image absolute inset-0 w-full h-full bg-cover bg-center max-md:bg-[85%_center] [image-rendering:high-quality] contrast-[1.15] brightness-[0.85] saturate-[1.2] transition-opacity duration-[1s] ease-in-out after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(135deg,rgba(99,102,241,0.5),rgba(139,92,246,0.3))] after:mix-blend-soft-light after:pointer-events-none" style="background-image: url('{{ url_for('static', filename='assets/images/' ~ hero_bg) }}');"></div>
+    <div class="hero-mountain-image absolute inset-0 w-full h-full bg-cover bg-center max-md:bg-[85%_center] [image-rendering:high-quality] contrast-[1.15] brightness-[0.85] saturate-[1.2] transition-opacity duration-[1s] ease-in-out after:content-[''] after:absolute after:inset-0 after:bg-[linear-gradient(135deg,rgba(99,102,241,0.5),rgba(139,92,246,0.3))] after:mix-blend-soft-light after:pointer-events-none" style="background-image: url('{{ hero_bgs[0] }}');"></div>
     <div class="hero-mountain-overlay absolute inset-0 bg-[linear-gradient(to_top,var(--color-bg)_0%,rgba(3,3,3,0.9)_5%,transparent_30%),linear-gradient(to_bottom,rgba(32,26,45,0.5)_0.5%,transparent_10%)]"></div>
   </div>
+
+  <script>
+    window.HERO_WALLPAPERS = {{ hero_bgs | tojson | safe }};
+  </script>
 
   <div class="hero-sticky-container sticky top-0 w-full h-[100vh] flex items-center z-[10] overflow-hidden max-lg:!relative max-lg:!top-auto max-lg:!h-auto max-lg:min-h-[100svh] max-md:!relative max-md:!top-auto max-md:!h-auto max-md:!min-h-auto" id="heroSticky">
     <div class="hero-layout relative w-full max-w-[1440px] mx-auto px-[5vw] flex flex-col justify-center h-full pt-[15vh] pb-[6vh] gap-0 max-lg:h-auto max-lg:min-h-[100svh] max-lg:pt-[14svh] max-lg:pb-[25svh] max-lg:justify-center max-md:h-auto max-md:min-h-auto max-md:pt-[16svh] max-md:pb-[8svh] max-md:justify-center max-sm:pt-[18svh] max-sm:pb-[8svh] 3xl:px-[6vw] 3xl:pt-[12vh] 3xl:pb-[6vh]"> 

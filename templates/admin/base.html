@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{% block title %}Admin | Portfolio{% endblock %}</title>
+    <title>Admin {% block title %}Portfolio{% endblock %}</title>
     <!-- Theme (load first to prevent flash-of-wrong-theme) -->
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
@@ -23,12 +23,24 @@
 
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        {% for category, message in messages %}
-          <div class="flash {{ category }}">
-            {{ message }}
-            <span class="flash-close" onclick="this.parentElement.remove()">Close</span>
-          </div>
-        {% endfor %}
+        <div id="flash-container">
+          {% for category, message in messages %}
+            <div class="flash {{ category }}">
+              {{ message }}
+              <span class="flash-close" onclick="this.parentElement.remove()">&times;</span>
+            </div>
+          {% endfor %}
+        </div>
+        <script>
+          setTimeout(() => {
+            const container = document.getElementById('flash-container');
+            if (container) {
+              container.style.opacity = '0';
+              container.style.transition = 'opacity 0.5s ease';
+              setTimeout(() => container.remove(), 500);
+            }
+          }, 3000);
+        </script>
       {% endif %}
     {% endwith %}
 

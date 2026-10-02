@@ -1,5 +1,5 @@
 {% extends "admin/base.html" %}
-{% block title %}Add Project{% endblock %}
+{% block title %}| Add Project{% endblock %}
 {% block head %}
 <link rel="stylesheet"
   href="{{ url_for('static', filename='css/admin/admin_forms.css') }}">
@@ -24,6 +24,12 @@
       type="text"
       name="tech_stack"
       placeholder="Tech stack (comma separated)"
+      required>
+
+    <input
+      type="text"
+      name="category"
+      placeholder="Project Category (e.g., Software Engineering, Full Stack)"
       required>
 
     <input type="number" name="priority" placeholder="Display Priority (e.g., 1, 2, 3...)" value="100" min="1" required>

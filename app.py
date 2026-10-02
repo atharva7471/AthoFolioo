@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, jsonify, flash, request, session, send_from_directory
-from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.security import check_password_hash
 from datetime import datetime, timedelta
 from functools import wraps
 from pymongo import MongoClient
@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 from flask_wtf.csrf import CSRFProtect
 import cloudinary
 import cloudinary.uploader
-import cloudinary.api
 import os
 import random
 import uuid
@@ -76,6 +75,8 @@ comments_collection = db["comments"]
 admins_collection = db["admins"]
 projects_collection = db["projects"]
 certificates_collection = db["certificates"]
+wallpapers_collection = db["wallpapers"]
+settings_collection = db["settings"]
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -93,6 +94,15 @@ def allowed_file(file):
         and "." in file.filename
         and file.filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
         and file.mimetype.startswith("image/")
+    )
+
+ALLOWED_RESUME_EXTENSIONS = {"pdf", "doc", "docx"}
+
+def allowed_resume_file(file):
+    return (
+        file
+        and "." in file.filename
+        and file.filename.rsplit(".", 1)[1].lower() in ALLOWED_RESUME_EXTENSIONS
     )
 
 # -------------------------
@@ -124,6 +134,39 @@ def cloudinary_opt(url, width=None):
         return f"{parts[0]}upload/{transform}/{parts[1]}"
     return url
 
+@app.context_processor
+def inject_resume_url():
+    return {"global_resume_url": url_for('serve_resume')}
+
+@app.route("/resume")
+def serve_resume():
+    try:
+        resume_data = settings_collection.find_one({"key": "resume_file_data"})
+        if resume_data and resume_data.get("data"):
+            from io import BytesIO
+            from flask import send_file
+            
+            filename = resume_data.get("filename", "resume.pdf")
+            if filename.lower().endswith(".pdf"):
+                mimetype = "application/pdf"
+            elif filename.lower().endswith(".doc"):
+                mimetype = "application/msword"
+            elif filename.lower().endswith(".docx"):
+                mimetype = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            else:
+                mimetype = "application/octet-stream"
+
+            return send_file(
+                BytesIO(resume_data["data"]),
+                mimetype=mimetype,
+                as_attachment=False,
+                download_name=filename
+            )
+    except Exception as e:
+        app.logger.error(f"Error serving resume from DB: {e}")
+        
+    return redirect(url_for('static', filename='assets/resume.pdf'))
+
 # -------------------------
 # Routes
 # -------------------------
@@ -142,21 +185,30 @@ def home():
         projects = list(projects_collection.find().sort([("priority", 1), ("created_at", -1)]))
         certificates = list(certificates_collection.find().sort([("priority", 1), ("created_at", -1)]))
         
-        # Get random hero background image
-        hero_bg = 'mountain.jpg'
+        # Get random hero background images
+        hero_bgs = []
         try:
-            image_dir = os.path.join(app.root_path, 'static', 'assets', 'images')
-            images = [f for f in os.listdir(image_dir) if os.path.isfile(os.path.join(image_dir, f)) and f.lower().endswith('.webp') and 'mountain' in f.lower()]
-            if images:
-                hero_bg = random.choice(images)
+            db_wallpapers = list(wallpapers_collection.find({"active": {"$ne": False}}))
+            if db_wallpapers:
+                hero_bgs = [wp["image_url"] for wp in db_wallpapers]
+                random.shuffle(hero_bgs)
+            else:
+                image_dir = os.path.join(app.root_path, 'static', 'assets', 'images')
+                images = [f for f in os.listdir(image_dir) if os.path.isfile(os.path.join(image_dir, f)) and f.lower().endswith('.webp') and 'mountain' in f.lower()]
+                if images:
+                    hero_bgs = [url_for('static', filename='assets/images/' + img) for img in images]
+                    random.shuffle(hero_bgs)
         except Exception as e:
-            app.logger.warning(f"Could not load random hero image: {e}")
+            app.logger.warning(f"Could not load hero images: {e}")
 
-        return render_template("main/index.html", projects=projects, certificates=certificates, hero_bg=hero_bg)
+        if not hero_bgs:
+            hero_bgs = [url_for('static', filename='assets/images/mountain1.webp')]
+
+        return render_template("main/index.html", projects=projects, certificates=certificates, hero_bgs=hero_bgs)
     except Exception as e:
         app.logger.error(f"Database error on home page: {e}")
         # Fallback to empty data gracefully instead of 500
-        return render_template("main/index.html", projects=[], certificates=[], hero_bg='mountain.jpg')
+        return render_template("main/index.html", projects=[], certificates=[], hero_bgs=[url_for('static', filename='assets/images/mountain1.webp')])
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -265,7 +317,7 @@ def toggle_approval(comment_id):
     comment = comments_collection.find_one({"_id": ObjectId(comment_id)})
     if not comment:
         flash("Comment not found", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(request.referrer or url_for("admin_dashboard"))
 
     new_state = not comment["approved"]
     comments_collection.update_one(
@@ -273,14 +325,14 @@ def toggle_approval(comment_id):
         {"$set": {"approved": new_state}}
     )
     flash("Approval updated", "success")
-    return redirect(url_for("admin_dashboard"))
+    return redirect(request.referrer or url_for("admin_dashboard"))
 
 @app.route('/admin/comments/delete/<comment_id>', methods=['POST'])
 @admin_required
 def delete_comment(comment_id):
     comments_collection.delete_one({"_id": ObjectId(comment_id)})
     flash("Comment deleted", "success")
-    return redirect(url_for("admin_dashboard"))
+    return redirect(request.referrer or url_for("admin_dashboard"))
 
 @app.route("/admin/add-project", methods=["POST"])
 @admin_required
@@ -290,6 +342,7 @@ def add_project():
     tech_stack = request.form.get("tech_stack", "").strip()
     github_url = request.form.get("github_url", "").strip()
     live_url = request.form.get("live_url", "").strip()
+    category = request.form.get("category", "Software Engineering").strip()
     
     priority_str = request.form.get("priority", "100").strip()
     try:
@@ -323,6 +376,7 @@ def add_project():
             "title": title,
             "description": description,
             "tech_stack": [t.strip() for t in tech_stack.split(",") if t.strip()],
+            "category": category,
             "github_url": github_url,
             "live_url": live_url,
             "priority": priority,
@@ -337,7 +391,7 @@ def add_project():
         app.logger.error("Cloudinary upload failed (project): %s", e)
         flash(f"Image upload failed: {e}", "danger")
 
-    return redirect(url_for("admin_dashboard"))
+    return redirect(request.referrer or url_for("admin_dashboard"))
 
 @app.route("/admin/add-certificate", methods=["POST"])
 @admin_required
@@ -392,7 +446,7 @@ def add_certificate():
         flash(f"Certificate upload failed: {e}", "danger")
 
 
-    return redirect(url_for("admin_dashboard"))
+    return redirect(request.referrer or url_for("admin_dashboard"))
 
 @app.route("/admin/delete-project/<project_id>", methods=["POST"])
 @admin_required
@@ -401,13 +455,13 @@ def delete_project(project_id):
         oid = ObjectId(project_id)
     except InvalidId:
         flash("Invalid project ID", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(request.referrer or url_for("admin_dashboard"))
 
     project = projects_collection.find_one({"_id": oid})
 
     if not project:
         flash("Project not found", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(request.referrer or url_for("admin_dashboard"))
 
     try:
         if project.get("image_public_id"):
@@ -422,7 +476,7 @@ def delete_project(project_id):
         app.logger.error("Delete project failed: %s", e)
         flash("Failed to delete project", "danger")
 
-    return redirect(url_for("admin_dashboard"))
+    return redirect(request.referrer or url_for("admin_dashboard"))
 
 @app.route("/admin/projects/edit/<project_id>", methods=["GET", "POST"])
 @admin_required
@@ -431,44 +485,155 @@ def edit_project(project_id):
         oid = ObjectId(project_id)
     except InvalidId:
         flash("Invalid project ID", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(request.referrer or url_for("admin_dashboard"))
 
     project = projects_collection.find_one({"_id": oid})
 
     if not project:
         flash("Project not found", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(request.referrer or url_for("admin_dashboard"))
 
     if request.method == "POST":
         title = request.form.get("title", "").strip()
         description = request.form.get("description", "").strip()
         tech_stack = request.form.get("tech_stack", "").strip()
+        github_url = request.form.get("github_url", "").strip()
+        live_url = request.form.get("live_url", "").strip()
+        category = request.form.get("category", "Software Engineering").strip()
         
         priority_str = request.form.get("priority", "100").strip()
         try:
             priority = int(priority_str)
         except ValueError:
             priority = 100
+            
+        image = request.files.get("image")
 
         if not title or not description or not tech_stack:
             flash("All fields are required", "danger")
             return redirect(url_for("edit_project", project_id=project_id))
 
+        update_data = {
+            "title": title,
+            "description": description,
+            "tech_stack": [t.strip() for t in tech_stack.split(",") if t.strip()],
+            "category": category,
+            "priority": priority,
+            "github_url": github_url,
+            "live_url": live_url,
+            "updated_at": datetime.utcnow()
+        }
+
+        if image and allowed_file(image):
+            try:
+                image.stream.seek(0)
+                upload_result = cloudinary.uploader.upload(
+                    image.stream,
+                    folder="portfolio/projects",
+                    resource_type="image",
+                    public_id=uuid.uuid4().hex,
+                    overwrite=True
+                )
+                
+                if project.get("image_public_id"):
+                    cloudinary.uploader.destroy(
+                        project["image_public_id"],
+                        resource_type="image"
+                    )
+
+                update_data["image_url"] = upload_result["secure_url"]
+                update_data["image_public_id"] = upload_result["public_id"]
+            except Exception as e:
+                traceback.print_exc()
+                app.logger.error("Cloudinary upload failed (project edit): %s", e)
+                flash(f"Image upload failed: {e}", "danger")
+                return redirect(url_for("edit_project", project_id=project_id))
+
         projects_collection.update_one(
             {"_id": oid},
-            {"$set": {
-                "title": title,
-                "description": description,
-                "tech_stack": [t.strip() for t in tech_stack.split(",") if t.strip()],
-                "priority": priority,
-                "updated_at": datetime.utcnow()
-            }}
+            {"$set": update_data}
         )
 
         flash("Project updated successfully", "success")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(request.referrer or url_for("admin_dashboard"))
 
     return render_template("admin/edit_project.html", project=project)
+
+@app.route("/admin/edit-certificate/<cert_id>", methods=["GET", "POST"])
+@admin_required
+def edit_certificate(cert_id):
+    try:
+        oid = ObjectId(cert_id)
+    except InvalidId:
+        flash("Invalid certificate ID", "danger")
+        return redirect(request.referrer or url_for("admin_dashboard"))
+
+    cert = certificates_collection.find_one({"_id": oid})
+    if not cert:
+        flash("Certificate not found", "danger")
+        return redirect(request.referrer or url_for("admin_dashboard"))
+
+    if request.method == "POST":
+        title = request.form.get("title", "").strip()
+        issuer = request.form.get("issuer", "").strip()
+        certificate_url = request.form.get("certificate_url", "").strip()
+        
+        priority_str = request.form.get("priority", "100").strip()
+        try:
+            priority = int(priority_str)
+        except ValueError:
+            priority = 100
+            
+        image = request.files.get("image")
+
+        if not title or not issuer:
+            flash("Title and issuer are required", "danger")
+            return redirect(url_for("edit_certificate", cert_id=cert_id))
+
+        update_data = {
+            "title": title,
+            "issuer": issuer,
+            "priority": priority,
+            "certificate_url": certificate_url,
+            "updated_at": datetime.utcnow()
+        }
+
+        if image and allowed_file(image):
+            try:
+                image.stream.seek(0)
+                upload_result = cloudinary.uploader.upload(
+                    image.stream,
+                    folder="portfolio/certificates",
+                    resource_type="image",
+                    public_id=uuid.uuid4().hex,
+                    overwrite=True
+                )
+                
+                # Delete old image if it exists and is different
+                if cert.get("image_public_id") and cert["image_public_id"] != upload_result["public_id"]:
+                    cloudinary.uploader.destroy(
+                        cert["image_public_id"],
+                        resource_type="image"
+                    )
+
+                update_data["image_url"] = upload_result["secure_url"]
+                update_data["image_public_id"] = upload_result["public_id"]
+
+            except Exception as e:
+                traceback.print_exc()
+                app.logger.error("Cloudinary upload failed: %s", e)
+                flash(f"Image upload failed: {e}", "danger")
+                return redirect(url_for("edit_certificate", cert_id=cert_id))
+
+        certificates_collection.update_one(
+            {"_id": oid},
+            {"$set": update_data}
+        )
+
+        flash("Certificate updated successfully", "success")
+        return redirect(request.referrer or url_for("admin_dashboard"))
+
+    return render_template("admin/edit_cert.html", cert=cert)
 
 @app.route("/admin/delete-certificate/<cert_id>", methods=["POST"])
 @admin_required
@@ -477,13 +642,13 @@ def delete_certificate(cert_id):
         oid = ObjectId(cert_id)
     except InvalidId:
         flash("Invalid certificate ID", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(request.referrer or url_for("admin_dashboard"))
 
     cert = certificates_collection.find_one({"_id": oid})
 
     if not cert:
         flash("Certificate not found", "danger")
-        return redirect(url_for("admin_dashboard"))
+        return redirect(request.referrer or url_for("admin_dashboard"))
 
     try:
         if cert.get("image_public_id"):
@@ -498,7 +663,137 @@ def delete_certificate(cert_id):
         app.logger.error("Delete certificate failed: %s", e)
         flash("Failed to delete certificate", "danger")
 
-    return redirect(url_for("admin_dashboard"))
+    return redirect(request.referrer or url_for("admin_dashboard"))
+
+@app.route("/admin/wallpapers", methods=["GET"])
+@admin_required
+def admin_wallpapers():
+    wallpapers = list(wallpapers_collection.find().sort("created_at", -1))
+    return render_template("admin/wallpapers.html", wallpapers=wallpapers)
+
+@app.route("/admin/add-wallpaper", methods=["POST"])
+@admin_required
+def add_wallpaper():
+    image = request.files.get("image")
+    if not image or not allowed_file(image):
+        flash("Invalid image file (PNG, JPG, WEBP only, max 5MB)", "danger")
+        return redirect(url_for("admin_wallpapers"))
+    
+    try:
+        image.stream.seek(0)
+        upload_result = cloudinary.uploader.upload(
+            image.stream,
+            folder="portfolio/wallpapers",
+            resource_type="image",
+            public_id=uuid.uuid4().hex,
+            overwrite=True
+        )
+        
+        wallpapers_collection.insert_one({
+            "image_url": upload_result["secure_url"],
+            "image_public_id": upload_result["public_id"],
+            "created_at": datetime.utcnow()
+        })
+        flash("Wallpaper added successfully!", "success")
+    except Exception as e:
+        app.logger.error("Cloudinary upload failed (wallpaper): %s", e)
+        flash(f"Wallpaper upload failed: {e}", "danger")
+        
+    return redirect(url_for("admin_wallpapers"))
+
+@app.route("/admin/toggle-wallpaper/<wp_id>", methods=["POST"])
+@admin_required
+def toggle_wallpaper(wp_id):
+    try:
+        oid = ObjectId(wp_id)
+    except InvalidId:
+        flash("Invalid wallpaper ID", "danger")
+        return redirect(url_for("admin_wallpapers"))
+        
+    wp = wallpapers_collection.find_one({"_id": oid})
+    if not wp:
+        flash("Wallpaper not found", "danger")
+        return redirect(url_for("admin_wallpapers"))
+        
+    try:
+        new_state = False if wp.get("active", True) else True
+        wallpapers_collection.update_one({"_id": oid}, {"$set": {"active": new_state}})
+        flash(f"Wallpaper marked as {'Active' if new_state else 'Inactive'}", "success")
+    except Exception as e:
+        app.logger.error("Toggle wallpaper failed: %s", e)
+        flash("Failed to toggle wallpaper status", "danger")
+        
+    return redirect(url_for("admin_wallpapers"))
+
+@app.route("/admin/delete-wallpaper/<wp_id>", methods=["POST"])
+@admin_required
+def delete_wallpaper(wp_id):
+    try:
+        oid = ObjectId(wp_id)
+    except InvalidId:
+        flash("Invalid wallpaper ID", "danger")
+        return redirect(url_for("admin_wallpapers"))
+        
+    wp = wallpapers_collection.find_one({"_id": oid})
+    if not wp:
+        flash("Wallpaper not found", "danger")
+        return redirect(url_for("admin_wallpapers"))
+        
+    try:
+        if wp.get("image_public_id"):
+            cloudinary.uploader.destroy(wp["image_public_id"], resource_type="image")
+        wallpapers_collection.delete_one({"_id": oid})
+        flash("Wallpaper deleted successfully", "success")
+    except Exception as e:
+        app.logger.error("Delete wallpaper failed: %s", e)
+        flash("Failed to delete wallpaper", "danger")
+        
+    return redirect(url_for("admin_wallpapers"))
+
+@app.route("/admin/resume", methods=["GET"])
+@admin_required
+def admin_resume():
+    return render_template("admin/resume.html")
+
+@app.route("/admin/update-resume", methods=["POST"])
+@admin_required
+def update_resume():
+    resume_file = request.files.get("resume_file")
+    if not resume_file or not allowed_resume_file(resume_file):
+        flash("Invalid resume file (PDF, DOC, DOCX only)", "danger")
+        return redirect(url_for("admin_resume"))
+        
+    try:
+        resume_file.stream.seek(0)
+        file_bytes = resume_file.stream.read()
+        
+        # Delete old resume from Cloudinary if it exists (Cleanup during migration)
+        old_resume = settings_collection.find_one({"key": "resume_url"})
+        if old_resume and old_resume.get("public_id"):
+            try:
+                old_rt = old_resume.get("resource_type", "raw")
+                cloudinary.uploader.destroy(old_resume["public_id"], resource_type=old_rt)
+            except Exception as ex:
+                app.logger.warning(f"Could not delete old resume from Cloudinary: {ex}")
+                
+        # Store resume natively in MongoDB for inline browser viewing support
+        from bson.binary import Binary
+        settings_collection.update_one(
+            {"key": "resume_file_data"},
+            {"$set": {
+                "data": Binary(file_bytes),
+                "filename": resume_file.filename,
+                "updated_at": datetime.utcnow()
+            }},
+            upsert=True
+        )
+        flash("Resume updated successfully!", "success")
+    except Exception as e:
+        traceback.print_exc()
+        app.logger.error("Cloudinary upload failed (resume): %s", e)
+        flash(f"Resume upload failed: {e}", "danger")
+        
+    return redirect(url_for("admin_resume"))
 
 # -------------------------
 # App run / DB init

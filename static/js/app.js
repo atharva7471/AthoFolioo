@@ -390,30 +390,25 @@ document.addEventListener('DOMContentLoaded', () => {
   /* ── Hero Background Auto-Slider ──────────────────────────── */
   const heroBgElement = document.querySelector('.hero-mountain-image');
   if (heroBgElement) {
-    const bgImages = [
-      'mountain1.webp',
-      'mountain2.webp',
-      'mountain3.webp',
-      'mountain4.webp',
-      'mountain5.webp'
+    const bgImages = window.HERO_WALLPAPERS || [
+      '/static/assets/images/mountain1.webp',
+      '/static/assets/images/mountain2.webp',
+      '/static/assets/images/mountain3.webp',
+      '/static/assets/images/mountain4.webp',
+      '/static/assets/images/mountain5.webp'
     ];
     let currentBgIndex = 0;
-    
-    // Find starting index from the element's style
-    const currentStyle = heroBgElement.style.backgroundImage;
-    const match = currentStyle.match(/mountain(\d+)\.webp/);
-    if (match) {
-      currentBgIndex = parseInt(match[1]) - 1;
-    }
 
-    setInterval(() => {
-      heroBgElement.style.opacity = '0';
-      setTimeout(() => {
-        currentBgIndex = (currentBgIndex + 1) % bgImages.length;
-        heroBgElement.style.backgroundImage = `url('/static/assets/images/${bgImages[currentBgIndex]}')`;
-        heroBgElement.style.opacity = '1';
-      }, 1000); // CSS transition is 1s
-    }, 15000);
+    if (bgImages.length > 1) {
+      setInterval(() => {
+        heroBgElement.style.opacity = '0';
+        setTimeout(() => {
+          currentBgIndex = (currentBgIndex + 1) % bgImages.length;
+          heroBgElement.style.backgroundImage = `url('${bgImages[currentBgIndex]}')`;
+          heroBgElement.style.opacity = '1';
+        }, 1000); // CSS transition is 1s
+      }, 15000);
+    }
   }
 
   /* ── Footer Quick Links Smooth Scroll ─────────────────────── */

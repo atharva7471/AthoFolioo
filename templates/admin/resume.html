@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% block title %}| Manage Resume{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin/admin_forms.css') }}">
+{% endblock %}
+{% block content %}
+<section class="admin-form-section">
+  <div class="admin-header">
+    <h2>Update Resume</h2>
+    <a href="{{ url_for('admin_dashboard') }}" class="back-btn">Back</a>
+  </div>
+
+  <form
+    action="{{ url_for('update_resume') }}"
+    method="POST"
+    enctype="multipart/form-data"
+    class="admin-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="file" name="resume_file" accept=".pdf,.doc,.docx" required>
+    <button type="submit">Upload Resume</button>
+  </form>
+</section>
+
+<section class="admin-list-section" style="margin-top: 2rem;">
+  <h2>Current Resume</h2>
+  {% if global_resume_url %}
+  <p>You have a resume set up.</p>
+  <div class="admin-actions" style="margin-top: 1rem;">
+    <a href="{{ global_resume_url }}" target="_blank" class="primary-btn">View Current Resume</a>
+  </div>
+  {% else %}
+  <p>No resume uploaded via admin panel yet (using default).</p>
+  {% endif %}
+</section>
+{% endblock %}

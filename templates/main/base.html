@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Atharva Bhosale — Machine Learning Engineer & Web Architect. View my portfolio, projects, and achievements." />
+    <meta name="description" content="Atharva Bhosale — Machine Learning Engineer & Web Architect. View my portfolio, projects and achievements." />
     <meta name="author" content="Atharva Bhosale" />
     
     <!-- Open Graph -->
@@ -56,9 +56,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/cursor.css') }}?v=3">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/loader.css') }}?v=3">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main/animations.css') }}?v=3">
-    {% if hero_bg %}
+    {% if hero_bgs %}
     <!-- Preload first hero image for LCP — fetchpriority ensures it wins bandwidth race -->
-    <link rel="preload" as="image" href="{{ url_for('static', filename='assets/images/' ~ hero_bg) }}" fetchpriority="high">
+    <link rel="preload" as="image" href="{{ hero_bgs[0] }}" fetchpriority="high">
     {% endif %}
   </head>
   <body class="loading">
