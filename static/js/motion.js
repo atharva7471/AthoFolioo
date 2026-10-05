@@ -202,6 +202,16 @@ if (typeof gsap !== 'undefined') {
   const LERP = 0.10; // ring lag amount
   let rafId = null;
 
+  // Cache the dimensions to avoid forced reflow in RAF
+  let rw = 0;
+  let rh = 0;
+  function updateRingSize() {
+    rw = ring.offsetWidth;
+    rh = ring.offsetHeight;
+  }
+  updateRingSize();
+  window.addEventListener('resize', updateRingSize);
+
   function tickCursor() {
     // Dot: instant
     dot.style.transform = `translate(${mouseX - 4}px, ${mouseY - 4}px)`;
@@ -209,8 +219,7 @@ if (typeof gsap !== 'undefined') {
     // Ring: lerp toward mouse
     ringX += (mouseX - ringX) * LERP;
     ringY += (mouseY - ringY) * LERP;
-    const rw = ring.offsetWidth;
-    const rh = ring.offsetHeight;
+    
     ring.style.transform = `translate(${ringX - rw / 2}px, ${ringY - rh / 2}px)`;
 
     rafId = requestAnimationFrame(tickCursor);
@@ -490,8 +499,13 @@ function runHeroSequence() {
 
   // After hero reveals, launch neural canvas + parallax
   tl.call(() => {
-    initNeuralCanvas();
-    initHeroParallax();
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => initNeuralCanvas());
+      requestIdleCallback(() => initHeroParallax());
+    } else {
+      setTimeout(initNeuralCanvas, 500);
+      setTimeout(initHeroParallax, 500);
+    }
   }, [], 0.3);
 }
 
@@ -1044,8 +1058,12 @@ function initHeroParallax() {
   cards.forEach((card) => {
     const panel = card.closest('.work-panel');
 
+    card.addEventListener('mouseenter', () => {
+      card._rect = card.getBoundingClientRect();
+    });
+
     card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
+      const rect = card._rect || card.getBoundingClientRect();
       const cx   = rect.left + rect.width  / 2;
       const cy   = rect.top  + rect.height / 2;
       // Offset from center (-1 to 1)
@@ -1092,8 +1110,12 @@ function initHeroParallax() {
   buttons.forEach((btn) => {
     const STRENGTH = 0.25; // 0 = no magnetism, 1 = full magnetism
 
+    btn.addEventListener('mouseenter', () => {
+      btn._rect = btn.getBoundingClientRect();
+    });
+
     btn.addEventListener('mousemove', (e) => {
-      const rect = btn.getBoundingClientRect();
+      const rect = btn._rect || btn.getBoundingClientRect();
       const cx   = rect.left + rect.width  / 2;
       const cy   = rect.top  + rect.height / 2;
       const dx   = (e.clientX - cx) * STRENGTH;
@@ -1156,16 +1178,25 @@ function initHeroParallax() {
   const cards = document.querySelectorAll('.bento-card');
   if (!cards.length) return;
 
-  document.getElementById('ecosystemBento')?.addEventListener('mousemove', (e) => {
-    for(const card of cards) {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      card.style.setProperty('--mouse-x', `${x}px`);
-      card.style.setProperty('--mouse-y', `${y}px`);
-    }
-  });
+  const container = document.getElementById('ecosystemBento');
+  if (container) {
+    container.addEventListener('mouseenter', () => {
+      for (const card of cards) {
+        card._rect = card.getBoundingClientRect();
+      }
+    });
+    
+    container.addEventListener('mousemove', (e) => {
+      for(const card of cards) {
+        const rect = card._rect || card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      }
+    });
+  }
 })();
 
 

@@ -41,6 +41,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
 
     <!-- Google Fonts: non-blocking load (eliminates render-blocking cascade) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Inter:wght@300;400;500&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Inter:wght@300;400;500&display=swap" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Inter:wght@300;400;500&display=swap"></noscript>
 
@@ -94,13 +95,13 @@
 
     <!-- ── Scripts ───────────────────────────────────────────── -->
     <!-- Smooth scroll -->
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
+    <script defer src="https://unpkg.com/@studio-freight/lenis@1.0.39/dist/lenis.min.js"></script>
     <!-- GSAP Core + ScrollTrigger -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <!-- Motion Engine (all animations) — loads before app.js -->
-    <script src="{{ url_for('static', filename='js/motion.js') }}?v=4"></script>
+    <script defer src="{{ url_for('static', filename='js/motion.js') }}?v=5"></script>
     <!-- App Logic (data: comments, modals, form) -->
-    <script src="{{ url_for('static', filename='js/app.js') }}?v=4"></script>
+    <script defer src="{{ url_for('static', filename='js/app.js') }}?v=4"></script>
   </body>
 </html>

@@ -69,17 +69,17 @@ module.exports = {
           '75%': { transform: 'translate(-1px, -1px)' },
         },
         orbPulse: {
-          '0%, 100%': { opacity: '0.6', boxShadow: '0 0 8px rgba(74, 144, 226, 0.4)' },
-          '50%': { opacity: '1', boxShadow: '0 0 12px rgba(74, 144, 226, 0.8), 0 0 20px rgba(74, 144, 226, 0.3)' },
+          '0%, 100%': { opacity: '0.6' },
+          '50%': { opacity: '1' },
         },
         pulseGreen: {
-          '0%': { transform: 'scale(0.95)', boxShadow: '0 0 0 0 rgba(16, 185, 129, 0.7)' },
-          '70%': { transform: 'scale(1)', boxShadow: '0 0 0 6px rgba(16, 185, 129, 0)' },
-          '100%': { transform: 'scale(0.95)', boxShadow: '0 0 0 0 rgba(16, 185, 129, 0)' },
+          '0%': { transform: 'scale(0.95)', opacity: '0.8' },
+          '70%': { transform: 'scale(1)', opacity: '1' },
+          '100%': { transform: 'scale(0.95)', opacity: '0.8' },
         },
         rolePulse: {
-          '0%, 100%': { boxShadow: '0 0 6px rgba(99, 102, 241, 0.5)' },
-          '50%': { boxShadow: '0 0 14px rgba(99, 102, 241, 0.9), 0 0 24px rgba(99, 102, 241, 0.3)' },
+          '0%, 100%': { opacity: '0.6' },
+          '50%': { opacity: '1' },
         },
         mouseScrollDot: {
           '0%': { transform: 'translateY(0)', opacity: '1' },
@@ -91,12 +91,12 @@ module.exports = {
           '100%': { opacity: '1' },
         },
         visualParticles: {
-          '0%': { backgroundPosition: '0 0' },
-          '100%': { backgroundPosition: '32px -64px' },
+          '0%': { transform: 'translate(0px, 0px)' },
+          '100%': { transform: 'translate(32px, -64px)' },
         },
         pulseDot: {
-          '0%': { opacity: '0.5', boxShadow: '0 0 4px #38bdf8' },
-          '100%': { opacity: '1', boxShadow: '0 0 12px #38bdf8' },
+          '0%': { opacity: '0.5' },
+          '100%': { opacity: '1' },
         },
         ftRidgeDraw: {
           '0%': { strokeDashoffset: '3200', opacity: '0' },
@@ -113,8 +113,8 @@ module.exports = {
           '100%': { transform: 'scale(1.06)', opacity: '1' },
         },
         nodePulse: {
-          '0%, 100%': { boxShadow: '0 0 8px rgba(99,102,241,0.5)' },
-          '50%': { boxShadow: '0 0 16px rgba(99,102,241,0.9), 0 0 28px rgba(99,102,241,0.3)' },
+          '0%, 100%': { opacity: '0.5' },
+          '50%': { opacity: '1' },
         }
       },
       animation: {
